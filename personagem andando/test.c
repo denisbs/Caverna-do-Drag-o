@@ -171,8 +171,7 @@ void error(char *message) {
     error("failed to create event queue");
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
-  if(!timer)
-    error("failed to create timer");
+  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
 
   /**********/
   ALLEGRO_BITMAP *solo = al_load_bitmap("solo.png");
@@ -192,7 +191,7 @@ void error(char *message) {
     int trapshift;
 
     for(trapshift = 0; trapshift < 5; trapshift++){
-        traps[trapshift]= al_create_sub_bitmap(trap, trapshift * 50, 0, TILE_SIZEH, TILE_SIZEV);
+        traps[trapshift]= al_create_sub_bitmap(trap, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
     }
 
 
@@ -208,7 +207,7 @@ void error(char *message) {
                         al_draw_bitmap(solo,l*50,m*50, 0);
                         break;
                     case 3 :
-                        al_draw_bitmap(traps[3],l*50,m*50, 0);
+                        al_draw_bitmap(traps[0],l*50,m*50, 0);
                     default :
                         break;
               }
@@ -248,9 +247,15 @@ void error(char *message) {
 
   int x = 50;
 
+  int xA;
+  int yA;
+
   int y = 50;
 
   int flags = 0;
+
+  int pos_x_trap = 1;
+  int flag_trap = 0;
 
   al_draw_bitmap(sprites[shift][shiftb], x, y, flags);
 
@@ -261,6 +266,7 @@ void error(char *message) {
   al_register_event_source(queue, al_get_keyboard_event_source());
   al_register_event_source(queue, al_get_display_event_source(display));
   al_register_event_source(queue, al_get_timer_event_source(timer));
+  al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap));
 
   /**********/
 
@@ -280,44 +286,44 @@ void error(char *message) {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-
+        if(b != 3){
             direction = -1;
             directionV = 0;
             shiftb = 1;
             flags = 0;
             refresh = 1;
-
+        }
         break;
 
       case ALLEGRO_KEY_DOWN:
 
-
-            directionV = 1;
-            direction = 0;
-            shiftb = 0;
-            flags = 0;
-            refresh = 1;
-
+                if(b != 3){
+                    directionV = 1;
+                    direction = 0;
+                    shiftb = 0;
+                    flags = 0;
+                    refresh = 1;
+                }
             break;
 
       case ALLEGRO_KEY_UP:
-
+            if(b != 3){
                 directionV = -1;
                 direction = 0;
                 shiftb = 3;
                 flags = 0;
                 refresh = 1;
-
+            }
             break;
 
       case ALLEGRO_KEY_RIGHT:
-
+            if(b != 3){
                 direction = 1;
                 directionV = 0;
                 shiftb = 2;
                 flags = 0;
                 refresh = 1;
-
+            }
         break;
       default:
         printf("unknown key down\n");
@@ -328,7 +334,7 @@ void error(char *message) {
     case ALLEGRO_EVENT_KEY_UP:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-        if(direction == -1) {
+        if(direction == -1 ) {
           shift = 0;
           shiftb = 0;
           direction = 0;
@@ -347,7 +353,7 @@ void error(char *message) {
             break;
 
       case ALLEGRO_KEY_UP:
-          if (directionV == -1){
+          if (directionV == -1 ){
             shift = 0;
             shiftb = 0;
             directionV = 0;
@@ -356,7 +362,7 @@ void error(char *message) {
             break;
 
       case ALLEGRO_KEY_RIGHT:
-        if(direction == 1) {
+        if(direction == 1 ) {
           shift = 0;
           shiftb = 0;
           direction = 0;
@@ -372,8 +378,8 @@ void error(char *message) {
 
       break;
     case ALLEGRO_EVENT_TIMER:
-
-
+        if(event.timer.source == timer)
+        {
           if(direction != 0) {
             if(shift == 0) {
               shift = 2;
@@ -396,11 +402,19 @@ void error(char *message) {
                 x += direction * SPEED;
             }else{
                 if (b == 3){
+                    al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+
+                    pos_x_trap = 1;
+                    xA = x;
+                    xA = xA/50;
+                    xA = xA*50;
+                    yA = y;
                     x += direction * SPEED;
+
+                    direction = 0;
 
                     tx = x/50;
                     ty = (y+40)/50;
-
 
                     int inia;
                     if (mapa[ty][tx] != 3){
@@ -412,10 +426,7 @@ void error(char *message) {
                         }
 
                     }
-
-
-
-                    printf("trap\n\n");
+                   printf("trap\n\n");
 
 
                 }else{
@@ -448,7 +459,16 @@ void error(char *message) {
                 y += directionV * SPEED;
             }else{
                 if (b == 3){
+                    al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                    pos_x_trap = 1;
+
+                    xA = x;
+                    yA = y/50;
+
+                    yA = (yA) * 50;
                     y += directionV * SPEED;
+
+                    directionV = 0;
 
                     tx =  (x)/50;
                     ty = (y+40)/50;
@@ -482,7 +502,36 @@ void error(char *message) {
 
 
 
+        }
+        if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
+        {
+            puts("hail\n");
+            if(pos_x_trap <= 3 && flag_trap == 0)
+            {
+                pos_x_trap++;
+                if(pos_x_trap == 3 && flag_trap == 0){
+                        x = xA;
+                        y = yA;
 
+                }
+            }
+            else
+            {
+
+                flag_trap = 1;
+                pos_x_trap--;
+
+                if(pos_x_trap == 0)
+                {
+                    puts("1");
+                    al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                    puts("2");
+                    b = 0;
+                    flag_trap = 0;
+                }
+            }
+            refresh = 1;
+        }
 
       break;
     default:
@@ -510,9 +559,9 @@ void error(char *message) {
         }
 
         if(b == 3)
-            al_draw_bitmap(traps[1],tx*50,ty*50, flags);
+            al_draw_bitmap(traps[pos_x_trap],tx*50,ty*50, 0);
 
-    al_draw_bitmap(sprites[shiftb][shift], x, y, flags);
+        al_draw_bitmap(sprites[shiftb][shift], x, y, flags);
 
 
       al_flip_display();
