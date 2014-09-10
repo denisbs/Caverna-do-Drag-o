@@ -39,8 +39,65 @@ int mapa[13][13] = {
                     };   // mapa base
 
 
+struct Reds{
+      int x, xA; // x do personagem
+      int y, yA; // y do personagem
+      int sprite; // imagem atual do personagem
+      int direcaoS;
+      int moveV;
+      int moveH; //direção do personagem
+
+      int frame;
+      int arm;
+
+};
+
+struct Reds red;
+
+struct trapAtiva{
+    int x;
+    int y;
+};
+
+struct trapAtiva TAFu;
 
 
+
+void setmove(int lado){
+    // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
+    switch(lado){
+        case 1:
+             red.moveH = -1;
+             red.moveV = 0;
+             red.direcaoS = 1;
+             break;
+        case 2:
+             red.moveH = 1;
+             red.moveV = 0;
+             red.direcaoS = 2;
+
+             break;int frame;
+        case 3:
+            red.moveH = 0;
+            red.moveV = -1;
+            red.direcaoS = 3;
+
+            break;
+        case 4:
+            red.moveH = 0;
+            red.moveV = 1;
+            red.direcaoS = 0;
+            break;
+        case 0:
+            red.moveH = 0;
+            red.moveV = 0;
+            red.direcaoS = 0;
+            red.sprite = 0;
+            break;
+        default:
+            break;
+    }
+}
 
 int colision(int xa, int ya, int posix, int posiy, int eixo){
        int px, py;
@@ -140,6 +197,120 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
 }
 
+int testex(){
+     int esta;
+
+            if(red.sprite == 0) {
+              red.sprite = 2;
+              red.frame = 0;
+            }
+            else {
+              red.frame++;
+              if(red.frame == FRAMES_PER_SHIFT) {
+                red.frame = 0;
+
+                red.sprite += red.arm;
+
+                if(red.sprite != 2)
+                  red.arm = -red.arm;
+              }
+            }
+            esta = colision(red.x,red.y,red.moveH,0,1);
+
+            if(esta == 0){
+                red.x += red.moveH * SPEED;
+            }
+                if (esta == 3){
+
+
+                    red.xA = red.x;
+                    red.xA = red.xA/50;
+                    red.xA = red.xA*50;
+                    red.yA = red.y;
+                    red.x += red.moveH * SPEED;
+
+                    red.moveH = 0;
+
+                    TAFu.x = red.x/50;
+                    TAFu.y = (red.y+40)/50;
+
+                    int inia;
+                    if (mapa[TAFu.y][TAFu.x] != 3){
+                        inia = TAFu.x + 1;
+                        if (mapa[TAFu.y][inia] != 3){
+                            TAFu.x = TAFu.x -1;
+                        }else{
+                            TAFu.x = inia;
+                        }
+
+                    }
+                   printf("trap\n\n");
+
+
+                }
+
+                return esta;
+}
+
+int testey(){
+    int esta;
+
+
+     if(red.sprite == 0) {
+        red.sprite = 2;
+        red.frame = 0;
+     }else {
+        red.frame++;
+
+        if(red.frame == FRAMES_PER_SHIFT) {
+                red.frame = 0;
+
+                red.sprite += red.arm;
+
+                if(red.sprite != 2)
+                  red.arm = -red.arm;
+              }
+            }
+            esta = colision(red.x,red.y,0,red.moveV,2);
+            if(esta == 0){
+                red.y += red.moveV * SPEED;
+            }else{
+                if (esta == 3){
+
+                    red.xA = red.x;
+                    red.yA = red.y/50;
+
+                    red.yA = (red.yA) * 50;
+                    red.y += red.moveV * SPEED;
+
+                    red.moveV = 0;
+
+                    TAFu.x =  (red.x)/50;
+
+                    TAFu.y = (red.y+40)/50;
+
+                    int inia;
+                    if (mapa[TAFu.y][TAFu.x] != 3){
+                        inia = TAFu.x + 1;
+                        if (mapa[TAFu.y][inia] != 3){
+                            TAFu.x = TAFu.x -1;
+                        }else{
+                            TAFu.x = inia;
+                        }
+
+                    }
+
+
+
+                    printf("trap\n\n");
+
+                }
+
+}
+        return esta;
+}
+
+
 
 
 void error(char *message) {
@@ -229,35 +400,28 @@ void error(char *message) {
         sprites[shift][shiftb] = al_create_sub_bitmap(sheet, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
     }
   }
-  shift = 0;
-  shiftb = 0;
 
+
+  red.sprite = 0;
+  red.direcaoS = 0;
+  red.moveH = 0;
+  red.moveV = 0;
+
+  red.x = 50;
+  red.y = 50;
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-  int direction = 0;
+  int b; //condição de colisão com trsap
 
-  int b;
 
-  int tx, ty;
+  red.frame = 0;
 
-  int directionV = 0;
-
-  int frame = 0;
-
-  int arm = -1;
-
-  int x = 50;
-
-  int xA;
-  int yA;
-
-  int y = 50;
+  red.arm = -1;
 
   int flags = 0;
-
   int pos_x_trap = 1;
   int flag_trap = 0;
 
-  al_draw_bitmap(sprites[shift][shiftb], x, y, flags);
+  al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
 
   /**********/
 
@@ -287,9 +451,7 @@ void error(char *message) {
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
         if(b != 3){
-            direction = -1;
-            directionV = 0;
-            shiftb = 1;
+            setmove(1);
             flags = 0;
             refresh = 1;
         }
@@ -298,9 +460,7 @@ void error(char *message) {
       case ALLEGRO_KEY_DOWN:
 
                 if(b != 3){
-                    directionV = 1;
-                    direction = 0;
-                    shiftb = 0;
+                    setmove(4);
                     flags = 0;
                     refresh = 1;
                 }
@@ -308,9 +468,7 @@ void error(char *message) {
 
       case ALLEGRO_KEY_UP:
             if(b != 3){
-                directionV = -1;
-                direction = 0;
-                shiftb = 3;
+                setmove(3);
                 flags = 0;
                 refresh = 1;
             }
@@ -318,9 +476,7 @@ void error(char *message) {
 
       case ALLEGRO_KEY_RIGHT:
             if(b != 3){
-                direction = 1;
-                directionV = 0;
-                shiftb = 2;
+                setmove(2);
                 flags = 0;
                 refresh = 1;
             }
@@ -334,38 +490,30 @@ void error(char *message) {
     case ALLEGRO_EVENT_KEY_UP:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-        if(direction == -1 ) {
-          shift = 0;
-          shiftb = 0;
-          direction = 0;
+        if(red.moveH == -1 ) {
+          setmove(0);
           refresh = 1;
         }
         break;
 
 
       case ALLEGRO_KEY_DOWN:
-            if(directionV == 1){
-                shift = 0;
-                shiftb = 0;
-                directionV = 0;
+            if(red.moveV == 1){
+                setmove(0);
                 refresh = 1;
             }
             break;
 
       case ALLEGRO_KEY_UP:
-          if (directionV == -1 ){
-            shift = 0;
-            shiftb = 0;
-            directionV = 0;
+          if (red.moveV == -1 ){
+            setmove(0);
             refresh = 1;
           }
             break;
 
       case ALLEGRO_KEY_RIGHT:
-        if(direction == 1 ) {
-          shift = 0;
-          shiftb = 0;
-          direction = 0;
+        if(red.moveH == 1 ) {
+          setmove(0);
           refresh = 1;
         }
         break;
@@ -380,128 +528,28 @@ void error(char *message) {
     case ALLEGRO_EVENT_TIMER:
         if(event.timer.source == timer)
         {
-          if(direction != 0) {
-            if(shift == 0) {
-              shift = 2;
-              frame = 0;
-            }
-            else {
-              frame++;
-              if(frame == FRAMES_PER_SHIFT) {
-                frame = 0;
 
-                shift += arm;
-
-                if(shift != 2)
-                  arm = -arm;
-              }
-            }
-            b = colision(x,y,direction,0,1);
-
-            if(b == 0){
-                x += direction * SPEED;
-            }else{
-                if (b == 3){
-                    al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-
-                    pos_x_trap = 1;
-                    xA = x;
-                    xA = xA/50;
-                    xA = xA*50;
-                    yA = y;
-                    x += direction * SPEED;
-
-                    direction = 0;
-
-                    tx = x/50;
-                    ty = (y+40)/50;
-
-                    int inia;
-                    if (mapa[ty][tx] != 3){
-                        inia = tx + 1;
-                        if (mapa[ty][inia] != 3){
-                            tx = tx -1;
-                        }else{
-                            tx = inia;
-                        }
-
-                    }
-                   printf("trap\n\n");
-
-
-                }else{
-                    x = x;
-                }
+          if(red.moveH != 0){
+            b = testex();
+            if(b == 3){
+                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                pos_x_trap = 1;
             }
             refresh = 1;
           }
 
-          if(directionV != 0) {
-            if(shift == 0) {
-              shift = 2;
-
-              frame = 0;
+          if(red.moveV != 0){
+            b = testey();
+             if(b == 3){
+                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                pos_x_trap = 1;
             }
-            else {
-              frame++;
-
-              if(frame == FRAMES_PER_SHIFT) {
-                frame = 0;
-
-                shift += arm;
-
-                if(shift != 2)
-                  arm = -arm;
-              }
-            }
-            b = colision(x,y,0,directionV,2);
-            if(b == 0){
-                y += directionV * SPEED;
-            }else{
-                if (b == 3){
-                    al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                    pos_x_trap = 1;
-
-                    xA = x;
-                    yA = y/50;
-
-                    yA = (yA) * 50;
-                    y += directionV * SPEED;
-
-                    directionV = 0;
-
-                    tx =  (x)/50;
-                    ty = (y+40)/50;
-
-                       int inia;
-                    if (mapa[ty][tx] != 3){
-                        inia = tx + 1;
-                        if (mapa[ty][inia] != 3){
-                            tx = tx -1;
-                        }else{
-                            tx = inia;
-                        }
-
-                    }
-
-
-
-                    printf("trap\n\n");
-
-                }else{
-                    y =y;
-                }
-
-            }
-
-
             refresh = 1;
-
-
           }
 
 
 
+          refresh = 1;
         }
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
@@ -510,14 +558,13 @@ void error(char *message) {
             {
                 pos_x_trap++;
                 if(pos_x_trap == 3 && flag_trap == 0){
-                        x = xA;
-                        y = yA;
+                        red.x = red.xA;
+                        red.y = red.yA;
 
                 }
             }
             else
             {
-
                 flag_trap = 1;
                 pos_x_trap--;
 
@@ -532,11 +579,10 @@ void error(char *message) {
             }
             refresh = 1;
         }
-
       break;
-    default:
-      printf("unknown event\n");
-    }
+        default:
+            printf("unknown event\n");
+        }
 
     if(refresh) {
 
@@ -559,9 +605,9 @@ void error(char *message) {
         }
 
         if(b == 3)
-            al_draw_bitmap(traps[pos_x_trap],tx*50,ty*50, 0);
+            al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
 
-        al_draw_bitmap(sprites[shiftb][shift], x, y, flags);
+        al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
 
 
       al_flip_display();
@@ -610,5 +656,4 @@ for(shift = 0; shift < NUM_SPRITES; shift++)
 
   return EXIT_SUCCESS;
 }
-
 
