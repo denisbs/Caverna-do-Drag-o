@@ -245,7 +245,7 @@ int testex(){
 
                     }
                    printf("trap\n\n");
-
+                    red.sprite = 0;
 
                 }
 
@@ -279,9 +279,13 @@ int testey(){
 
                     red.xA = red.x;
                     red.yA = red.y/50;
+                    if(red.moveV == -1)
+                        red.yA = red.yA + 1;
 
                     red.yA = (red.yA) * 50;
                     red.y += red.moveV * SPEED;
+
+
 
                     red.moveV = 0;
 
@@ -301,12 +305,13 @@ int testey(){
                     }
 
 
-
+                    red.sprite = 0;
                     printf("trap\n\n");
 
                 }
 
 }
+
         return esta;
 }
 
@@ -411,7 +416,7 @@ void error(char *message) {
   red.y = 50;
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
   int b; //condição de colisão com trsap
-
+    int ai;
 
   red.frame = 0;
 
@@ -526,12 +531,15 @@ void error(char *message) {
 
       break;
     case ALLEGRO_EVENT_TIMER:
+
         if(event.timer.source == timer)
         {
-
-          if(red.moveH != 0){
+        if(red.moveH != 0){
+            ai = red.moveH;
             b = testex();
             if(b == 3){
+                red.x = (TAFu.x*50) + (9);
+                red.y = (TAFu.y*50) + (5);
                 al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
                 pos_x_trap = 1;
             }
@@ -539,8 +547,12 @@ void error(char *message) {
           }
 
           if(red.moveV != 0){
+            ai = red.moveV;
             b = testey();
              if(b == 3){
+                red.x = (TAFu.x*50) + (9);
+                red.y = (TAFu.y*50) - (5* ai);
+
                 al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
                 pos_x_trap = 1;
             }
@@ -557,7 +569,7 @@ void error(char *message) {
             if(pos_x_trap <= 3 && flag_trap == 0)
             {
                 pos_x_trap++;
-                if(pos_x_trap == 3 && flag_trap == 0){
+                if(pos_x_trap == 4 && flag_trap == 0){
                         red.x = red.xA;
                         red.y = red.yA;
 
