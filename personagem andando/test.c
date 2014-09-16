@@ -5,7 +5,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 #include <winsock.h>
-
+#include <time.h>
 
 
 #define WIDTH 650
@@ -18,6 +18,9 @@
 #define NUM_SPRITES 5
 #define FRAMES_PER_SHIFT 10
 #define SPEED 1
+#define mapa_size 13
+
+
 
 #define FPS 60
 
@@ -38,6 +41,31 @@ int mapa[13][13] = {
                     1,1,1,1,1,1,1,1,1,1,1,1,1
                     };   // mapa base
 
+void sorteaA(){
+    int a, C;
+    int nL, nC;
+    C = 0;
+    for (a = 0; a < 7; a++ ){
+        nL = rand()%mapa_size;
+        nC = rand()%mapa_size;
+        while (C == 0){
+            if(mapa[nC][nL] == 0){
+                mapa[nC][nL] = 3;
+                C = 1;
+                printf("\n trap em: %d - %d", nL, nC);
+            }else{
+                nL = rand()%mapa_size;
+                nC = rand()%mapa_size;
+            }
+        }
+        C = 0;
+
+    }
+
+
+
+
+}
 
 struct Reds{
       int x, xA; // x do personagem
@@ -372,6 +400,8 @@ void error(char *message) {
 
 
     int l,m;
+    sorteaA();
+
 
     for(l = 0; l < 14; l++){
             for(m = 0; m < 14; m++){
