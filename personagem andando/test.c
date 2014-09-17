@@ -30,15 +30,15 @@
 int mapa[13][13] = {
                     1,1,1,1,1,1,1,1,1,1,1,1,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
-                    1,0,0,0,1,0,1,0,1,0,1,0,1,
+                    1,0,1,0,1,0,1,0,1,0,1,0,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
-                    1,0,0,0,1,0,1,0,1,0,1,0,1,
-                    1,0,0,0,1,1,0,0,0,0,0,0,1,
-                    1,0,0,0,1,0,1,0,1,0,1,0,1,
-                    1,0,0,0,0,0,0,0,0,0,0,1,1,
-                    1,0,0,0,1,0,1,0,1,0,1,0,1,
-                    1,0,0,0,1,0,0,0,0,0,0,0,1,
-                    1,0,0,0,1,0,1,0,1,0,1,0,1,
+                    1,0,1,0,1,0,1,0,1,0,1,0,1,
+                    1,0,0,0,0,0,0,0,0,0,0,0,1,
+                    1,0,1,0,1,0,1,0,1,0,1,0,1,
+                    1,0,0,0,0,0,0,0,0,0,0,0,1,
+                    1,0,1,0,1,0,1,0,1,0,1,0,1,
+                    1,0,0,0,0,0,0,0,0,0,0,0,1,
+                    1,0,1,0,1,0,1,0,1,0,1,0,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
                     1,1,1,1,1,1,1,1,1,1,1,1,1
                     };   // mapa base
@@ -52,6 +52,7 @@ void sorteaA(){
     int a, C;
     int nL, nC;
     C = 0;
+    srand((unsigned)time(NULL));
     for (a = 0; a < 7; a++ ){
         nL = rand()%mapa_size;
         nC = rand()%mapa_size;
@@ -74,33 +75,49 @@ void sorteaA(){
 struct pontoNas{
         int x[8];
         int y[8];
-        int ativa;
+        int ativa[8];
+
 };
+
 struct pontoNas inicios;
 
-inicios.x[0] = 2;
-inicios.y[0] = 2;
+void setI(){
 
-inicios.x[1] = 2;
+inicios.x[0] = 1;
+inicios.y[0] = 1;
+mapa[1][1] = 4;
+
+inicios.x[1] = 1;
 inicios.y[1] = 11;
+mapa[1][11] = 4;
 
 inicios.x[2] = 11;
 inicios.y[2] = 11;
+mapa[11][11] = 4;
 
 inicios.x[3] = 11;
-inicios.y[3] = 2;
+inicios.y[3] = 1;
+mapa[11][1] = 4;
 
-inicios.x[4] = 2;
+inicios.x[4] = 1;
 inicios.y[4] = 6;
+mapa[1][6] = 4;
 
 inicios.x[5] = 6;
 inicios.y[5] = 11;
+mapa[6][11] = 4;
 
 inicios.x[6] = 11;
 inicios.y[6] = 6;
+mapa[11][6] = 4;
 
 inicios.x[7] = 6;
-inicios.y[7] = 2;
+inicios.y[7] = 1;
+mapa[6][1] = 4;
+
+
+}
+
 
 
 
@@ -115,6 +132,7 @@ struct Reds{
       int frame;
       int arm;
 
+
 };
 
 struct Reds red;
@@ -125,6 +143,23 @@ struct trapAtiva{
 };
 
 struct trapAtiva TAFu;
+
+void sortearNas(){
+   int p, C;
+   C = 1;
+   srand((unsigned)time(NULL));
+   while(C == 1){
+
+        p = rand()%8;
+        if(inicios.ativa[p] != 1 ){
+            red.x = inicios.x[p]*50;
+            red.y = inicios.y[p]*50;
+            inicios.ativa[p] = 1;
+            C=0;
+        }
+   }
+
+}
 
 
 
@@ -380,9 +415,6 @@ int testey(){
         return esta;
 }
 
-
-
-
 void error(char *message) {
   fprintf(stderr, "ERROR: %s\n", message);
 
@@ -435,7 +467,7 @@ void error(char *message) {
         traps[trapshift]= al_create_sub_bitmap(trap, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
     }
 
-
+    setI();
     int l,m;
     sorteaA();
 
@@ -451,6 +483,11 @@ void error(char *message) {
                         break;
                     case 3 :
                         al_draw_bitmap(traps[0],l*50,m*50, 0);
+                        break;
+                    case 4 :
+                        al_draw_bitmap(solo,l*50,m*50, 0);
+                        break;
+
                     default :
                         break;
               }
@@ -479,8 +516,7 @@ void error(char *message) {
   red.moveH = 0;
   red.moveV = 0;
 
-  red.x = 50;
-  red.y = 50;
+  sortearNas();
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
   int b; //condição de colisão com trsap
     int ai;
@@ -491,6 +527,7 @@ void error(char *message) {
 
   int flags = 0;
   int pos_x_trap = 1;
+
   int flag_trap = 0;
 
   al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
@@ -553,6 +590,9 @@ void error(char *message) {
                 refresh = 1;
             }
         break;
+      case ALLEGRO_KEY_ESCAPE:
+        running = 0;
+        break;
       default:
         printf("unknown key down\n");
       }
@@ -588,6 +628,9 @@ void error(char *message) {
           setmove(0);
           refresh = 1;
         }
+        break;
+      case ALLEGRO_KEY_ESCAPE:
+        running = 0;
         break;
       default:
         printf("unknown key up\n");
@@ -677,6 +720,10 @@ void error(char *message) {
                         break;
                     case 3 :
                         al_draw_bitmap(traps[0],l*50,m*50, 0);
+                        break;
+                     case 4 :
+                        al_draw_bitmap(solo,l*50,m*50, 0);
+                        break;
                     default :
                         break;
               }
