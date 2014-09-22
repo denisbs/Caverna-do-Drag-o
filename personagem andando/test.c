@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <winsock.h>
 #include <time.h>
 
@@ -43,11 +45,6 @@ int mapa[13][13] = {
                     1,1,1,1,1,1,1,1,1,1,1,1,1
                     };   // mapa base
 
-
-
-
-
-
 void sorteaA(){
     int a, C;
     int nL, nC;
@@ -70,7 +67,6 @@ void sorteaA(){
 
     }
 }
-
 
 struct pontoNas{
         int x[8];
@@ -118,9 +114,6 @@ mapa[6][1] = 4;
 
 }
 
-
-
-
 struct Reds{
       int x, xA; // x do personagem
       int y, yA; // y do personagem
@@ -160,8 +153,6 @@ void sortearNas(){
    }
 
 }
-
-
 
 void setmove(int lado){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
@@ -421,8 +412,7 @@ void error(char *message) {
   exit(EXIT_FAILURE);
 }
 
-
- int main() {
+int game() {
   if(!al_init())
     error("failed to initialize");
 
@@ -460,12 +450,31 @@ void error(char *message) {
   if(!trap)
     error("failed to load trap");
 
+  ALLEGRO_BITMAP *sheet = al_load_bitmap("Red.png");
+  if(!sheet)
+    error("failed to load sheet");
+
+  //
+
+
     ALLEGRO_BITMAP *traps[5];
     int trapshift;
 
     for(trapshift = 0; trapshift < 5; trapshift++){
         traps[trapshift]= al_create_sub_bitmap(trap, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
     }
+
+
+  ALLEGRO_BITMAP *sprites[NUM_SPRITES][NUM_SPRITES];
+
+  int shift, shiftb;
+
+  for(shift = 0; shift < NUM_SPRITES; shift++){
+    for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++){
+        sprites[shift][shiftb] = al_create_sub_bitmap(sheet, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
+    }
+  }
+
 
     setI();
     int l,m;
@@ -496,19 +505,7 @@ void error(char *message) {
 
   /**********/
 
-  ALLEGRO_BITMAP *sheet = al_load_bitmap("Red.png");
-  if(!sheet)
-    error("failed to load sheet");
 
-  ALLEGRO_BITMAP *sprites[NUM_SPRITES][NUM_SPRITES];
-
-  int shift, shiftb;
-
-  for(shift = 0; shift < NUM_SPRITES; shift++){
-    for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++){
-        sprites[shift][shiftb] = al_create_sub_bitmap(sheet, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
-    }
-  }
 
 
   red.sprite = 0;
@@ -594,7 +591,7 @@ void error(char *message) {
         running = 0;
         break;
       default:
-        printf("unknown key down\n");
+        printf("");
       }
       break;
 
@@ -633,7 +630,7 @@ void error(char *message) {
         running = 0;
         break;
       default:
-        printf("unknown key up\n");
+        printf("");
       }
       break;
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -675,7 +672,7 @@ void error(char *message) {
         }
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
-            puts("hail\n");
+
             if(pos_x_trap <= 3 && flag_trap == 0)
             {
                 pos_x_trap++;
@@ -692,9 +689,7 @@ void error(char *message) {
 
                 if(pos_x_trap == 0)
                 {
-                    puts("1");
                     al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                    puts("2");
                     b = 0;
                     flag_trap = 0;
                 }
@@ -703,7 +698,7 @@ void error(char *message) {
         }
       break;
         default:
-            printf("unknown event\n");
+            printf("");
         }
 
     if(refresh) {
@@ -781,5 +776,239 @@ for(shift = 0; shift < NUM_SPRITES; shift++)
   al_uninstall_system();
 
   return EXIT_SUCCESS;
+}
+
+int menu() {
+    ALLEGRO_DISPLAY *janela = NULL;
+    ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
+    ALLEGRO_BITMAP *botao_sair = NULL, *area_central = 0, *btt_mult=0;
+
+    ALLEGRO_FONT *fonte = NULL, *fontT = NULL;
+
+    // Flag que condicionará nosso looping
+    int sair = 0;
+
+    if (!al_init())
+    {
+        fprintf(stderr, "Falha ao inicializar a Allegro.\n");
+        return -1;
+    }
+
+    al_init_font_addon();
+
+    if (!al_init_ttf_addon())
+    {
+        fprintf(stderr, "Falha ao inicializar add-on allegro_ttf.\n");
+        return -1;
+    }
+
+    janela = al_create_display(WIDTH, HEIGHT);
+    if (!janela)
+    {
+        fprintf(stderr, "Falha ao criar janela.\n");
+        return -1;
+    }
+
+    fonte = al_load_font("C:/users/denis.loliveira/desktop/sa/bin/debug/aspartam.ttf", 24, 0);
+    if (!fonte)
+    {
+        al_destroy_display(janela);
+        fprintf(stderr, "Falha ao carregar fonte.\n");
+        return -1;
+    }
+
+    fontT = al_load_font("C:/users/denis.loliveira/desktop/sa/bin/debug/aspartam.ttf", 50, 0);
+    if (!fontT)
+    {
+        al_destroy_display(janela);
+        fprintf(stderr, "Falha ao carregar fontT.\n");
+        return -1;
+    }
+
+
+
+    // Configura o título da janela
+    al_set_window_title(janela, "Rotinas de Mouse - www.rafaeltoledo.net");
+
+    //configurar textos
+    char *texto1 = "Programa teste";
+    char *texto2 = "Mutiplayer";
+    char *texto3 = "Sair";
+    char *titulo = "Enigma do diploma";
+
+    // Torna apto o uso de mouse na aplicação
+    if (!al_install_mouse())
+    {
+        fprintf(stderr, "Falha ao inicializar o mouse.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+
+    // Atribui o cursor padrão do sistema para ser usado
+    if (!al_set_system_mouse_cursor(janela, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT))
+    {
+        fprintf(stderr, "Falha ao atribuir ponteiro do mouse.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+
+    // Alocamos o retângulo central da tela
+    area_central = al_create_bitmap(250, 50);
+    if (!area_central)
+    {
+        fprintf(stderr, "Falha ao criar bitmap.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+    //botão multiplayer
+    btt_mult = al_create_bitmap(250, 50);
+    if (!btt_mult)
+    {
+        fprintf(stderr, "Falha ao criar bitmap.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+
+
+
+    // Alocamos o botão para fechar a aplicação
+    botao_sair = al_create_bitmap(100, 50);
+    if (!botao_sair)
+    {
+        fprintf(stderr, "Falha ao criar botão de saída.\n");
+        al_destroy_bitmap(area_central);
+        al_destroy_display(janela);
+        return -1;
+    }
+
+    fila_eventos = al_create_event_queue();
+    if (!fila_eventos)
+    {
+        fprintf(stderr, "Falha ao inicializar o fila de eventos.\n");
+        al_destroy_display(janela);
+        return -1;
+    }
+
+    // Dizemos que vamos tratar os eventos vindos do mouse
+    al_register_event_source(fila_eventos, al_get_mouse_event_source());
+
+    // Flag indicando se o mouse está sobre o retângulo central
+    int na_area_central = 0;
+    int no_btt_multi = 0;
+    while (!sair)
+    {
+        // Verificamos se há eventos na fila
+        while (!al_is_event_queue_empty(fila_eventos))
+        {
+            ALLEGRO_EVENT evento;
+            al_wait_for_event(fila_eventos, &evento);
+
+            // Se o evento foi de movimentação do mouse
+            if (evento.type == ALLEGRO_EVENT_MOUSE_AXES)
+            {
+                // Verificamos se ele está sobre a região do retângulo central
+                if (evento.mouse.x >= 200 &&
+                    evento.mouse.x <= 450 &&
+                    evento.mouse.y >= 250 &&
+                    evento.mouse.y <= 300)
+                {
+                    na_area_central = 1;
+                }
+                else
+                {
+                    na_area_central = 0;
+                     if (evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 320 && evento.mouse.y <= 370)
+                    {
+                        no_btt_multi = 1;
+                    }else{
+                        no_btt_multi = 0;
+                    }
+                }
+            }
+            // Ou se o evento foi um clique do mouse
+            else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+            {
+                if (evento.mouse.x >= WIDTH - al_get_bitmap_width(botao_sair) - 10 &&
+                    evento.mouse.x <= WIDTH - 10 && evento.mouse.y <= HEIGHT - 10 &&
+                    evento.mouse.y >= HEIGHT - al_get_bitmap_height(botao_sair) - 10)
+                {
+                    sair = 1;
+
+
+                }else{
+                    if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 250 && evento.mouse.y <= 300){
+                           al_destroy_bitmap(botao_sair);
+                           al_destroy_bitmap(area_central);
+                           al_destroy_display(janela);
+                           al_destroy_event_queue(fila_eventos);
+                            game();
+                    }
+                }
+            }
+        }
+
+        // Limpamos a tela
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+
+        // Colorimos o bitmap correspondente ao retângulo central,
+        // com a cor condicionada ao conteúdo da flag na_area_central
+        al_set_target_bitmap(area_central);
+        if (!na_area_central)
+        {
+            al_clear_to_color(al_map_rgb(255, 255, 255));
+        }
+        else
+        {
+            al_clear_to_color(al_map_rgb(0, 255, 0));
+        }
+        //no segundo botão
+        al_set_target_bitmap(btt_mult);
+        if (!no_btt_multi)
+        {
+            al_clear_to_color(al_map_rgb(255, 255, 255));
+        }
+        else
+        {
+            al_clear_to_color(al_map_rgb(0, 255, 0));
+        }
+
+
+        // Colorimos o bitmap do botão de sair
+
+
+        al_set_target_bitmap(botao_sair);
+        al_clear_to_color(al_map_rgb(255, 0, 0));
+
+        // Desenhamos os retângulos na tela
+        al_set_target_bitmap(al_get_backbuffer(janela));
+        al_draw_bitmap(area_central, 200, 250, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 320, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
+
+
+        al_draw_bitmap(btt_mult, 200, 320, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 320, 330, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
+
+        al_draw_bitmap(botao_sair, WIDTH - al_get_bitmap_width(botao_sair) - 10, HEIGHT - al_get_bitmap_height(botao_sair) - 10, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), WIDTH - al_get_bitmap_width(botao_sair)+25, HEIGHT - al_get_bitmap_height(botao_sair) , ALLEGRO_ALIGN_CENTRE, "%s", texto3);
+        // Atualiza a tela
+
+        al_draw_textf(fontT, al_map_rgb(250, 250, 250), 320, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo);
+
+        al_flip_display();
+    }
+
+    // Desaloca os recursos utilizados na aplicação
+    al_destroy_bitmap(botao_sair);
+    al_destroy_bitmap(area_central);
+    al_destroy_display(janela);
+    al_destroy_event_queue(fila_eventos);
+
+    return 0;
+}
+
+
+
+int main(){
+    menu();
 }
 
