@@ -13,6 +13,9 @@
 #define WIDTH 650
 #define HEIGHT 650
 
+#define WIDTHM 500
+#define HEIGHTM 450
+
 #define TILE_SIZEH 50
 #define TILE_SIZEV 50
 #define SPRITE_SIZEH 32
@@ -167,7 +170,7 @@ void setmove(int lado){
              red.moveV = 0;
              red.direcaoS = 2;
 
-             break;int frame;
+             break;
         case 3:
             red.moveH = 0;
             red.moveV = -1;
@@ -755,7 +758,6 @@ int game() {
 
 
 
-
 for(shift = 0; shift < NUM_SPRITES; shift++)
   for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++)
     al_destroy_bitmap(sprites[shift][shiftb]);
@@ -767,15 +769,17 @@ for(shift = 0; shift < NUM_SPRITES; shift++)
 
 
   al_destroy_timer(timer);
+  al_destroy_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
   al_destroy_event_queue(queue);
   al_destroy_display(display);
+
 
   al_shutdown_primitives_addon();
   al_shutdown_image_addon();
   al_uninstall_keyboard();
   al_uninstall_system();
 
-  return EXIT_SUCCESS;
+  return 0;
 }
 
 int menu() {
@@ -802,7 +806,7 @@ int menu() {
         return -1;
     }
 
-    janela = al_create_display(WIDTH, HEIGHT);
+    janela = al_create_display(WIDTHM, HEIGHTM);
     if (!janela)
     {
         fprintf(stderr, "Falha ao criar janela.\n");
@@ -834,8 +838,9 @@ int menu() {
     char *texto1 = "Programa teste";
     char *texto2 = "Mutiplayer";
     char *texto3 = "Sair";
-    char *titulo = "Enigma do diploma";
-
+    char *titulo1 = "Riddle Story";
+    char *titulo2 = " of ";
+    char *titulo3 = "devil degree";
     // Torna apto o uso de mouse na aplicação
     if (!al_install_mouse())
     {
@@ -928,9 +933,9 @@ int menu() {
             // Ou se o evento foi um clique do mouse
             else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
             {
-                if (evento.mouse.x >= WIDTH - al_get_bitmap_width(botao_sair) - 10 &&
-                    evento.mouse.x <= WIDTH - 10 && evento.mouse.y <= HEIGHT - 10 &&
-                    evento.mouse.y >= HEIGHT - al_get_bitmap_height(botao_sair) - 10)
+                if (evento.mouse.x >= WIDTHM - al_get_bitmap_width(botao_sair) - 10 &&
+                    evento.mouse.x <= WIDTHM - 10 && evento.mouse.y <= HEIGHT - 10 &&
+                    evento.mouse.y >= HEIGHTM - al_get_bitmap_height(botao_sair) - 10)
                 {
                     sair = 1;
 
@@ -939,16 +944,20 @@ int menu() {
                     if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 250 && evento.mouse.y <= 300){
                            al_destroy_bitmap(botao_sair);
                            al_destroy_bitmap(area_central);
+                           al_destroy_bitmap(btt_mult);
+
                            al_destroy_display(janela);
                            al_destroy_event_queue(fila_eventos);
-                            game();
+
+
+                           return 1;
                     }
                 }
             }
         }
 
         // Limpamos a tela
-        al_clear_to_color(al_map_rgb(0, 0, 0));
+       al_clear_to_color(al_map_rgb(0, 0, 0));
 
         // Colorimos o bitmap correspondente ao retângulo central,
         // com a cor condicionada ao conteúdo da flag na_area_central
@@ -981,18 +990,20 @@ int menu() {
 
         // Desenhamos os retângulos na tela
         al_set_target_bitmap(al_get_backbuffer(janela));
-        al_draw_bitmap(area_central, 200, 250, 0);
-        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 320, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
+        al_draw_bitmap(area_central, 100, 250, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
 
 
-        al_draw_bitmap(btt_mult, 200, 320, 0);
-        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 320, 330, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
+        al_draw_bitmap(btt_mult, 100, 320, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 330, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
 
-        al_draw_bitmap(botao_sair, WIDTH - al_get_bitmap_width(botao_sair) - 10, HEIGHT - al_get_bitmap_height(botao_sair) - 10, 0);
-        al_draw_textf(fonte, al_map_rgb(0, 0, 0), WIDTH - al_get_bitmap_width(botao_sair)+25, HEIGHT - al_get_bitmap_height(botao_sair) , ALLEGRO_ALIGN_CENTRE, "%s", texto3);
+        al_draw_bitmap(botao_sair, WIDTHM - al_get_bitmap_width(botao_sair) - 10, HEIGHTM - al_get_bitmap_height(botao_sair) - 10, 0);
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), WIDTHM - al_get_bitmap_width(botao_sair)+25, HEIGHTM - al_get_bitmap_height(botao_sair) , ALLEGRO_ALIGN_CENTRE, "%s", texto3);
         // Atualiza a tela
 
-        al_draw_textf(fontT, al_map_rgb(250, 250, 250), 320, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo);
+        al_draw_textf(fontT, al_map_rgb(250, 0, 0), 220, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo1);
+        al_draw_textf(fontT, al_map_rgb(250, 0, 0), 220, 75, ALLEGRO_ALIGN_CENTRE, "%s", titulo2);
+        al_draw_textf(fontT, al_map_rgb(250, 0, 0), 220, 100, ALLEGRO_ALIGN_CENTRE, "%s", titulo3);
 
         al_flip_display();
     }
@@ -1000,6 +1011,7 @@ int menu() {
     // Desaloca os recursos utilizados na aplicação
     al_destroy_bitmap(botao_sair);
     al_destroy_bitmap(area_central);
+    al_destroy_bitmap(btt_mult);
     al_destroy_display(janela);
     al_destroy_event_queue(fila_eventos);
 
@@ -1009,6 +1021,11 @@ int menu() {
 
 
 int main(){
-    menu();
+    int qual = menu();
+    if(qual == 1)
+        game();
+
+
+    return 0;
 }
 
