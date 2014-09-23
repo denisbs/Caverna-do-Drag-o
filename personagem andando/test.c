@@ -125,6 +125,8 @@ struct Reds{
       int moveV;
       int moveH; //direção do personagem
 
+      int vida;
+
       int frame;
       int arm;
 
@@ -142,6 +144,7 @@ struct trapAtiva TAFu;
 
 void sortearNas(){
    int p, C;
+   red.vida = 3;
    C = 1;
    srand((unsigned)time(NULL));
    while(C == 1){
@@ -338,7 +341,6 @@ int testex(){
                         }
 
                     }
-                   printf("trap\n\n");
                     red.sprite = 0;
 
                 }
@@ -682,6 +684,12 @@ int game() {
                 if(pos_x_trap == 4 && flag_trap == 0){
                         red.x = red.xA;
                         red.y = red.yA;
+                        if(red.vida >1)
+                         {
+                             red.vida -= 1;
+                         }else{
+                             sortearNas();
+                         }
 
                 }
             }
@@ -813,7 +821,7 @@ int menu() {
         return -1;
     }
 
-    fonte = al_load_font("C:/users/denis.loliveira/desktop/sa/bin/debug/aspartam.ttf", 24, 0);
+    fonte = al_load_font("bin/Debug/aspartam.ttf", 24, 0);
     if (!fonte)
     {
         al_destroy_display(janela);
@@ -821,7 +829,7 @@ int menu() {
         return -1;
     }
 
-    fontT = al_load_font("C:/users/denis.loliveira/desktop/sa/bin/debug/aspartam.ttf", 50, 0);
+    fontT = al_load_font("bin/Debug/aspartam.ttf", 50, 0);
     if (!fontT)
     {
         al_destroy_display(janela);
