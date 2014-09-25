@@ -10,7 +10,7 @@
 #include <time.h>
 
 
-#define WIDTH 650
+#define WIDTH 900
 #define HEIGHT 650
 
 #define WIDTHM 500
@@ -417,6 +417,23 @@ void error(char *message) {
   exit(EXIT_FAILURE);
 }
 
+struct relogio{
+    int minutos;
+    int segundos;
+};
+struct relogio reloginho;
+
+void maisumseg(){
+    reloginho.segundos += 1;
+    if(reloginho.segundos  == 60)
+    {
+        reloginho.segundos = 0;
+        reloginho.minutos += 1;
+    }
+
+}
+
+
 int game() {
   if(!al_init())
     error("failed to initialize");
@@ -440,16 +457,24 @@ int game() {
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
   ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
-
+  ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
   /**********/
   ALLEGRO_BITMAP *solo = al_load_bitmap("solo.png");
   if(!solo)
     error("failed to load solo");
 
 
+  ALLEGRO_BITMAP *area_central = al_create_bitmap(250, 650);
+    if (!area_central)
+        error("Falha ao criar bitmap.");
+
   ALLEGRO_BITMAP *parede = al_load_bitmap("paredes.png");
   if(!parede)
     error("failed to load paredes");
+
+  ALLEGRO_BITMAP *life = al_load_bitmap("heart.png");
+  if(!life)
+    error("faled to load life");
 
   ALLEGRO_BITMAP *trap = al_load_bitmap("trap.png");
   if(!trap)
@@ -459,9 +484,11 @@ int game() {
   if(!sheet)
     error("failed to load sheet");
 
+    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
+    if (!fonte)
+        error("Falha ao carregar fonte.");
+
   //
-
-
     ALLEGRO_BITMAP *traps[5];
     int trapshift;
 
@@ -486,8 +513,8 @@ int game() {
     sorteaA();
 
 
-    for(l = 0; l < 14; l++){
-            for(m = 0; m < 14; m++){
+    for(l = 0; l < 13; l++){
+            for(m = 0; m < 13; m++){
               switch(mapa[m][l]){
                     case 1 :
                         al_draw_bitmap(parede,l*50,m*50, 0);
@@ -507,7 +534,9 @@ int game() {
               }
             }
     }
-
+    al_set_target_bitmap(area_central);
+    al_clear_to_color(al_map_rgb(255, 255, 255));
+    al_draw_bitmap(area_central, 650,0,0);
   /**********/
 
 
@@ -520,7 +549,7 @@ int game() {
 
   sortearNas();
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-  int b; //condição de colisão com trsap
+  int b = 0; //condição de colisão com trsap
     int ai;
 
   red.frame = 0;
@@ -532,7 +561,10 @@ int game() {
 
   int flag_trap = 0;
 
-  al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+    reloginho.segundos = 0;
+    reloginho.minutos = 0;
+
+
 
   /**********/
 
@@ -542,6 +574,7 @@ int game() {
   al_register_event_source(queue, al_get_display_event_source(display));
   al_register_event_source(queue, al_get_timer_event_source(timer));
   al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap));
+  al_register_event_source(queue, al_get_timer_event_source(timer_contador));
 
   /**********/
 
@@ -550,6 +583,7 @@ int game() {
   int refresh = 0;
 
   al_start_timer(timer);
+  al_start_timer(timer_contador);
 
   while(running) {
     ALLEGRO_EVENT event;
@@ -561,7 +595,7 @@ int game() {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-        if(b != 3){
+        if(b < 3){
             setmove(1);
             flags = 0;
             refresh = 1;
@@ -570,7 +604,7 @@ int game() {
 
       case ALLEGRO_KEY_DOWN:
 
-                if(b != 3){
+                if(b < 3){
                     setmove(4);
                     flags = 0;
                     refresh = 1;
@@ -578,7 +612,7 @@ int game() {
             break;
 
       case ALLEGRO_KEY_UP:
-            if(b != 3){
+            if(b < 3){
                 setmove(3);
                 flags = 0;
                 refresh = 1;
@@ -586,7 +620,7 @@ int game() {
             break;
 
       case ALLEGRO_KEY_RIGHT:
-            if(b != 3){
+            if(b < 3){
                 setmove(2);
                 flags = 0;
                 refresh = 1;
@@ -675,38 +709,52 @@ int game() {
 
           refresh = 1;
         }
+
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
 
-            if(pos_x_trap <= 3 && flag_trap == 0)
-            {
-                pos_x_trap++;
-                if(pos_x_trap == 4 && flag_trap == 0){
-                        red.x = red.xA;
-                        red.y = red.yA;
-                        if(red.vida >1)
-                         {
-                             red.vida -= 1;
-                         }else{
-                             sortearNas();
-                         }
+                    if(pos_x_trap <= 3 && flag_trap == 0)
+                    {
+                        pos_x_trap++;
+                        if(pos_x_trap == 4 && flag_trap == 0){
+                                red.x = red.xA;
+                                red.y = red.yA;
+                                if(red.vida >1)
+                                 {
+                                     red.vida -= 1;
+                                 }else{
+                                     sortearNas();
+                                 }
 
-                }
-            }
-            else
-            {
-                flag_trap = 1;
-                pos_x_trap--;
+                        }
+                    }
+                    else
+                    {
+                        flag_trap = 1;
+                        pos_x_trap--;
 
-                if(pos_x_trap == 0)
-                {
-                    al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                    b = 0;
-                    flag_trap = 0;
-                }
-            }
+                        if(pos_x_trap == 0)
+                        {
+                            al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                            if (b != 4)
+                                b = 0;
+
+                            flag_trap = 0;
+                        }
+                    }
+
             refresh = 1;
         }
+
+        if(event.timer.source == timer_contador)
+            {
+                    maisumseg();
+                    if( reloginho.minutos == 1 && reloginho.segundos == 30){
+                        b = 4;
+                        al_stop_timer(timer_contador);
+                        al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                    }
+            }
       break;
         default:
             printf("");
@@ -714,9 +762,19 @@ int game() {
 
     if(refresh) {
 
+    al_set_target_bitmap(al_get_backbuffer(display));
 
-        for(l = 0; l < 14; l++){
-            for(m = 0; m < 14; m++){
+      al_draw_bitmap(area_central, 650, 0, 0);
+      if(reloginho.segundos < 10){
+        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : 0%d", reloginho.minutos, reloginho.segundos);
+      }else{
+        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
+      }
+      if(b == 4)
+        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+
+        for(l = 0; l < 13; l++){
+            for(m = 0; m < 13; m++){
               switch(mapa[m][l]){
                     case 1 :
                         al_draw_bitmap(parede,l*50,m*50, 0);
@@ -736,10 +794,15 @@ int game() {
             }
         }
 
+        for(l = 0; l < red.vida; l++)
+            al_draw_bitmap(life,(660+l*70),250, 0);
+
         if(b == 3)
             al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
 
         al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+
+
 
 
       al_flip_display();
@@ -760,7 +823,7 @@ int game() {
   al_destroy_bitmap(parede);
   al_destroy_bitmap(trap);
   al_destroy_bitmap(solo);
-
+  al_destroy_bitmap(area_central);
 
 
 
