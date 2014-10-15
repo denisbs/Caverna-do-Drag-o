@@ -46,7 +46,7 @@ int mapa[13][13] = {
                     1,0,1,0,1,0,1,0,1,0,1,0,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
                     1,1,1,1,1,1,1,1,1,1,1,1,1
-                    };   // mapa base
+                    };   //mapa base;
 
 void sorteaA(){
     int a, C;
@@ -118,12 +118,12 @@ mapa[6][1] = 4;
 }
 
 struct Reds{
-      int x, xA; // x do personagem
-      int y, yA; // y do personagem
-      int sprite; // imagem atual do personagem
+      int x, xA; // x do personagem;
+      int y, yA; // y do personagem;
+      int sprite; // imagem atual do personagem;
       int direcaoS;
       int moveV;
-      int moveH; //direÁ„o do personagem
+      int moveH; //dire–∑–≥o do personagem;
 
       int vida;
 
@@ -563,7 +563,7 @@ int game() {
 
   sortearNas();
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-  int b = 0; //condiÁ„o de colis„o com trsap
+  int b = 0; //condi–∑–≥o de colis–≥o com trsap
     int ai;
 
   red.frame = 0;
@@ -600,6 +600,7 @@ int game() {
   al_start_timer(timer_contador);
 
   while(running) {
+
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
@@ -688,7 +689,6 @@ int game() {
       break;
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
       running = 0;
-
       break;
     case ALLEGRO_EVENT_TIMER:
 
@@ -903,7 +903,7 @@ int menu() {
 
     ALLEGRO_FONT *fonte = NULL, *fontT = NULL;
 
-    // Flag que condicionar· nosso looping
+    // Flag que condicionar–± nosso looping
     int sair = 0;
 
     if (!al_init())
@@ -945,7 +945,7 @@ int menu() {
 
 
 
-    // Configura o tÌtulo da janela
+    // Configura o t–Ωtulo da janela
     al_set_window_title(janela, "Rotinas de Mouse - www.rafaeltoledo.net");
 
     //configurar textos
@@ -955,7 +955,7 @@ int menu() {
     char *titulo1 = "Riddle Story";
     char *titulo2 = " of ";
     char *titulo3 = "devil degree";
-    // Torna apto o uso de mouse na aplicaÁ„o
+    // Torna apto o uso de mouse na aplica–∑–≥o
     if (!al_install_mouse())
     {
         fprintf(stderr, "Falha ao inicializar o mouse.\n");
@@ -963,7 +963,7 @@ int menu() {
         return -1;
     }
 
-    // Atribui o cursor padr„o do sistema para ser usado
+    // Atribui o cursor padr–≥o do sistema para ser usado
     if (!al_set_system_mouse_cursor(janela, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT))
     {
         fprintf(stderr, "Falha ao atribuir ponteiro do mouse.\n");
@@ -971,7 +971,7 @@ int menu() {
         return -1;
     }
 
-    // Alocamos o ret‚ngulo central da tela
+    // Alocamos o ret–≤ngulo central da tela
     area_central = al_create_bitmap(250, 50);
     if (!area_central)
     {
@@ -979,7 +979,7 @@ int menu() {
         al_destroy_display(janela);
         return -1;
     }
-    //bot„o multiplayer
+    //bot–≥o multiplayer
     btt_mult = al_create_bitmap(250, 50);
     if (!btt_mult)
     {
@@ -990,11 +990,11 @@ int menu() {
 
 
 
-    // Alocamos o bot„o para fechar a aplicaÁ„o
+    // Alocamos o bot–≥o para fechar a aplica–∑–≥o
     botao_sair = al_create_bitmap(100, 50);
     if (!botao_sair)
     {
-        fprintf(stderr, "Falha ao criar bot„o de saÌda.\n");
+        fprintf(stderr, "Falha ao criar bot–≥o de sa–Ωda.\n");
         al_destroy_bitmap(area_central);
         al_destroy_display(janela);
         return -1;
@@ -1011,21 +1011,21 @@ int menu() {
     // Dizemos que vamos tratar os eventos vindos do mouse
     al_register_event_source(fila_eventos, al_get_mouse_event_source());
 
-    // Flag indicando se o mouse est· sobre o ret‚ngulo central
+    // Flag indicando se o mouse est–± sobre o ret–≤ngulo central
     int na_area_central = 0;
     int no_btt_multi = 0;
     while (!sair)
     {
-        // Verificamos se h· eventos na fila
+        // Verificamos se h–± eventos na fila
         while (!al_is_event_queue_empty(fila_eventos))
         {
             ALLEGRO_EVENT evento;
             al_wait_for_event(fila_eventos, &evento);
 
-            // Se o evento foi de movimentaÁ„o do mouse
+            // Se o evento foi de movimenta–∑–≥o do mouse
             if (evento.type == ALLEGRO_EVENT_MOUSE_AXES)
             {
-                // Verificamos se ele est· sobre a regi„o do ret‚ngulo central
+                // Verificamos se ele est–± sobre a regi–≥o do ret–≤ngulo central
                 if (evento.mouse.x >= 200 &&
                     evento.mouse.x <= 450 &&
                     evento.mouse.y >= 250 &&
@@ -1047,14 +1047,11 @@ int menu() {
             // Ou se o evento foi um clique do mouse
             else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
             {
-                if (evento.mouse.x >= WIDTHM - al_get_bitmap_width(botao_sair) - 10 &&
-                    evento.mouse.x <= WIDTHM - 10 && evento.mouse.y <= HEIGHT - 10 &&
-                    evento.mouse.y >= HEIGHTM - al_get_bitmap_height(botao_sair) - 10)
+                if (evento.mouse.x >= WIDTHM - al_get_bitmap_width(botao_sair) - 10 && evento.mouse.x <= WIDTHM - 10 && evento.mouse.y <= HEIGHT - 10 && evento.mouse.y >= HEIGHTM - al_get_bitmap_height(botao_sair) - 10)
                 {
                     sair = 1;
-
-
-                }else{
+                }
+                else{
                     if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 250 && evento.mouse.y <= 300){
                            al_destroy_bitmap(botao_sair);
                            al_destroy_bitmap(area_central);
@@ -1065,6 +1062,16 @@ int menu() {
 
 
                            return 1;
+                    }else{
+                        if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 320 && evento.mouse.y <= 370){
+                           al_destroy_bitmap(botao_sair);
+                           al_destroy_bitmap(area_central);
+                           al_destroy_bitmap(btt_mult);
+
+                           al_destroy_display(janela);
+                           al_destroy_event_queue(fila_eventos);
+                           return 2;
+                        }
                     }
                 }
             }
@@ -1073,8 +1080,8 @@ int menu() {
         // Limpamos a tela
        al_clear_to_color(al_map_rgb(0, 0, 0));
 
-        // Colorimos o bitmap correspondente ao ret‚ngulo central,
-        // com a cor condicionada ao conte˙do da flag na_area_central
+        // Colorimos o bitmap correspondente ao ret–≤ngulo central,
+        // com a cor condicionada ao conte—ädo da flag na_area_central
         al_set_target_bitmap(area_central);
         if (!na_area_central)
         {
@@ -1084,7 +1091,7 @@ int menu() {
         {
             al_clear_to_color(al_map_rgb(0, 255, 0));
         }
-        //no segundo bot„o
+        //no segundo bot–≥o
         al_set_target_bitmap(btt_mult);
         if (!no_btt_multi)
         {
@@ -1096,13 +1103,13 @@ int menu() {
         }
 
 
-        // Colorimos o bitmap do bot„o de sair
+        // Colorimos o bitmap do bot–≥o de sair
 
 
         al_set_target_bitmap(botao_sair);
         al_clear_to_color(al_map_rgb(255, 0, 0));
 
-        // Desenhamos os ret‚ngulos na tela
+        // Desenhamos os ret–≤ngulos na tela
         al_set_target_bitmap(al_get_backbuffer(janela));
         al_draw_bitmap(area_central, 100, 250, 0);
         al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
@@ -1122,14 +1129,14 @@ int menu() {
         al_flip_display();
     }
 
-    // Desaloca os recursos utilizados na aplicaÁ„o
+    // Desaloca os recursos utilizados na aplica–∑–≥o
     al_destroy_bitmap(botao_sair);
     al_destroy_bitmap(area_central);
     al_destroy_bitmap(btt_mult);
     al_destroy_display(janela);
     al_destroy_event_queue(fila_eventos);
 
-    return 0;
+    return 1;
 }
 
 int waitplayer(){
@@ -1150,9 +1157,14 @@ int waitplayer(){
     if(!queue)
         error("failed to create event queue");
 
+    ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
     ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
 
-    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
+    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/NIv.ttf", 20, 0);
+    if (!fonte)
+        error("Falha ao carregar fonte.");
+
+    ALLEGRO_FONT *fonte2 = al_load_font("bin/Debug/NIv.ttf", 30, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
@@ -1164,7 +1176,7 @@ int waitplayer(){
     int saida = 1;
     int conf1, conf2, conf3, conf4, confT;
     int timerF;
-
+    int ret; // retorno
 
     conf1 = 0;
     conf2 = 0;
@@ -1172,7 +1184,7 @@ int waitplayer(){
     conf4 = 0;
     confT = 0;
 
-    char *texto1 = "Voce È o player N";
+    char *texto1 = "Voce √© o player N";
 
     char *texto2 = "Aguardando mapa";
     char *texto21 = "Mapa carregado";
@@ -1180,119 +1192,160 @@ int waitplayer(){
     char *texto3 = "Aguardando Player N";
     char *texto4 = "Player N ok";
 
-    char *texto5 = "PosiÁıes inicias definidas";
+    char *texto5 = "Posi–∑—Öes inicias definidas";
 
     char *texto6 = " Iniciando ";
-    char *texto7 = " Esperando todas as condiÁıes ";
+    char *texto7 = " Esperando todas as condi√ßoes ";
 
     char *titulo = "Riddle Story of devil degree";
 
-
+    al_register_event_source(queue, al_get_display_event_source(display));
+    al_register_event_source(queue, al_get_timer_event_source(timer));
     al_register_event_source(queue, al_get_timer_event_source(timer_contador));
+
     timerF = 5;
+    al_start_timer(timer);
+    while(saida){
 
-    while(saida != 0){
-         if(conf1 == 0){
-        //recebe mapa
-            if(mapa[0][0] == 1)
-                conf1 = 1;
-        }
-        if(conf2 == 0){
-            //recebe informaÁ„o sobre os personagems
-            // conf 3 seu personagem, conf 4 os outros
-            if(conf3 == 0){
-                //persoangens local confere se n„o t· no 0 0
-                conf3 = 1;
-            }
-             if(conf4 == 0){
-                //persoangens confere se nenhum personagem tirando o local n„o t· no 0 0
-                conf4 = 1;
-            }
-            if(conf3 == 1 && conf4 == 1)
-                conf2 = 1;
+        ALLEGRO_EVENT event;
 
-        }
-        if (conf1 && conf2 && conf3 && conf4)
-            al_start_timer(timer_contador);
-/*
-        switch(event.type){
-        case ALLEGRO_EVENT_TIMER:
-            confT = 1;
-            if(event.timer.source == timer_contador)
+        al_wait_for_event(queue, &event);
 
-                if(timerF >= 0){
-                    timerF = timerF - 1;
-                }else{
+        switch(event.type) {
+               case ALLEGRO_EVENT_DISPLAY_CLOSE:
                     saida = 0;
-                    al_stop_timer(timer_contador);
-                }
-                break;
-        default:
-            break;
-        }
+                    ret = 0;
+                    break;
+              case ALLEGRO_EVENT_TIMER:
+                if(event.timer.source == timer)
+                {
+                             if(conf1 == 0){
+                            //recebe mapa
+                                if(mapa[0][0] == 1)
+                                    conf1 = 1;
+                            }
+                            if(conf2 == 0){
+                                //recebe informa–∑–≥o sobre os personagems
+                                // conf 3 seu personagem, conf 4 os outros
+                                if(conf3 == 0){
+                                    //persoangens local confere se n–≥o t–± no 0 0
+                                    conf3 = 1;
+                                }
+                                 if(conf4 == 0){
+                                    //persoangens confere se nenhum personagem tirando o local n–≥o t–± no 0 0
+                                    conf4 = 1;
+                                }
+                                if(conf3 == 1 && conf4 == 1)
+                                    conf2 = 1;
+
+                            }
+                            if (conf1 && conf2 && conf3 && conf4)
+                                al_start_timer(timer_contador);
 
 
-
-
-
-
-        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo);
-
-        if(conf1 == 1){
-           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto21);
-        }else{
-               al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
-        }
-        //definir qual o player È por hora ele È 0 4
-        int i;
-        for(i = 0; i< 4; i++){
-              if(i != 4)  {
-                    if(conf4 == 1){
-                        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto4, i);
-                    }else{
-                       al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto3, i);
                     }
-              }else{
-                    if(conf3 == 1){
-                        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto1, i);
-                    }else{
-                       al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informaÁ„o do serve");
-                    }
-              }
-        }
+                    if(event.timer.source == timer_contador){
+                                    confT = 1;
+                                    if(timerF > 0){
+                                        timerF = timerF - 1;
+                                    }else{
+                                        ret = 1;
+                                        saida = 0;
+                                        al_stop_timer(timer_contador);
+                                    }
+                                    break;
+                            default:
+                                break;
+                            }
 
-        if(conf4 == 1 && conf3 == 1)
-        {
-            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 400, ALLEGRO_ALIGN_CENTRE, "%s", texto5);
 
-        }
-        if(confT == 1){
-            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto6);
-            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 450, 500, ALLEGRO_ALIGN_CENTRE, "%d segundo", timerF);
-        }else{
-                al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto7);
+        //Olha o desenho ae pessoal
+
+
+            al_set_target_bitmap(area_central);
+            al_clear_to_color(al_map_rgb(0, 0, 0));
+
+
+            al_set_target_bitmap(al_get_backbuffer(display));
+
+
+            al_draw_bitmap(area_central, 0, 0, 0);
+
+            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo);
+
+            if(conf1 == 1){
+               al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto21);
+            }else{
+                   al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
+            }
+            //definir qual o player –π por hora ele –π 0 4
+            int i;
+            for(i = 0; i< 4; i++){
+                  if(i != 4)  {
+                        if(conf4 == 1){
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto4, i);
+                        }else{
+                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto3, i);
+                        }
+                  }else{
+                        if(conf3 == 1){
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto1, i);
+                        }else{
+                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informa–∑–≥o do serve");
+                        }
+                  }
             }
 
-        al_flip_display();
-    }
+            if(conf4 == 1 && conf3 == 1)
+            {
+                al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 400, ALLEGRO_ALIGN_CENTRE, "%s", texto5);
 
+            }
+
+            if(confT == 1){
+                al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto6);
+                al_draw_textf(fonte2, al_map_rgb(140, 255, 0), 450, 500, ALLEGRO_ALIGN_CENTRE, "%d segundo", timerF);
+            }else{
+                    al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto7);
+                }
+
+            al_flip_display();
+        }
+    }
     al_destroy_font(fonte);
     al_destroy_timer(timer_contador);
+    al_destroy_timer(timer);
     al_destroy_event_queue(queue);
     al_destroy_display(display);
 
 
     al_shutdown_primitives_addon();
 
+    return ret;
+
 
 }
 
 int main(){
     int qual = menu();
-    if(qual == 1)
-        waitplayer();
+    int q2;
+   // if(qual == 1)
+     //   q2 = waitplayer();
 
+
+
+    switch(qual){
+        case 1:
+            game();
+            break;
+        case 2:
+            q2 = waitplayer();
+            if(q2 == 1)
+                game();
+            break;
+        default:
+            break;
+    }
 
     return 0;
 }
-
