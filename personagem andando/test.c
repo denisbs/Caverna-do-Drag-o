@@ -230,6 +230,9 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
+                        if(mapa[anaY][anaX] == 5)
+                            coli = 5;
+
                         //ponto de borda sprite 4
                         anaX = (px)/50;
                         anaY = (py+40)/50;
@@ -240,6 +243,8 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
+                        if(mapa[anaY][anaX] == 5)
+                            coli = 5;
 
 
 
@@ -271,6 +276,8 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                        if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
+                         if(mapa[anaY][anaX] == 5)
+                            coli = 5;
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
@@ -282,6 +289,8 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
+                         if(mapa[anaY][anaX] == 5)
+                            coli = 5;
 
 
 
@@ -483,6 +492,11 @@ int game() {
   ALLEGRO_BITMAP *sheet = al_load_bitmap("Red.png");
   if(!sheet)
     error("failed to load sheet");
+
+    ALLEGRO_BITMAP *saida = al_load_bitmap("exit.png");
+  if(!sheet)
+    error("failed to load saida");
+
 
     ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
     if (!fonte)
@@ -749,6 +763,9 @@ int game() {
         if(event.timer.source == timer_contador)
             {
                     maisumseg();
+                    if(reloginho.segundos == 15 && reloginho.minutos == 0 )
+                        mapa[6][6] = 5;
+
                     if( reloginho.minutos == 1 && reloginho.segundos == 30){
                         b = 4;
                         al_stop_timer(timer_contador);
@@ -762,46 +779,72 @@ int game() {
 
     if(refresh) {
 
-    al_set_target_bitmap(al_get_backbuffer(display));
 
-      al_draw_bitmap(area_central, 650, 0, 0);
-      if(reloginho.segundos < 10){
-        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : 0%d", reloginho.minutos, reloginho.segundos);
-      }else{
-        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
-      }
-      if(b == 4)
-        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+        if(b != 5){
+                        al_set_target_bitmap(al_get_backbuffer(display));
 
-        for(l = 0; l < 13; l++){
-            for(m = 0; m < 13; m++){
-              switch(mapa[m][l]){
-                    case 1 :
-                        al_draw_bitmap(parede,l*50,m*50, 0);
-                        break;
-                    case 0 :
-                        al_draw_bitmap(solo,l*50,m*50, 0);
-                        break;
-                    case 3 :
-                        al_draw_bitmap(traps[0],l*50,m*50, 0);
-                        break;
-                     case 4 :
-                        al_draw_bitmap(solo,l*50,m*50, 0);
-                        break;
-                    default :
-                        break;
-              }
-            }
+
+                          al_draw_bitmap(area_central, 650, 0, 0);
+                          if(reloginho.segundos < 10){
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : 0%d", reloginho.minutos, reloginho.segundos);
+                          }else{
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
+                          }
+                          if(b == 4)
+                            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+
+                            for(l = 0; l < 13; l++){
+                                for(m = 0; m < 13; m++){
+                                  switch(mapa[m][l]){
+                                        case 1 :
+                                            al_draw_bitmap(parede,l*50,m*50, 0);
+                                            break;
+                                        case 0 :
+                                            al_draw_bitmap(solo,l*50,m*50, 0);
+                                            break;
+                                        case 3 :
+                                            al_draw_bitmap(traps[0],l*50,m*50, 0);
+                                            break;
+                                         case 4 :
+                                            al_draw_bitmap(solo,l*50,m*50, 0);
+                                            break;
+                                         case 5 :
+                                            al_draw_bitmap(saida,l*50,m*50, 0);
+                                        default :
+                                            break;
+                                  }
+                                }
+                            }
+
+                            for(l = 0; l < red.vida; l++)
+                                al_draw_bitmap(life,(660+l*70),250, 0);
+
+                            if(b == 3)
+                                al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
+
+                            al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+        }else{
+            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 750, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu");
+
+            al_draw_bitmap(solo,6*50,5*50, 0);
+            al_draw_bitmap(solo,6*50,7*50, 0);
+            al_draw_bitmap(solo,5*50,6*50, 0);
+            al_draw_bitmap(solo,7*50,6*50, 0);
+
+            al_draw_bitmap(solo,7*50,7*50, 0);
+            al_draw_bitmap(solo,7*50,5*50, 0);
+            al_draw_bitmap(solo,5*50,7*50, 0);
+            al_draw_bitmap(solo,5*50,5*50, 0);
+
+            al_draw_bitmap(saida,6*50,6*50, 0);
+
+
+            red.x = (6*50) + (9);
+            red.y = (6*50) + (5);
+            al_draw_bitmap(sprites[0][0], red.x, red.y, flags);
+
         }
-
-        for(l = 0; l < red.vida; l++)
-            al_draw_bitmap(life,(660+l*70),250, 0);
-
-        if(b == 3)
-            al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
-
-        al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
-
 
 
 
@@ -1089,12 +1132,165 @@ int menu() {
     return 0;
 }
 
+int waitplayer(){
+    if(!al_init())
+        error("failed to initialize");
 
+    if(!al_init_image_addon())
+        error("failed to initialize image addon");
+
+    if(!al_init_primitives_addon())
+        error("failed to initialize primitives addon");
+
+    ALLEGRO_DISPLAY *display = al_create_display(650, 650);
+    if(!display)
+        error("failed to create display");
+
+    ALLEGRO_EVENT_QUEUE *queue = al_create_event_queue();
+    if(!queue)
+        error("failed to create event queue");
+
+    ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
+
+    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
+    if (!fonte)
+        error("Falha ao carregar fonte.");
+
+    ALLEGRO_BITMAP *area_central = al_create_bitmap(650, 650);
+    if (!area_central)
+        error("Falha ao criar bitmap.");
+
+
+    int saida = 1;
+    int conf1, conf2, conf3, conf4, confT;
+    int timerF;
+
+
+    conf1 = 0;
+    conf2 = 0;
+    conf3 = 0;
+    conf4 = 0;
+    confT = 0;
+
+    char *texto1 = "Voce é o player N";
+
+    char *texto2 = "Aguardando mapa";
+    char *texto21 = "Mapa carregado";
+
+    char *texto3 = "Aguardando Player N";
+    char *texto4 = "Player N ok";
+
+    char *texto5 = "Posições inicias definidas";
+
+    char *texto6 = " Iniciando ";
+    char *texto7 = " Esperando todas as condições ";
+
+    char *titulo = "Riddle Story of devil degree";
+
+
+    al_register_event_source(queue, al_get_timer_event_source(timer_contador));
+    timerF = 5;
+
+    while(saida != 0){
+         if(conf1 == 0){
+        //recebe mapa
+            if(mapa[0][0] == 1)
+                conf1 = 1;
+        }
+        if(conf2 == 0){
+            //recebe informação sobre os personagems
+            // conf 3 seu personagem, conf 4 os outros
+            if(conf3 == 0){
+                //persoangens local confere se não tá no 0 0
+                conf3 = 1;
+            }
+             if(conf4 == 0){
+                //persoangens confere se nenhum personagem tirando o local não tá no 0 0
+                conf4 = 1;
+            }
+            if(conf3 == 1 && conf4 == 1)
+                conf2 = 1;
+
+        }
+        if (conf1 && conf2 && conf3 && conf4)
+            al_start_timer(timer_contador);
+/*
+        switch(event.type){
+        case ALLEGRO_EVENT_TIMER:
+            confT = 1;
+            if(event.timer.source == timer_contador)
+
+                if(timerF >= 0){
+                    timerF = timerF - 1;
+                }else{
+                    saida = 0;
+                    al_stop_timer(timer_contador);
+                }
+                break;
+        default:
+            break;
+        }
+
+
+
+
+
+
+        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 50, ALLEGRO_ALIGN_CENTRE, "%s", titulo);
+
+        if(conf1 == 1){
+           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto21);
+        }else{
+               al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
+        }
+        //definir qual o player é por hora ele é 0 4
+        int i;
+        for(i = 0; i< 4; i++){
+              if(i != 4)  {
+                    if(conf4 == 1){
+                        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto4, i);
+                    }else{
+                       al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto3, i);
+                    }
+              }else{
+                    if(conf3 == 1){
+                        al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto1, i);
+                    }else{
+                       al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informação do serve");
+                    }
+              }
+        }
+
+        if(conf4 == 1 && conf3 == 1)
+        {
+            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 400, ALLEGRO_ALIGN_CENTRE, "%s", texto5);
+
+        }
+        if(confT == 1){
+            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto6);
+            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 450, 500, ALLEGRO_ALIGN_CENTRE, "%d segundo", timerF);
+        }else{
+                al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 450, ALLEGRO_ALIGN_CENTRE, "%s", texto7);
+            }
+
+        al_flip_display();
+    }
+
+    al_destroy_font(fonte);
+    al_destroy_timer(timer_contador);
+    al_destroy_event_queue(queue);
+    al_destroy_display(display);
+
+
+    al_shutdown_primitives_addon();
+
+
+}
 
 int main(){
     int qual = menu();
     if(qual == 1)
-        game();
+        waitplayer();
 
 
     return 0;

@@ -46,6 +46,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="Red.png" />
+		<Unit filename="exit.png" />
 		<Unit filename="heart.png" />
 		<Unit filename="images.png" />
 		<Unit filename="paredes.png" />
