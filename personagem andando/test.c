@@ -30,7 +30,7 @@
 #define FPS 60
 
 
-
+int vencedor;
 
 int mapa[13][13] = {
                     1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -130,29 +130,29 @@ struct Reds{
       int frame;
       int arm;
 
-
+      int b;
 };
 
-struct Reds red;
+struct Reds red[2];
 
 struct trapAtiva{
     int x;
     int y;
 };
 
-struct trapAtiva TAFu;
+struct trapAtiva TAFu[2];
 
-void sortearNas(){
+void sortearNas(int player){
    int p, C;
-   red.vida = 3;
+   red[player].vida = 3;
    C = 1;
    srand((unsigned)time(NULL));
    while(C == 1){
 
         p = rand()%8;
         if(inicios.ativa[p] != 1 ){
-            red.x = inicios.x[p]*50;
-            red.y = inicios.y[p]*50;
+            red[player].x = inicios.x[p]*50;
+            red[player].y = inicios.y[p]*50;
             inicios.ativa[p] = 1;
             C=0;
         }
@@ -160,36 +160,36 @@ void sortearNas(){
 
 }
 
-void setmove(int lado){
+void setmove(int lado, int p){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
     switch(lado){
         case 1:
-             red.moveH = -1;
-             red.moveV = 0;
-             red.direcaoS = 1;
+             red[p].moveH = -1;
+             red[p].moveV = 0;
+             red[p].direcaoS = 1;
              break;
         case 2:
-             red.moveH = 1;
-             red.moveV = 0;
-             red.direcaoS = 2;
+             red[p].moveH = 1;
+             red[p].moveV = 0;
+             red[p].direcaoS = 2;
 
              break;
         case 3:
-            red.moveH = 0;
-            red.moveV = -1;
-            red.direcaoS = 3;
+            red[p].moveH = 0;
+            red[p].moveV = -1;
+            red[p].direcaoS = 3;
 
             break;
         case 4:
-            red.moveH = 0;
-            red.moveV = 1;
-            red.direcaoS = 0;
+            red[p].moveH = 0;
+            red[p].moveV = 1;
+            red[p].direcaoS = 0;
             break;
         case 0:
-            red.moveH = 0;
-            red.moveV = 0;
-            red.direcaoS = 0;
-            red.sprite = 0;
+            red[p].moveH = 0;
+            red[p].moveV = 0;
+            red[p].direcaoS = 0;
+            red[p].sprite = 0;
             break;
         default:
             break;
@@ -303,119 +303,125 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
 }
 
-int testex(){
+int testex(int p){
      int esta;
 
-            if(red.sprite == 0) {
-              red.sprite = 2;
-              red.frame = 0;
+            if(red[p].sprite == 0) {
+              red[p].sprite = 2;
+              red[p].frame = 0;
             }
             else {
-              red.frame++;
-              if(red.frame == FRAMES_PER_SHIFT) {
-                red.frame = 0;
+              red[p].frame++;
+              if(red[p].frame == FRAMES_PER_SHIFT) {
+                red[p].frame = 0;
 
-                red.sprite += red.arm;
+                red[p].sprite += red[p].arm;
 
-                if(red.sprite != 2)
-                  red.arm = -red.arm;
+                if(red[p].sprite != 2)
+                  red[p].arm = -red[p].arm;
               }
             }
-            esta = colision(red.x,red.y,red.moveH,0,1);
+            esta = colision(red[p].x,red[p].y,red[p].moveH,0,1);
 
             if(esta == 0){
-                red.x += red.moveH * SPEED;
+                red[p].x += red[p].moveH * SPEED;
             }
                 if (esta == 3){
 
 
-                    red.xA = red.x;
-                    red.xA = red.xA/50;
-                    red.xA = red.xA*50;
-                    red.yA = red.y;
-                    red.x += red.moveH * SPEED;
+                    red[p].xA = red[p].x;
+                    red[p].xA = red[p].xA/50;
+                    red[p].xA = red[p].xA*50;
+                    red[p].yA = red[p].y;
+                    red[p].x += red[p].moveH * SPEED;
 
-                    red.moveH = 0;
+                    red[p].moveH = 0;
 
-                    TAFu.x = red.x/50;
-                    TAFu.y = (red.y+40)/50;
+                    TAFu[p].x = red[p].x/50;
+                    TAFu[p].y = (red[p].y+40)/50;
 
                     int inia;
-                    if (mapa[TAFu.y][TAFu.x] != 3){
-                        inia = TAFu.x + 1;
-                        if (mapa[TAFu.y][inia] != 3){
-                            TAFu.x = TAFu.x -1;
+                    if (mapa[TAFu[p].y][TAFu[p].x] != 3){
+                        inia = TAFu[p].x + 1;
+                        if (mapa[TAFu[p].y][inia] != 3){
+                            TAFu[p].x = TAFu[p].x -1;
                         }else{
-                            TAFu.x = inia;
+                            TAFu[p].x = inia;
                         }
 
                     }
-                    red.sprite = 0;
+                    red[p].sprite = 0;
 
                 }
-
+                if(esta == 5){
+                    vencedor = p;
+                }
                 return esta;
 }
 
-int testey(){
+int testey(int p){
     int esta;
 
 
-     if(red.sprite == 0) {
-        red.sprite = 2;
-        red.frame = 0;
+     if(red[p].sprite == 0) {
+        red[p].sprite = 2;
+        red[p].frame = 0;
      }else {
-        red.frame++;
+        red[p].frame++;
 
-        if(red.frame == FRAMES_PER_SHIFT) {
-                red.frame = 0;
+        if(red[p].frame == FRAMES_PER_SHIFT) {
+                red[p].frame = 0;
 
-                red.sprite += red.arm;
+                red[p].sprite += red[p].arm;
 
-                if(red.sprite != 2)
-                  red.arm = -red.arm;
+                if(red[p].sprite != 2)
+                  red[p].arm = -red[p].arm;
               }
             }
-            esta = colision(red.x,red.y,0,red.moveV,2);
+            esta = colision(red[p].x,red[p].y,0,red[p].moveV,2);
             if(esta == 0){
-                red.y += red.moveV * SPEED;
+                red[p].y += red[p].moveV * SPEED;
             }else{
                 if (esta == 3){
 
-                    red.xA = red.x;
-                    red.yA = red.y/50;
-                    if(red.moveV == -1)
-                        red.yA = red.yA + 1;
+                    red[p].xA = red[p].x;
+                    red[p].yA = red[p].y/50;
+                    if(red[p].moveV == -1)
+                        red[p].yA = red[p].yA + 1;
 
-                    red.yA = (red.yA) * 50;
-                    red.y += red.moveV * SPEED;
+                    red[p].yA = (red[p].yA) * 50;
+                    red[p].y += red[p].moveV * SPEED;
 
 
 
-                    red.moveV = 0;
+                    red[p].moveV = 0;
 
-                    TAFu.x =  (red.x)/50;
+                    TAFu[p].x =  (red[p].x)/50;
 
-                    TAFu.y = (red.y+40)/50;
+                    TAFu[p].y = (red[p].y+40)/50;
 
                     int inia;
-                    if (mapa[TAFu.y][TAFu.x] != 3){
-                        inia = TAFu.x + 1;
-                        if (mapa[TAFu.y][inia] != 3){
-                            TAFu.x = TAFu.x -1;
+                    if (mapa[TAFu[p].y][TAFu[p].x] != 3){
+                        inia = TAFu[p].x + 1;
+                        if (mapa[TAFu[p].y][inia] != 3){
+                            TAFu[p].x = TAFu[p].x -1;
                         }else{
-                            TAFu.x = inia;
+                            TAFu[p].x = inia;
                         }
 
                     }
 
 
-                    red.sprite = 0;
-                    printf("trap\n\n");
+                    red[p].sprite = 0;
+                    //printf("trap\n\n");
 
                 }
 
 }
+
+                if(esta == 5){
+                    vencedor = p;
+                }
 
         return esta;
 }
@@ -466,6 +472,7 @@ int game() {
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
   ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
+  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap_B = al_create_timer(0.5);
   ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
   /**********/
   ALLEGRO_BITMAP *solo = al_load_bitmap("solo.png");
@@ -481,8 +488,12 @@ int game() {
   if(!parede)
     error("failed to load paredes");
 
+  ALLEGRO_BITMAP *life2 = al_load_bitmap("heart2.png");
+  if(!life2)
+    error("faled to load life");
+
   ALLEGRO_BITMAP *life = al_load_bitmap("heart.png");
-  if(!life)
+  if(!life2)
     error("faled to load life");
 
   ALLEGRO_BITMAP *trap = al_load_bitmap("trap.png");
@@ -493,8 +504,12 @@ int game() {
   if(!sheet)
     error("failed to load sheet");
 
-    ALLEGRO_BITMAP *saida = al_load_bitmap("exit.png");
-  if(!sheet)
+  ALLEGRO_BITMAP *sheet2 = al_load_bitmap("Red2.png");
+  if(!sheet2)
+    error("failed to load sheet2");
+
+  ALLEGRO_BITMAP *saida = al_load_bitmap("exit.png");
+  if(!saida)
     error("failed to load saida");
 
 
@@ -512,12 +527,19 @@ int game() {
 
 
   ALLEGRO_BITMAP *sprites[NUM_SPRITES][NUM_SPRITES];
+  ALLEGRO_BITMAP *sprites2[NUM_SPRITES][NUM_SPRITES];
 
   int shift, shiftb;
 
   for(shift = 0; shift < NUM_SPRITES; shift++){
     for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++){
         sprites[shift][shiftb] = al_create_sub_bitmap(sheet, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
+    }
+  }
+
+  for(shift = 0; shift < NUM_SPRITES; shift++){
+    for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++){
+        sprites2[shift][shiftb] = al_create_sub_bitmap(sheet2, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
     }
   }
 
@@ -556,24 +578,40 @@ int game() {
 
 
 
-  red.sprite = 0;
-  red.direcaoS = 0;
-  red.moveH = 0;
-  red.moveV = 0;
+  red[0].sprite = 0;
+  red[0].direcaoS = 0;
+  red[0].moveH = 0;
+  red[0].moveV = 0;
 
-  sortearNas();
+  red[1].sprite = 0;
+  red[1].direcaoS = 0;
+  red[1].moveH = 0;
+  red[1].moveV = 0;
+
+
+  sortearNas(0);
+  sortearNas(1);
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-  int b = 0; //condiзгo de colisгo com trsap
+   red[0].b = 0;
+   red[1].b = 0; //condiзгo de colisгo com trsap
     int ai;
 
-  red.frame = 0;
+  red[0].frame = 0;
+  red[1].frame = 0;
 
-  red.arm = -1;
+  red[0].arm = -1;
+  red[1].arm = -1;
 
   int flags = 0;
-  int pos_x_trap = 1;
+  int pos_x_trap[2];
 
-  int flag_trap = 0;
+  pos_x_trap[0] = 1;
+  pos_x_trap[1] = 1;
+
+  int flag_trap[2];
+
+    flag_trap[0] = 0;
+    flag_trap[1] = 0;
 
     reloginho.segundos = 0;
     reloginho.minutos = 0;
@@ -588,6 +626,7 @@ int game() {
   al_register_event_source(queue, al_get_display_event_source(display));
   al_register_event_source(queue, al_get_timer_event_source(timer));
   al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap));
+  al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap_B));
   al_register_event_source(queue, al_get_timer_event_source(timer_contador));
 
   /**********/
@@ -609,84 +648,153 @@ int game() {
     switch(event.type) {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
-      case ALLEGRO_KEY_LEFT:
-        if(b < 3){
-            setmove(1);
-            flags = 0;
-            refresh = 1;
-        }
-        break;
+          case ALLEGRO_KEY_LEFT:
+            if(red[0].b < 3){
+                setmove(1,0);
+                flags = 0;
+                refresh = 1;
+            }
+            break;
 
-      case ALLEGRO_KEY_DOWN:
+          case ALLEGRO_KEY_DOWN:
 
-                if(b < 3){
-                    setmove(4);
+                    if(red[0].b < 3){
+                        setmove(4,0);
+                        flags = 0;
+                        refresh = 1;
+                    }
+                break;
+
+          case ALLEGRO_KEY_UP:
+                if(red[0].b < 3){
+                    setmove(3,0);
+                    flags = 0;
+                    refresh = 1;
+                }
+                break;
+
+          case ALLEGRO_KEY_RIGHT:
+                if(red[0].b < 3){
+                    setmove(2,0);
                     flags = 0;
                     refresh = 1;
                 }
             break;
 
-      case ALLEGRO_KEY_UP:
-            if(b < 3){
-                setmove(3);
+            //player 2
+            case ALLEGRO_KEY_A:
+            if(red[1].b < 3){
+                setmove(1,1);
                 flags = 0;
                 refresh = 1;
             }
             break;
 
-      case ALLEGRO_KEY_RIGHT:
-            if(b < 3){
-                setmove(2);
-                flags = 0;
-                refresh = 1;
-            }
-        break;
-      case ALLEGRO_KEY_ESCAPE:
-        running = 0;
-        break;
-      default:
-        printf("");
-      }
-      break;
+          case ALLEGRO_KEY_S:
+
+                    if(red[1].b < 3){
+                        setmove(4,1);
+                        flags = 0;
+                        refresh = 1;
+                    }
+                break;
+
+          case ALLEGRO_KEY_W:
+                if(red[1].b < 3){
+                    setmove(3,1);
+                    flags = 0;
+                    refresh = 1;
+                }
+                break;
+
+          case ALLEGRO_KEY_D:
+                if(red[1].b < 3){
+                    setmove(2,1);
+                    flags = 0;
+                    refresh = 1;
+                }
+            break;
+
+          case ALLEGRO_KEY_ESCAPE:
+            running = 0;
+            break;
+          default:
+            printf("");
+          }
+          break;
 
 
     case ALLEGRO_EVENT_KEY_UP:
       switch(event.keyboard.keycode) {
-      case ALLEGRO_KEY_LEFT:
-        if(red.moveH == -1 ) {
-          setmove(0);
-          refresh = 1;
-        }
-        break;
-
-
-      case ALLEGRO_KEY_DOWN:
-            if(red.moveV == 1){
-                setmove(0);
-                refresh = 1;
+          case ALLEGRO_KEY_LEFT:
+            if(red[0].moveH == -1 ) {
+              setmove(0,0);
+              refresh = 1;
             }
             break;
 
-      case ALLEGRO_KEY_UP:
-          if (red.moveV == -1 ){
-            setmove(0);
-            refresh = 1;
-          }
+
+          case ALLEGRO_KEY_DOWN:
+                if(red[0].moveV == 1){
+                    setmove(0,0);
+                    refresh = 1;
+                }
+                break;
+
+          case ALLEGRO_KEY_UP:
+              if (red[0].moveV == -1 ){
+                setmove(0,0);
+                refresh = 1;
+              }
+                break;
+
+          case ALLEGRO_KEY_RIGHT:
+            if(red[0].moveH == 1 ) {
+              setmove(0,0);
+              refresh = 1;
+            }
+            break;
+            //Second Player
+
+            case ALLEGRO_KEY_A:
+            if(red[1].moveH == -1 ) {
+              setmove(0,1);
+              refresh = 1;
+            }
             break;
 
-      case ALLEGRO_KEY_RIGHT:
-        if(red.moveH == 1 ) {
-          setmove(0);
-          refresh = 1;
-        }
-        break;
-      case ALLEGRO_KEY_ESCAPE:
-        running = 0;
-        break;
-      default:
-        printf("");
-      }
-      break;
+
+          case ALLEGRO_KEY_S:
+                if(red[1].moveV == 1){
+                    setmove(0,1);
+                    refresh = 1;
+                }
+                break;
+
+          case ALLEGRO_KEY_W:
+              if (red[1].moveV == -1 ){
+                setmove(0,1);
+                refresh = 1;
+              }
+                break;
+
+          case ALLEGRO_KEY_D:
+            if(red[1].moveH == 1 ) {
+              setmove(0,1);
+              refresh = 1;
+            }
+            break;
+
+
+
+          case ALLEGRO_KEY_ESCAPE:
+            running = 0;
+            break;
+          default:
+            printf("");
+          }
+          break;
+
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
       running = 0;
       break;
@@ -694,71 +802,136 @@ int game() {
 
         if(event.timer.source == timer)
         {
-        if(red.moveH != 0){
-            ai = red.moveH;
-            b = testex();
-            if(b == 3){
-                red.x = (TAFu.x*50) + (9);
-                red.y = (TAFu.y*50) + (5);
-                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                pos_x_trap = 1;
-            }
-            refresh = 1;
-          }
+                if(red[0].moveH != 0){
+                    ai = red[0].moveH;
+                    red[0].b = testex(0);
+                    if(red[0].b == 3){
+                        red[0].x = (TAFu[0].x*50) + (9);
+                        red[0].y = (TAFu[0].y*50) + (5);
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                        pos_x_trap[0] = 1;
+                    }
+                    refresh = 1;
+                  }
 
-          if(red.moveV != 0){
-            ai = red.moveV;
-            b = testey();
-             if(b == 3){
-                red.x = (TAFu.x*50) + (9);
-                red.y = (TAFu.y*50) - (5* ai);
+                   if(red[1].moveH != 0){
+                    ai = red[1].moveH;
+                    red[1].b = testex(1);
+                    if(red[1].b == 3){
+                        red[1].x = (TAFu[1].x*50) + (9);
+                        red[1].y = (TAFu[1].y*50) + (5);
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap_B);
+                        pos_x_trap[1] = 1;
+                    }
+                    refresh = 1;
+                  }
 
-                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                pos_x_trap = 1;
-            }
-            refresh = 1;
-          }
+                  if(red[0].moveV != 0){
+                    ai = red[0].moveV;
+                    red[0].b = testey(0);
+                     if(red[0].b == 3){
+                        red[0].x = (TAFu[0].x*50) + (9);
+                        red[0].y = (TAFu[0].y*50) - (5* ai);
 
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                        pos_x_trap[0] = 1;
+                    }
+                    refresh = 1;
+                  }
 
+                  if(red[1].moveV != 0){
+                    ai = red[1].moveV;
+                    red[1].b = testey(1);
+                     if(red[1].b == 3){
+                        red[1].x = (TAFu[1].x*50) + (9);
+                        red[1].y = (TAFu[1].y*50) - (5* ai);
 
-          refresh = 1;
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap_B);
+                        pos_x_trap[1] = 1;
+                    }
+                    refresh = 1;
+                  }
+                  if(red[0].b== 5 || red[1].b == 5 ){
+                    red[0].b =5;
+                    red[1].b =5;
+                  }
+
+                  refresh = 1;
         }
 
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
 
-                    if(pos_x_trap <= 3 && flag_trap == 0)
+                    if(pos_x_trap[0] <= 3 && flag_trap[0] == 0)
                     {
-                        pos_x_trap++;
-                        if(pos_x_trap == 4 && flag_trap == 0){
-                                red.x = red.xA;
-                                red.y = red.yA;
-                                if(red.vida >1)
+                        pos_x_trap[0]++;
+                        if(pos_x_trap[0] == 4 && flag_trap[0] == 0){
+                                red[0].x = red[0].xA;
+                                red[0].y = red[0].yA;
+                                if(red[0].vida >1)
                                  {
-                                     red.vida -= 1;
+                                     red[0].vida -= 1;
                                  }else{
-                                     sortearNas();
+                                     sortearNas(0);
                                  }
 
                         }
                     }
                     else
                     {
-                        flag_trap = 1;
-                        pos_x_trap--;
+                        flag_trap[0] = 1;
+                        pos_x_trap[0]--;
 
-                        if(pos_x_trap == 0)
+                        if(pos_x_trap[0] == 0)
                         {
                             al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                            if (b != 4)
-                                b = 0;
+                            if (red[0].b != 4)
+                                red[0].b = 0;
 
-                            flag_trap = 0;
+                            flag_trap[0] = 0;
                         }
                     }
 
             refresh = 1;
         }
+
+        //trap para P2
+        if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap_B)
+        {
+
+                    if(pos_x_trap[1] <= 3 && flag_trap[1] == 0)
+                    {
+                        pos_x_trap[1]++;
+                        if(pos_x_trap[1] == 4 && flag_trap[1] == 0){
+                                red[1].x = red[1].xA;
+                                red[1].y = red[1].yA;
+                                if(red[1].vida >1)
+                                 {
+                                     red[1].vida -= 1;
+                                 }else{
+                                     sortearNas(1);
+                                 }
+
+                        }
+                    }
+                    else
+                    {
+                        flag_trap[1] = 1;
+                        pos_x_trap[1]--;
+
+                        if(pos_x_trap[1] == 0)
+                        {
+                            al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap_B);
+                            if (red[1].b != 4)
+                                red[1].b = 0;
+
+                            flag_trap[1] = 0;
+                        }
+                    }
+
+            refresh = 1;
+        }
+
 
         if(event.timer.source == timer_contador)
             {
@@ -767,9 +940,11 @@ int game() {
                         mapa[6][6] = 5;
 
                     if( reloginho.minutos == 1 && reloginho.segundos == 30){
-                        b = 4;
+                        red[0].b = 4;
+                        red[1].b = 4;
                         al_stop_timer(timer_contador);
                         al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                        al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap_B);
                     }
             }
       break;
@@ -780,7 +955,7 @@ int game() {
     if(refresh) {
 
 
-        if(b != 5){
+        if(red[0].b != 5 && red[1].b != 5){
                         al_set_target_bitmap(al_get_backbuffer(display));
 
 
@@ -790,7 +965,7 @@ int game() {
                           }else{
                             al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
                           }
-                          if(b == 4)
+                          if(red[0].b == 4)
                             al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
 
                             for(l = 0; l < 13; l++){
@@ -816,16 +991,28 @@ int game() {
                                 }
                             }
 
-                            for(l = 0; l < red.vida; l++)
+                            for(l = 0; l < red[0].vida; l++)
                                 al_draw_bitmap(life,(660+l*70),250, 0);
 
-                            if(b == 3)
-                                al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
+                            for(l = 0; l < red[1].vida; l++)
+                                al_draw_bitmap(life2,(660+l*70),330, 0);
 
-                            al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+
+                            if(red[0].b == 3)
+                                al_draw_bitmap(traps[pos_x_trap[0]],TAFu[0].x*50,TAFu[0].y*50, 0);
+
+                            if(red[1].b == 3)
+                                al_draw_bitmap(traps[pos_x_trap[1]],TAFu[1].x*50,TAFu[1].y*50, 0);
+
+
+
+
+                            al_draw_bitmap(sprites[red[0].direcaoS][red[0].sprite], red[0].x, red[0].y, flags);
+                            al_draw_bitmap(sprites2[red[1].direcaoS][red[1].sprite], red[1].x, red[1].y, flags);
+
         }else{
             al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
-            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 750, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu");
+            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 750, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu %d", vencedor + 1);
 
             al_draw_bitmap(solo,6*50,5*50, 0);
             al_draw_bitmap(solo,6*50,7*50, 0);
@@ -839,10 +1026,19 @@ int game() {
 
             al_draw_bitmap(saida,6*50,6*50, 0);
 
+            if(vencedor == 0){
 
-            red.x = (6*50) + (9);
-            red.y = (6*50) + (5);
-            al_draw_bitmap(sprites[0][0], red.x, red.y, flags);
+                red[0].x = (6*50) + (9);
+                red[0].y = (6*50) + (5);
+                al_draw_bitmap(sprites[0][0], red[0].x, red[0].y, flags);
+                al_draw_bitmap(sprites2[0][0], red[1].x, red[1].y, flags);
+            }else{
+                red[1].x = (6*50) + (9);
+                red[1].y = (6*50) + (5);
+                al_draw_bitmap(sprites2[0][0], red[1].x, red[1].y, flags);
+                al_draw_bitmap(sprites[0][0], red[0].x, red[0].y, flags);
+            }
+
 
         }
 
