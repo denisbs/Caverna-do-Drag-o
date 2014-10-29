@@ -123,7 +123,7 @@ struct Reds{
       int sprite; // imagem atual do personagem;
       int direcaoS;
       int moveV;
-      int moveH; //direзгo do personagem;
+      int moveH; //dire??o do personagem;
 
       int vida;
 
@@ -593,7 +593,7 @@ int game() {
   sortearNas(1);
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
    red[0].b = 0;
-   red[1].b = 0; //condiзгo de colisгo com trsap
+   red[1].b = 0; //condi??o de colis?o com trsap
     int ai;
 
   red[0].frame = 0;
@@ -617,6 +617,7 @@ int game() {
     reloginho.minutos = 0;
 
 
+    int px, py;
 
   /**********/
 
@@ -968,28 +969,60 @@ int game() {
                           if(red[0].b == 4)
                             al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
 
-                            for(l = 0; l < 13; l++){
-                                for(m = 0; m < 13; m++){
-                                  switch(mapa[m][l]){
+
+                            px = red[0].x/50;
+                            py = red[0].y/50;
+                            for(l = -1; l < 2; l++){
+                                for(m = -1; m < 2; m++){
+                                  switch(mapa[py + m][px + l]){
                                         case 1 :
-                                            al_draw_bitmap(parede,l*50,m*50, 0);
+                                            al_draw_bitmap(parede,(px+l)*50,(py+m)*50, 0);
                                             break;
                                         case 0 :
-                                            al_draw_bitmap(solo,l*50,m*50, 0);
+                                            al_draw_bitmap(solo,(px+l)*50,(py+m)*50, 0);
                                             break;
                                         case 3 :
-                                            al_draw_bitmap(traps[0],l*50,m*50, 0);
+                                            al_draw_bitmap(traps[0],(px+l)*50,(py+m)*50, 0);
                                             break;
                                          case 4 :
-                                            al_draw_bitmap(solo,l*50,m*50, 0);
+                                            al_draw_bitmap(solo,(px+l)*50,(py+m)*50, 0);
                                             break;
                                          case 5 :
-                                            al_draw_bitmap(saida,l*50,m*50, 0);
+                                            al_draw_bitmap(saida,(px+l)*50,(py+m)*50, 0);
                                         default :
                                             break;
                                   }
                                 }
                             }
+
+                            px = red[1].x/50;
+                            py = red[1].y/50;
+
+                            for(l = -1; l < 2; l++){
+                                for(m = -1; m < 2; m++){
+                                  switch(mapa[py + m][px + l]){
+                                        case 1 :
+                                            al_draw_bitmap(parede,(px+l)*50,(py+m)*50, 0);
+                                            break;
+                                        case 0 :
+                                            al_draw_bitmap(solo,(px+l)*50,(py+m)*50, 0);
+                                            break;
+                                        case 3 :
+                                            al_draw_bitmap(traps[0],(px+l)*50,(py+m)*50, 0);
+                                            break;
+                                         case 4 :
+                                            al_draw_bitmap(solo,(px+l)*50,(py+m)*50, 0);
+                                            break;
+                                         case 5 :
+                                            al_draw_bitmap(saida,(px+l)*50,(py+m)*50, 0);
+                                        default :
+                                            break;
+                                  }
+                                }
+                            }
+
+
+
 
                             for(l = 0; l < red[0].vida; l++)
                                 al_draw_bitmap(life,(660+l*70),250, 0);
@@ -1099,7 +1132,7 @@ int menu() {
 
     ALLEGRO_FONT *fonte = NULL, *fontT = NULL;
 
-    // Flag que condicionarб nosso looping
+    // Flag que condicionar? nosso looping
     int sair = 0;
 
     if (!al_init())
@@ -1141,7 +1174,7 @@ int menu() {
 
 
 
-    // Configura o tнtulo da janela
+    // Configura o t?tulo da janela
     al_set_window_title(janela, "Rotinas de Mouse - www.rafaeltoledo.net");
 
     //configurar textos
@@ -1151,7 +1184,7 @@ int menu() {
     char *titulo1 = "Riddle Story";
     char *titulo2 = " of ";
     char *titulo3 = "devil degree";
-    // Torna apto o uso de mouse na aplicaзгo
+    // Torna apto o uso de mouse na aplica??o
     if (!al_install_mouse())
     {
         fprintf(stderr, "Falha ao inicializar o mouse.\n");
@@ -1159,7 +1192,7 @@ int menu() {
         return -1;
     }
 
-    // Atribui o cursor padrгo do sistema para ser usado
+    // Atribui o cursor padr?o do sistema para ser usado
     if (!al_set_system_mouse_cursor(janela, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT))
     {
         fprintf(stderr, "Falha ao atribuir ponteiro do mouse.\n");
@@ -1167,7 +1200,7 @@ int menu() {
         return -1;
     }
 
-    // Alocamos o retвngulo central da tela
+    // Alocamos o ret?ngulo central da tela
     area_central = al_create_bitmap(250, 50);
     if (!area_central)
     {
@@ -1175,7 +1208,7 @@ int menu() {
         al_destroy_display(janela);
         return -1;
     }
-    //botгo multiplayer
+    //bot?o multiplayer
     btt_mult = al_create_bitmap(250, 50);
     if (!btt_mult)
     {
@@ -1186,11 +1219,11 @@ int menu() {
 
 
 
-    // Alocamos o botгo para fechar a aplicaзгo
+    // Alocamos o bot?o para fechar a aplica??o
     botao_sair = al_create_bitmap(100, 50);
     if (!botao_sair)
     {
-        fprintf(stderr, "Falha ao criar botгo de saнda.\n");
+        fprintf(stderr, "Falha ao criar bot?o de sa?da.\n");
         al_destroy_bitmap(area_central);
         al_destroy_display(janela);
         return -1;
@@ -1207,21 +1240,21 @@ int menu() {
     // Dizemos que vamos tratar os eventos vindos do mouse
     al_register_event_source(fila_eventos, al_get_mouse_event_source());
 
-    // Flag indicando se o mouse estб sobre o retвngulo central
+    // Flag indicando se o mouse est? sobre o ret?ngulo central
     int na_area_central = 0;
     int no_btt_multi = 0;
     while (!sair)
     {
-        // Verificamos se hб eventos na fila
+        // Verificamos se h? eventos na fila
         while (!al_is_event_queue_empty(fila_eventos))
         {
             ALLEGRO_EVENT evento;
             al_wait_for_event(fila_eventos, &evento);
 
-            // Se o evento foi de movimentaзгo do mouse
+            // Se o evento foi de movimenta??o do mouse
             if (evento.type == ALLEGRO_EVENT_MOUSE_AXES)
             {
-                // Verificamos se ele estб sobre a regiгo do retвngulo central
+                // Verificamos se ele est? sobre a regi?o do ret?ngulo central
                 if (evento.mouse.x >= 200 &&
                     evento.mouse.x <= 450 &&
                     evento.mouse.y >= 250 &&
@@ -1276,8 +1309,8 @@ int menu() {
         // Limpamos a tela
        al_clear_to_color(al_map_rgb(0, 0, 0));
 
-        // Colorimos o bitmap correspondente ao retвngulo central,
-        // com a cor condicionada ao conteъdo da flag na_area_central
+        // Colorimos o bitmap correspondente ao ret?ngulo central,
+        // com a cor condicionada ao conte?do da flag na_area_central
         al_set_target_bitmap(area_central);
         if (!na_area_central)
         {
@@ -1287,7 +1320,7 @@ int menu() {
         {
             al_clear_to_color(al_map_rgb(0, 255, 0));
         }
-        //no segundo botгo
+        //no segundo bot?o
         al_set_target_bitmap(btt_mult);
         if (!no_btt_multi)
         {
@@ -1299,13 +1332,13 @@ int menu() {
         }
 
 
-        // Colorimos o bitmap do botгo de sair
+        // Colorimos o bitmap do bot?o de sair
 
 
         al_set_target_bitmap(botao_sair);
         al_clear_to_color(al_map_rgb(255, 0, 0));
 
-        // Desenhamos os retвngulos na tela
+        // Desenhamos os ret?ngulos na tela
         al_set_target_bitmap(al_get_backbuffer(janela));
         al_draw_bitmap(area_central, 100, 250, 0);
         al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
@@ -1325,7 +1358,7 @@ int menu() {
         al_flip_display();
     }
 
-    // Desaloca os recursos utilizados na aplicaзгo
+    // Desaloca os recursos utilizados na aplica??o
     al_destroy_bitmap(botao_sair);
     al_destroy_bitmap(area_central);
     al_destroy_bitmap(btt_mult);
@@ -1380,7 +1413,7 @@ int waitplayer(){
     conf4 = 0;
     confT = 0;
 
-    char *texto1 = "Voce é o player N";
+    char *texto1 = "Voce  o player N";
 
     char *texto2 = "Aguardando mapa";
     char *texto21 = "Mapa carregado";
@@ -1388,10 +1421,10 @@ int waitplayer(){
     char *texto3 = "Aguardando Player N";
     char *texto4 = "Player N ok";
 
-    char *texto5 = "Posiзхes inicias definidas";
+    char *texto5 = "Posi??es inicias definidas";
 
     char *texto6 = " Iniciando ";
-    char *texto7 = " Esperando todas as condiçoes ";
+    char *texto7 = " Esperando todas as condioes ";
 
     char *titulo = "Riddle Story of devil degree";
 
@@ -1421,14 +1454,14 @@ int waitplayer(){
                                     conf1 = 1;
                             }
                             if(conf2 == 0){
-                                //recebe informaзгo sobre os personagems
+                                //recebe informa??o sobre os personagems
                                 // conf 3 seu personagem, conf 4 os outros
                                 if(conf3 == 0){
-                                    //persoangens local confere se nгo tб no 0 0
+                                    //persoangens local confere se n?o t? no 0 0
                                     conf3 = 1;
                                 }
                                  if(conf4 == 0){
-                                    //persoangens confere se nenhum personagem tirando o local nгo tб no 0 0
+                                    //persoangens confere se nenhum personagem tirando o local n?o t? no 0 0
                                     conf4 = 1;
                                 }
                                 if(conf3 == 1 && conf4 == 1)
@@ -1474,7 +1507,7 @@ int waitplayer(){
             }else{
                    al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, 100, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
             }
-            //definir qual o player й por hora ele й 0 4
+            //definir qual o player ? por hora ele ? 0 4
             int i;
             for(i = 0; i< 4; i++){
                   if(i != 4)  {
@@ -1487,7 +1520,7 @@ int waitplayer(){
                         if(conf3 == 1){
                             al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto1, i);
                         }else{
-                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informaзгo do serve");
+                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informa??o do serve");
                         }
                   }
             }
