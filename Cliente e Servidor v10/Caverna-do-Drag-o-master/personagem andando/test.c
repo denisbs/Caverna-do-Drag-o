@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <winsock.h>
+#include <windows.h>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -29,11 +31,19 @@
 
 #define FPS 60
 
+WSADATA data; //Variíveis que recebem o valor da inicialização e criação do socket.
+//SOCKET winsock; //Variíveis que recebem o valor da inicialização e criação do socket.
+SOCKADDR_IN sock; //Variíveis que recebem o valor da inicialização e criação do socket.
+
+int descritorCliente;
+int posicaoServidor;
+char ip [1024];
+int posicaoPersonagem[4][4];
 
 int vencedor;
 
 int mapa[13][13] = {
-                    1,1,1,1,1,1,1,1,1,1,1,1,1,
+                    0,1,1,1,1,1,1,1,1,1,1,1,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
                     1,0,1,0,1,0,1,0,1,0,1,0,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
@@ -46,7 +56,7 @@ int mapa[13][13] = {
                     1,0,1,0,1,0,1,0,1,0,1,0,1,
                     1,0,0,0,0,0,0,0,0,0,0,0,1,
                     1,1,1,1,1,1,1,1,1,1,1,1,1
-                    };   //mapa base;
+                    };   // mapa base
 
 void sorteaA(){
     int a, C;
@@ -82,58 +92,77 @@ struct pontoNas inicios;
 
 void setI(){
 
-inicios.x[0] = 1;
-inicios.y[0] = 1;
-mapa[1][1] = 4;
+    inicios.x[0] = 1;
+    inicios.y[0] = 1;
+    mapa[1][1] = 4;
 
-inicios.x[1] = 1;
-inicios.y[1] = 11;
-mapa[1][11] = 4;
+    inicios.x[1] = 1;
+    inicios.y[1] = 11;
+    mapa[1][11] = 4;
 
-inicios.x[2] = 11;
-inicios.y[2] = 11;
-mapa[11][11] = 4;
+    inicios.x[2] = 11;
+    inicios.y[2] = 11;
+    mapa[11][11] = 4;
 
-inicios.x[3] = 11;
-inicios.y[3] = 1;
-mapa[11][1] = 4;
+    inicios.x[3] = 11;
+    inicios.y[3] = 1;
+    mapa[11][1] = 4;
 
-inicios.x[4] = 1;
-inicios.y[4] = 6;
-mapa[1][6] = 4;
+    inicios.x[4] = 1;
+    inicios.y[4] = 6;
+    mapa[1][6] = 4;
 
-inicios.x[5] = 6;
-inicios.y[5] = 11;
-mapa[6][11] = 4;
+    inicios.x[5] = 6;
+    inicios.y[5] = 11;
+    mapa[6][11] = 4;
 
-inicios.x[6] = 11;
-inicios.y[6] = 6;
-mapa[11][6] = 4;
+    inicios.x[6] = 11;
+    inicios.y[6] = 6;
+    mapa[11][6] = 4;
 
-inicios.x[7] = 6;
-inicios.y[7] = 1;
-mapa[6][1] = 4;
+    inicios.x[7] = 6;
+    inicios.y[7] = 1;
+    mapa[6][1] = 4;
 
 
 }
 
 struct Reds{
-      int x, xA; // x do personagem;
-      int y, yA; // y do personagem;
-      int sprite; // imagem atual do personagem;
+      int x, xA; // x do personagem
+      int y, yA; // y do personagem
+      int sprite; // imagem atual do personagem
       int direcaoS;
       int moveV;
-      int moveH; //dire??o do personagem;
+      int moveH; //direção do personagem
 
       int vida;
 
       int frame;
       int arm;
 
+
       int b;
+
+};
+
+struct Pdfora{
+    int x;
+    int y;
+
+    int estado;
+
+    int spritel;
+    int spritec;
+
+    int trapX;
+    int trapY;
+    int spriteT;
+
 };
 
 struct Reds red;
+struct Pdfora personas[4];
+struct Pdfora eu;
 
 struct trapAtiva{
     int x;
@@ -142,23 +171,62 @@ struct trapAtiva{
 
 struct trapAtiva TAFu;
 
-void sortearNas(){
+void* recebeClientes(void* arg){
+    int sockEntrada = (*(int *) arg);
+    //printf("%d\n",sockEntrada);
+    while(1)
+    {
+
+    	//int j;
+    	//for (j = 0; j >= 3; j++)
+    	//{
+		recv(descritorCliente, (void*)&personas, sizeof(personas),0);
+		//printf("Posicao x %d\n",red[sockEntrada].x);
+        //printf("Posicao y %d\n",red[sockEntrada].y);
+        //Sleep(1500);
+        //Sleep(1000);
+    	//}
+    		//printf("%f\n", dadosClientes[0][1]);
+    }
+}
+
+void* enviaClientes(void* arg){
+    int sockEntrada = (*(int *) arg);
+    printf("%d\n", sockEntrada);
+    while(1){
+        //printf("%d\n",personagens[sockEntrada].x);
+        //printf("%d\n",personagens[sockEntrada].y);
+        //if (red[sockEntrada].x != 0 || red[sockEntrada].y != 0){
+        eu.x = red.x;
+        eu.y = red.y;
+        eu.spritel = red.direcaoS;
+        eu.spritec = red.sprite;
+
+
+            Sleep(1);
+            send(descritorCliente, (void*)&eu, sizeof(eu),0);
+        //}
+    }
+
+}
+
+/*void sortearNas(int n){
    int p, C;
-   red.vida = 3;
+   red[n].vida = 3;
    C = 1;
    srand((unsigned)time(NULL));
    while(C == 1){
 
         p = rand()%8;
         if(inicios.ativa[p] != 1 ){
-            red.x = inicios.x[p]*50;
-            red.y = inicios.y[p]*50;
+            red[n].x = inicios.x[p]*50;
+            red[n].y = inicios.y[p]*50;
             inicios.ativa[p] = 1;
             C=0;
         }
    }
 
-}
+}*/
 
 void setmove(int lado){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
@@ -230,9 +298,6 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
-                        if(mapa[anaY][anaX] == 5)
-                            coli = 5;
-
                         //ponto de borda sprite 4
                         anaX = (px)/50;
                         anaY = (py+40)/50;
@@ -243,8 +308,6 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
-                        if(mapa[anaY][anaX] == 5)
-                            coli = 5;
 
 
 
@@ -276,8 +339,6 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                        if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
-                         if(mapa[anaY][anaX] == 5)
-                            coli = 5;
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
@@ -289,8 +350,6 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] == 3)
                             coli = 3;
 
-                         if(mapa[anaY][anaX] == 5)
-                            coli = 5;
 
 
 
@@ -432,6 +491,17 @@ void error(char *message) {
   exit(EXIT_FAILURE);
 }
 
+/*void zeraPersonagens(){
+    int i;
+    for(i = 0; i < 4; i++){
+        red[i].sprite = 0;
+        red[i].direcaoS = 0;
+        red[i].moveH = 0;
+        red[i].moveV = 0;
+        red[i].frame = 0;
+        red[i].arm = -1;
+    }
+}*/
 struct relogio{
     int minutos;
     int segundos;
@@ -449,7 +519,8 @@ void maisumseg(){
 }
 
 
-int game() {
+
+int game(int servidor) {
   if(!al_init())
     error("failed to initialize");
 
@@ -471,46 +542,45 @@ int game() {
     error("failed to create event queue");
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
-  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
-  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap_B = al_create_timer(0.5);
   ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
+  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
+
   /**********/
-  ALLEGRO_BITMAP *solo = al_load_bitmap("solo.png");
+  ALLEGRO_BITMAP *solo = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/solo.png");
   if(!solo)
     error("failed to load solo");
 
+
+  ALLEGRO_BITMAP *parede = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/paredes.png");
+  if(!parede)
+    error("failed to load paredes");
+
+  ALLEGRO_BITMAP *trap = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/trap.png");
+  if(!trap)
+    error("failed to load trap");
+
+  ALLEGRO_BITMAP *sheet = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/Red.png");
+  if(!sheet)
+    error("failed to load sheet");
 
   ALLEGRO_BITMAP *area_central = al_create_bitmap(250, 650);
     if (!area_central)
         error("Falha ao criar bitmap.");
 
-  ALLEGRO_BITMAP *parede = al_load_bitmap("paredes.png");
-  if(!parede)
-    error("failed to load paredes");
-
-
-  ALLEGRO_BITMAP *life = al_load_bitmap("heart2.png");
-  if(!life)
-    error("faled to load life");
-
-  ALLEGRO_BITMAP *trap = al_load_bitmap("trap.png");
-  if(!trap)
-    error("failed to load trap");
-
-  ALLEGRO_BITMAP *sheet = al_load_bitmap("Red2.png");
-  if(!sheet)
-    error("failed to load sheet");
-
   ALLEGRO_BITMAP *saida = al_load_bitmap("exit.png");
   if(!saida)
     error("failed to load saida");
 
-
-    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
+  ALLEGRO_BITMAP *life = al_load_bitmap("heart2.png");
+  if(!life)
+    error("faled to load life");
+  //
+  ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
-  //
+
+
     ALLEGRO_BITMAP *traps[5];
     int trapshift;
 
@@ -530,10 +600,9 @@ int game() {
   }
 
 
-
     setI();
     int l,m;
-    sorteaA();
+    //sorteaA();
 
 
     for(l = 0; l < 13; l++){
@@ -557,49 +626,34 @@ int game() {
               }
             }
     }
-    al_set_target_bitmap(area_central);
-    al_clear_to_color(al_map_rgb(255, 255, 255));
-    al_draw_bitmap(area_central, 650,0,0);
+
   /**********/
-
-
-
-
-  red.sprite = 0;
-  red.direcaoS = 0;
-  red.moveH = 0;
-  red.moveV = 0;
-
-
-
-
-  sortearNas();
   // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-   red.b = 0;
- //condi??o de colis?o com trsap
-    int ai;
-
-  red.frame = 0;
-
-
-  red.arm = -1;
-
+  int b; //condição de colisão com trsap
+  int ai;
 
   int flags = 0;
-  int pos_x_trap;
+  int pos_x_trap = 1;
+  int flag_trap = 0;
 
-  pos_x_trap = 1;
 
-  int flag_trap;
-
-    flag_trap = 0;
+    red.frame = 0;
+    eu.spriteT = 0;
+    red.arm = -1;
 
 
     reloginho.segundos = 0;
     reloginho.minutos = 0;
 
-
-    int px, py;
+  /************/
+  //Gerando personagens na tela
+  int contador;
+  for (contador = 0; contador < 4; contador++){
+        //sortearNas(contador);
+       if(contador != servidor)
+            al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
+  }
+  al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
 
   /**********/
 
@@ -609,20 +663,17 @@ int game() {
   al_register_event_source(queue, al_get_display_event_source(display));
   al_register_event_source(queue, al_get_timer_event_source(timer));
   al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap));
-  al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap_B));
-  al_register_event_source(queue, al_get_timer_event_source(timer_contador));
 
   /**********/
 
   int running = 1;
 
-  int refresh = 0;
+    int refresh = 0;
+    red.sprite = 0;
 
-  al_start_timer(timer);
-  al_start_timer(timer_contador);
-
+    al_start_timer(timer);
+    al_start_timer(timer_contador);
   while(running) {
-
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
@@ -631,184 +682,165 @@ int game() {
     switch(event.type) {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
-          case ALLEGRO_KEY_LEFT:
-            if(red.b < 3){
-                setmove(1);
+      case ALLEGRO_KEY_LEFT:
+        if(b != 3){
+            setmove(1 );
+            flags = 0;
+            refresh = 1;
+        }
+        break;
+
+      case ALLEGRO_KEY_DOWN:
+
+                if(b != 3){
+                    setmove(4);
+                    flags = 0;
+                    refresh = 1;
+                }
+            break;
+
+      case ALLEGRO_KEY_UP:
+            if(b != 3){
+                setmove(3);
                 flags = 0;
+
                 refresh = 1;
             }
             break;
 
-          case ALLEGRO_KEY_DOWN:
-
-                    if(red.b < 3){
-                        setmove(4);
-                        flags = 0;
-                        refresh = 1;
-                    }
-                break;
-
-          case ALLEGRO_KEY_UP:
-                if(red.b < 3){
-                    setmove(3);
-                    flags = 0;
-                    refresh = 1;
-                }
-                break;
-
-          case ALLEGRO_KEY_RIGHT:
-                if(red.b < 3){
-                    setmove(2);
-                    flags = 0;
-                    refresh = 1;
-                }
-            break;
-
-          case ALLEGRO_KEY_ESCAPE:
-            running = 0;
-            break;
-          default:
-            printf("");
-          }
-          break;
+      case ALLEGRO_KEY_RIGHT:
+            if(b != 3){
+                setmove(2);
+                flags = 0;
+                refresh = 1;
+            }
+        break;
+      case ALLEGRO_KEY_ESCAPE:
+        running = 0;
+        break;
+      default:
+        printf("a");
+      }
+      break;
 
 
     case ALLEGRO_EVENT_KEY_UP:
       switch(event.keyboard.keycode) {
-          case ALLEGRO_KEY_LEFT:
-            if(red.moveH == -1 ) {
-              setmove(0);
-              refresh = 1;
-            }
-            break;
+      case ALLEGRO_KEY_LEFT:
+        if(red.moveH == -1 ) {
+          setmove(0);
+          refresh = 1;
+        }
+        break;
 
 
-          case ALLEGRO_KEY_DOWN:
-                if(red.moveV == 1){
-                    setmove(0);
-                    refresh = 1;
-                }
-                break;
-
-          case ALLEGRO_KEY_UP:
-              if (red.moveV == -1 ){
+      case ALLEGRO_KEY_DOWN:
+            if(red.moveV == 1){
                 setmove(0);
                 refresh = 1;
-              }
-                break;
-
-          case ALLEGRO_KEY_RIGHT:
-            if(red.moveH == 1 ) {
-              setmove(0);
-              refresh = 1;
             }
             break;
 
-          case ALLEGRO_KEY_ESCAPE:
-            running = 0;
-            break;
-          default:
-            printf("");
+      case ALLEGRO_KEY_UP:
+          if (red.moveV == -1 ){
+            setmove(0);
+            refresh = 1;
           }
-          break;
+            break;
 
+      case ALLEGRO_KEY_RIGHT:
+        if(red.moveH == 1 ) {
+          setmove(0);
+          refresh = 1;
+        }
+        break;
+      case ALLEGRO_KEY_ESCAPE:
+        running = 0;
+        break;
+      default:
+        printf("b");
+      }
+      break;
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
       running = 0;
+
       break;
     case ALLEGRO_EVENT_TIMER:
 
         if(event.timer.source == timer)
         {
-                if(red.moveH != 0){
-                    ai = red.moveH;
-                    red.b = testex(0);
-                    if(red.b == 3){
-                        red.x = (TAFu.x*50) + (9);
-                        red.y = (TAFu.y*50) + (5);
-                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                        pos_x_trap = 1;
-                    }
-                    refresh = 1;
-                  }
+        if(red.moveH != 0){
+            ai = red.moveH;
+            b = testex();
+            if(b == 3){
+                red.x = (TAFu.x*50) + (9);
+                red.y = (TAFu.y*50) + (5);
+                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                pos_x_trap = 1;
+            }
+            refresh = 1;
+          }
+
+          if(red.moveV != 0){
+            ai = red.moveV;
+            b = testey();
+             if(b == 3){
+                red.x = (TAFu.x*50) + (9);
+                red.y = (TAFu.y*50) - (5* ai);
+
+                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                pos_x_trap = 1;
+            }
+            refresh = 1;
+          }
 
 
-                  if(red.moveV != 0){
-                    ai = red.moveV;
-                    red.b = testey(0);
-                     if(red.b == 3){
-                        red.x = (TAFu.x*50) + (9);
-                        red.y = (TAFu.y*50) - (5* ai);
 
-                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                        pos_x_trap = 1;
-                    }
-                    refresh = 1;
-                  }
-
-
-                  refresh = 1;
+          refresh = 1;
         }
-
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
 
-                    if(pos_x_trap <= 3 && flag_trap == 0)
-                    {
-                        pos_x_trap++;
-                        if(pos_x_trap == 4 && flag_trap == 0){
-                                red.x = red.xA;
-                                red.y = red.yA;
-                                if(red.vida >1)
-                                 {
-                                     red.vida -= 1;
-                                 }else{
-                                     sortearNas(0);
-                                 }
+            if(pos_x_trap <= 3 && flag_trap == 0)
+            {
+                pos_x_trap++;
+                if(pos_x_trap == 4 && flag_trap == 0){
+                        red.x = red.xA;
+                        red.y = red.yA;
+                        if(red.vida >1)
+                         {
+                             red.vida -= 1;
+                         }else{
+                             //sortearNas(servidor);
+                         }
 
-                        }
-                    }
-                    else
-                    {
-                        flag_trap = 1;
-                        pos_x_trap--;
+                }
+            }
+            else
+            {
+                flag_trap = 1;
+                pos_x_trap--;
 
-                        if(pos_x_trap == 0)
-                        {
-                            al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                            if (red.b != 4)
-                                red.b = 0;
-
-                            flag_trap = 0;
-                        }
-                    }
-
+                if(pos_x_trap == 0)
+                {
+                    al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                    b = 0;
+                    flag_trap = 0;
+                }
+            }
             refresh = 1;
         }
-
-
-
-        if(event.timer.source == timer_contador)
-            {
-                    maisumseg();
-                    if(reloginho.segundos == 15 && reloginho.minutos == 0 )
-                        mapa[6][6] = 5;
-
-                    if( reloginho.minutos == 1 && reloginho.segundos == 30){
-                        red.b = 4;
-                        al_stop_timer(timer_contador);
-                        al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                        al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap_B);
-                    }
-            }
       break;
         default:
             printf("");
         }
 
     if(refresh) {
+        //send(descritorCliente, (void*)&red, sizeof(red),0);
+        //recv(descritorCliente, (void*)&red, sizeof(red),0);
 
-
-        if(red.b != 5){
+            if(red.b != 5)
+                {
                         al_set_target_bitmap(al_get_backbuffer(display));
 
 
@@ -899,7 +931,9 @@ int game() {
                    }
 
 
-        }else{
+        }
+            else
+                {
             al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
             al_draw_textf(fonte, al_map_rgb(0, 0, 0), 750, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu %d", vencedor + 1);
 
@@ -929,14 +963,12 @@ int game() {
 
         }
 
-
-
-      al_flip_display();
+        al_flip_display();
 
       refresh = 0;
 
     }
-  }
+}
 
   /**********/
 
@@ -949,7 +981,7 @@ int game() {
   al_destroy_bitmap(parede);
   al_destroy_bitmap(trap);
   al_destroy_bitmap(solo);
-  al_destroy_bitmap(area_central);
+
 
 
 
@@ -979,6 +1011,7 @@ for(shift = 0; shift < NUM_SPRITES; shift++)
   return 0;
 }
 
+
 int menu() {
     ALLEGRO_DISPLAY *janela = NULL;
     ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
@@ -986,7 +1019,7 @@ int menu() {
 
     ALLEGRO_FONT *fonte = NULL, *fontT = NULL;
 
-    // Flag que condicionar? nosso looping
+    // Flag que condicionará nosso looping
     int sair = 0;
 
     if (!al_init())
@@ -1010,7 +1043,7 @@ int menu() {
         return -1;
     }
 
-    fonte = al_load_font("bin/Debug/aspartam.ttf", 24, 0);
+    fonte = al_load_font("C:/Users/caio.mvsilva/Desktop/aspartam.ttf", 24, 0);
     if (!fonte)
     {
         al_destroy_display(janela);
@@ -1018,7 +1051,7 @@ int menu() {
         return -1;
     }
 
-    fontT = al_load_font("bin/Debug/aspartam.ttf", 50, 0);
+    fontT = al_load_font("C:/Users/caio.mvsilva/Desktop/aspartam.ttf", 50, 0);
     if (!fontT)
     {
         al_destroy_display(janela);
@@ -1028,7 +1061,7 @@ int menu() {
 
 
 
-    // Configura o t?tulo da janela
+    // Configura o título da janela
     al_set_window_title(janela, "Rotinas de Mouse - www.rafaeltoledo.net");
 
     //configurar textos
@@ -1038,7 +1071,7 @@ int menu() {
     char *titulo1 = "Riddle Story";
     char *titulo2 = " of ";
     char *titulo3 = "devil degree";
-    // Torna apto o uso de mouse na aplica??o
+    // Torna apto o uso de mouse na aplicação
     if (!al_install_mouse())
     {
         fprintf(stderr, "Falha ao inicializar o mouse.\n");
@@ -1046,7 +1079,7 @@ int menu() {
         return -1;
     }
 
-    // Atribui o cursor padr?o do sistema para ser usado
+    // Atribui o cursor padrão do sistema para ser usado
     if (!al_set_system_mouse_cursor(janela, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT))
     {
         fprintf(stderr, "Falha ao atribuir ponteiro do mouse.\n");
@@ -1054,7 +1087,7 @@ int menu() {
         return -1;
     }
 
-    // Alocamos o ret?ngulo central da tela
+    // Alocamos o retângulo central da tela
     area_central = al_create_bitmap(250, 50);
     if (!area_central)
     {
@@ -1062,7 +1095,7 @@ int menu() {
         al_destroy_display(janela);
         return -1;
     }
-    //bot?o multiplayer
+    //botão multiplayer
     btt_mult = al_create_bitmap(250, 50);
     if (!btt_mult)
     {
@@ -1073,11 +1106,11 @@ int menu() {
 
 
 
-    // Alocamos o bot?o para fechar a aplica??o
+    // Alocamos o botão para fechar a aplicação
     botao_sair = al_create_bitmap(100, 50);
     if (!botao_sair)
     {
-        fprintf(stderr, "Falha ao criar bot?o de sa?da.\n");
+        fprintf(stderr, "Falha ao criar botão de saída.\n");
         al_destroy_bitmap(area_central);
         al_destroy_display(janela);
         return -1;
@@ -1094,21 +1127,21 @@ int menu() {
     // Dizemos que vamos tratar os eventos vindos do mouse
     al_register_event_source(fila_eventos, al_get_mouse_event_source());
 
-    // Flag indicando se o mouse est? sobre o ret?ngulo central
+    // Flag indicando se o mouse está sobre o retângulo central
     int na_area_central = 0;
     int no_btt_multi = 0;
     while (!sair)
     {
-        // Verificamos se h? eventos na fila
+        // Verificamos se há eventos na fila
         while (!al_is_event_queue_empty(fila_eventos))
         {
             ALLEGRO_EVENT evento;
             al_wait_for_event(fila_eventos, &evento);
 
-            // Se o evento foi de movimenta??o do mouse
+            // Se o evento foi de movimentação do mouse
             if (evento.type == ALLEGRO_EVENT_MOUSE_AXES)
             {
-                // Verificamos se ele est? sobre a regi?o do ret?ngulo central
+                // Verificamos se ele está sobre a região do retângulo central
                 if (evento.mouse.x >= 200 &&
                     evento.mouse.x <= 450 &&
                     evento.mouse.y >= 250 &&
@@ -1130,11 +1163,14 @@ int menu() {
             // Ou se o evento foi um clique do mouse
             else if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
             {
-                if (evento.mouse.x >= WIDTHM - al_get_bitmap_width(botao_sair) - 10 && evento.mouse.x <= WIDTHM - 10 && evento.mouse.y <= HEIGHT - 10 && evento.mouse.y >= HEIGHTM - al_get_bitmap_height(botao_sair) - 10)
+                if (evento.mouse.x >= WIDTHM - al_get_bitmap_width(botao_sair) - 10 &&
+                    evento.mouse.x <= WIDTHM - 10 && evento.mouse.y <= HEIGHT - 10 &&
+                    evento.mouse.y >= HEIGHTM - al_get_bitmap_height(botao_sair) - 10)
                 {
                     sair = 1;
-                }
-                else{
+
+
+                }else{
                     if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 250 && evento.mouse.y <= 300){
                            al_destroy_bitmap(botao_sair);
                            al_destroy_bitmap(area_central);
@@ -1145,16 +1181,6 @@ int menu() {
 
 
                            return 1;
-                    }else{
-                        if( evento.mouse.x >= 200 && evento.mouse.x <= 450 && evento.mouse.y >= 320 && evento.mouse.y <= 370){
-                           al_destroy_bitmap(botao_sair);
-                           al_destroy_bitmap(area_central);
-                           al_destroy_bitmap(btt_mult);
-
-                           al_destroy_display(janela);
-                           al_destroy_event_queue(fila_eventos);
-                           return 2;
-                        }
                     }
                 }
             }
@@ -1163,8 +1189,8 @@ int menu() {
         // Limpamos a tela
        al_clear_to_color(al_map_rgb(0, 0, 0));
 
-        // Colorimos o bitmap correspondente ao ret?ngulo central,
-        // com a cor condicionada ao conte?do da flag na_area_central
+        // Colorimos o bitmap correspondente ao retângulo central,
+        // com a cor condicionada ao conteúdo da flag na_area_central
         al_set_target_bitmap(area_central);
         if (!na_area_central)
         {
@@ -1174,7 +1200,7 @@ int menu() {
         {
             al_clear_to_color(al_map_rgb(0, 255, 0));
         }
-        //no segundo bot?o
+        //no segundo botão
         al_set_target_bitmap(btt_mult);
         if (!no_btt_multi)
         {
@@ -1186,13 +1212,13 @@ int menu() {
         }
 
 
-        // Colorimos o bitmap do bot?o de sair
+        // Colorimos o bitmap do botão de sair
 
 
         al_set_target_bitmap(botao_sair);
         al_clear_to_color(al_map_rgb(255, 0, 0));
 
-        // Desenhamos os ret?ngulos na tela
+        // Desenhamos os retângulos na tela
         al_set_target_bitmap(al_get_backbuffer(janela));
         al_draw_bitmap(area_central, 100, 250, 0);
         al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 260, ALLEGRO_ALIGN_CENTRE, "%s", texto1);
@@ -1212,14 +1238,45 @@ int menu() {
         al_flip_display();
     }
 
-    // Desaloca os recursos utilizados na aplica??o
+    // Desaloca os recursos utilizados na aplicação
     al_destroy_bitmap(botao_sair);
     al_destroy_bitmap(area_central);
     al_destroy_bitmap(btt_mult);
     al_destroy_display(janela);
     al_destroy_event_queue(fila_eventos);
 
-    return 1;
+    return 0;
+}
+
+int criaCliente(){
+ //   int winsock;
+    int clienteWinsock;
+    // testando comunicação
+    if(WSAStartup(MAKEWORD(2,0),&data)==SOCKET_ERROR)
+    {
+        printf("Erro ao inicializar o winsock\n");
+        //return 0;
+    }
+
+    if((clienteWinsock = socket(AF_INET,SOCK_STREAM,0))==SOCKET_ERROR)
+    {
+        printf("Erro ao criar socket\n");
+        //return 0;
+    }
+
+    /*printf("Digite o ip do servidor:\n");
+    gets(ip);*/
+
+    sock.sin_family=AF_INET;
+    sock.sin_port=htons(1235); //Numero da porta de rede
+    sock.sin_addr.s_addr=inet_addr(/*"127.0.0.1"*/"10.135.160.22"/*ip*/);
+
+    if(connect(clienteWinsock, (SOCKADDR*)&sock, sizeof(sock))==SOCKET_ERROR)
+    {
+        printf("Erro ao se conectar\n");
+        //return 0;
+    }
+    return clienteWinsock;
 }
 
 int waitplayer(){
@@ -1267,13 +1324,15 @@ int waitplayer(){
     conf4 = 0;
     confT = 0;
 
-    char *texto1 = "Voce  o player N";
+    char *texto1 = "Voce  o player";
 
     char *texto2 = "Aguardando mapa";
     char *texto21 = "Mapa carregado";
 
-    char *texto3 = "Aguardando Player N";
-    char *texto4 = "Player N ok";
+    char *texto3 = "Aguardando Player";
+    char *texto4 = "Player";
+
+    char *ok = "ok";
 
     char *texto5 = "Posi??es inicias definidas";
 
@@ -1309,13 +1368,23 @@ int waitplayer(){
                             }
                             if(conf2 == 0){
                                 //recebe informa??o sobre os personagems
+
                                 // conf 3 seu personagem, conf 4 os outros
                                 if(conf3 == 0){
                                     //persoangens local confere se n?o t? no 0 0
-                                    conf3 = 1;
+                                    if(eu.x != 0 && eu.y != 0)
+                                          conf3 = 1;
                                 }
                                  if(conf4 == 0){
                                     //persoangens confere se nenhum personagem tirando o local n?o t? no 0 0
+                                    int i;
+                                    for (i = 0; i < 4; i++){
+                                        if(personas[i].x == 0 || personas[i].y == 0){
+                                          conf3 = 0;
+                                        }else{
+                                            conf3 = 1;
+                                        }
+                                    }
                                     conf4 = 1;
                                 }
                                 if(conf3 == 1 && conf4 == 1)
@@ -1366,15 +1435,15 @@ int waitplayer(){
             for(i = 0; i< 4; i++){
                   if(i != 4)  {
                         if(conf4 == 1){
-                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto4, i);
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d %s", texto4, i, ok);
                         }else{
                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto3, i);
                         }
                   }else{
                         if(conf3 == 1){
-                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d", texto1, i);
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "%s: %d %s", texto1, i, ok);
                         }else{
-                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informa??o do serve");
+                           al_draw_textf(fonte, al_map_rgb(140, 255, 0), 300, (150 +(i * 50)), ALLEGRO_ALIGN_CENTRE, "Arguandando informacao do serve");
                         }
                   }
             }
@@ -1409,28 +1478,38 @@ int waitplayer(){
 
 }
 
+
 int main(){
+    HANDLE th[2];
+    DWORD Ith;
+//    struct sockaddr_in serv_addr;
+    /*Tamanho da estrutura*/
+//    unsigned int clntLen;
+//    clntLen = sizeof (sock);
+//    HANDLE th;
+    /*Define o descritor cliente*/
+    //int descritorCliente;
+    descritorCliente = criaCliente();
+    recv(descritorCliente, &posicaoServidor, sizeof(posicaoServidor),0);
+    printf("%d\n", posicaoServidor);
+    recv(descritorCliente, (void*)&eu, sizeof(eu),0);
+    red.x = eu.x;
+    red.y = eu.y;
+    //zeraPersonagens();
+    //printf("%d,\n%d\n", red[posicaoServidor].x,red[posicaoServidor].y);
+    th[0] = CreateThread(NULL,0,recebeClientes,&posicaoServidor,0,&Ith);
+    th[1] = CreateThread(NULL,0,enviaClientes,&posicaoServidor,0,&Ith);
+
     int qual = menu();
     int q2;
-   // if(qual == 1)
-     //   q2 = waitplayer();
 
-
-
-    switch(qual){
-        case 1:
-            q2 = waitplayer();
+    if(qual == 1)
+         q2 = waitplayer();
             if(q2 == 1)
-                game();
-            break;
-        case 2:
-            q2 = waitplayer();
-            if(q2 == 1)
-                game();
-            break;
-        default:
-            break;
-    }
+                game(posicaoServidor);
+
+
 
     return 0;
 }
+

@@ -1,0 +1,108 @@
+# depslib dependency file v1.0
+1408578310 source:c:\users\caio.mvsilva\desktop\servidorgame\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+
+1408656266 source:c:\users\caio.mvsilva\desktop\allegro 5\servidorgame\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+
+1408712632 source:c:\users\nutel\desktop\allegro 5\pi vi\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+
+1408740950 source:c:\users\caio.mvsilva\desktop\cliente e servidor v2\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1409187012 source:c:\users\caio.mvsilva\desktop\cliente e servidor v3\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1410381803 source:c:\users\caio.mvsilva\desktop\cliente e servidor v3problema no envio de dados\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1410396004 source:c:\users\caio.mvsilva\desktop\cliente e servidor v4 comecando a usar struct\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1410999778 source:c:\users\caio.mvsilva\desktop\cliente e servidor v5 problemas com zeros\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1411607125 source:c:\users\caio.mvsilva\desktop\cliente e servidor v5 problemas com zeros + ou - resolvido\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1412208396 source:c:\users\caio.mvsilva\desktop\cliente e servidor v6 problemas com personagens\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1413420804 source:c:\users\caio.mvsilva\desktop\cliente e servidor v7 problemas com personagens transmitindo\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1414010030 source:c:\users\caio.mvsilva\desktop\cliente e servidor v8 com mutex problemas com personagens transmitindo\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1414441491 source:c:\users\caio.mvsilva\desktop\cliente e servidor v9\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
