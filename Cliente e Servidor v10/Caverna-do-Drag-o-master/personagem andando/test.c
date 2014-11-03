@@ -210,23 +210,23 @@ void* enviaClientes(void* arg){
 
 }
 
-/*void sortearNas(int n){
+void sortearNas(int n){
    int p, C;
-   red[n].vida = 3;
+   red.vida = 3;
    C = 1;
    srand((unsigned)time(NULL));
    while(C == 1){
 
         p = rand()%8;
         if(inicios.ativa[p] != 1 ){
-            red[n].x = inicios.x[p]*50;
-            red[n].y = inicios.y[p]*50;
+            red.x = inicios.x[p]*50;
+            red.y = inicios.y[p]*50;
             inicios.ativa[p] = 1;
             C=0;
         }
    }
 
-}*/
+}
 
 void setmove(int lado){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
@@ -491,21 +491,23 @@ void error(char *message) {
   exit(EXIT_FAILURE);
 }
 
-/*void zeraPersonagens(){
+void zeraPersonagens(){
     int i;
     for(i = 0; i < 4; i++){
-        red[i].sprite = 0;
-        red[i].direcaoS = 0;
-        red[i].moveH = 0;
-        red[i].moveV = 0;
-        red[i].frame = 0;
-        red[i].arm = -1;
+        red.sprite = 0;
+        red.direcaoS = 0;
+        red.moveH = 0;
+        red.moveV = 0;
+        red.frame = 0;
+        red.arm = -1;
     }
-}*/
+}
+
 struct relogio{
     int minutos;
     int segundos;
 };
+
 struct relogio reloginho;
 
 void maisumseg(){
@@ -517,8 +519,6 @@ void maisumseg(){
     }
 
 }
-
-
 
 int game(int servidor) {
   if(!al_init())
@@ -542,40 +542,41 @@ int game(int servidor) {
     error("failed to create event queue");
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
-  ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
   ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
-
+  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap_B = al_create_timer(0.5);
+  ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
   /**********/
-  ALLEGRO_BITMAP *solo = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/solo.png");
+  ALLEGRO_BITMAP *solo = al_load_bitmap("solo.png");
   if(!solo)
     error("failed to load solo");
 
-
-  ALLEGRO_BITMAP *parede = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/paredes.png");
-  if(!parede)
-    error("failed to load paredes");
-
-  ALLEGRO_BITMAP *trap = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/trap.png");
-  if(!trap)
-    error("failed to load trap");
-
-  ALLEGRO_BITMAP *sheet = al_load_bitmap("C:/Users/caio.mvsilva/Desktop/Red.png");
-  if(!sheet)
-    error("failed to load sheet");
 
   ALLEGRO_BITMAP *area_central = al_create_bitmap(250, 650);
     if (!area_central)
         error("Falha ao criar bitmap.");
 
+  ALLEGRO_BITMAP *parede = al_load_bitmap("paredes.png");
+  if(!parede)
+    error("failed to load paredes");
+
+  ALLEGRO_BITMAP *life = al_load_bitmap("heart.png");
+  if(!life)
+    error("faled to load life");
+
+  ALLEGRO_BITMAP *trap = al_load_bitmap("trap.png");
+  if(!trap)
+    error("failed to load trap");
+
+  ALLEGRO_BITMAP *sheet = al_load_bitmap("Red.png");
+  if(!sheet)
+    error("failed to load sheet");
+
   ALLEGRO_BITMAP *saida = al_load_bitmap("exit.png");
   if(!saida)
     error("failed to load saida");
 
-  ALLEGRO_BITMAP *life = al_load_bitmap("heart2.png");
-  if(!life)
-    error("faled to load life");
-  //
-  ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
+
+    ALLEGRO_FONT *fonte = al_load_font("bin/Debug/aspartam.ttf", 20, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
@@ -635,7 +636,8 @@ int game(int servidor) {
   int flags = 0;
   int pos_x_trap = 1;
   int flag_trap = 0;
-
+    int px;
+    int py;
 
     red.frame = 0;
     eu.spriteT = 0;
@@ -769,35 +771,34 @@ int game(int servidor) {
 
         if(event.timer.source == timer)
         {
-        if(red.moveH != 0){
-            ai = red.moveH;
-            b = testex();
-            if(b == 3){
-                red.x = (TAFu.x*50) + (9);
-                red.y = (TAFu.y*50) + (5);
-                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                pos_x_trap = 1;
-            }
-            refresh = 1;
-          }
+                if(red.moveH != 0){
+                    ai = red.moveH;
+                    b = testex();
+                    if(b == 3){
+                        red.x = (TAFu.x*50) + (9);
+                        red.y = (TAFu.y*50) + (5);
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                        pos_x_trap = 1;
+                    }
+                    refresh = 1;
+                  }
 
-          if(red.moveV != 0){
-            ai = red.moveV;
-            b = testey();
-             if(b == 3){
-                red.x = (TAFu.x*50) + (9);
-                red.y = (TAFu.y*50) - (5* ai);
+                  if(red.moveV != 0){
+                    ai = red.moveV;
+                    b = testey();
+                     if(b == 3){
+                        red.x = (TAFu.x*50) + (9);
+                        red.y = (TAFu.y*50) - (5* ai);
 
-                al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
-                pos_x_trap = 1;
-            }
-            refresh = 1;
-          }
+                        al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+                        pos_x_trap = 1;
+                    }
+                    refresh = 1;
+                    }
+                    refresh = 1;
 
-
-
-          refresh = 1;
         }
+
         if(event.timer.source == timer_mudanca_de_posicao_na_imagem_da_trap)
         {
 
@@ -830,7 +831,24 @@ int game(int servidor) {
             }
             refresh = 1;
         }
-      break;
+        if(event.timer.source == timer_contador)
+            {
+                    maisumseg();
+                    if(reloginho.segundos == 15 && reloginho.minutos == 0 )
+                        mapa[6][6] = 5;
+
+                    if( reloginho.minutos == 1 && reloginho.segundos == 30){
+                        red.b = 4;
+                        al_stop_timer(timer_contador);
+                        al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
+
+                    }
+            }
+
+
+
+
+        break;
         default:
             printf("");
         }
@@ -957,7 +975,7 @@ int game(int servidor) {
 
                 for (contador = 0; contador < 4; contador++){
                     if(contador != servidor)
-                        al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags)
+                        al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
                 }
             }
 
@@ -968,6 +986,8 @@ int game(int servidor) {
       refresh = 0;
 
     }
+
+
 }
 
   /**********/
@@ -1479,6 +1499,8 @@ int waitplayer(){
 }
 
 
+
+
 int main(){
     HANDLE th[2];
     DWORD Ith;
@@ -1509,7 +1531,8 @@ int main(){
                 game(posicaoServidor);
 
 
-
     return 0;
 }
+
+
 
