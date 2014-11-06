@@ -379,6 +379,7 @@ int testey(int p){
               }
             }
             esta = colision(red[p].x,red[p].y,0,red[p].moveV,2);
+
             if(esta == 0){
                 red[p].y += red[p].moveV * SPEED;
             }else{
@@ -417,7 +418,7 @@ int testey(int p){
 
                 }
 
-}
+                }
 
                 if(esta == 5){
                     vencedor = p;

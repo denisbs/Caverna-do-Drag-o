@@ -128,23 +128,6 @@ void setI(){
 }
 
 
-void sortearNas(){
-   int p, C;
-   red.vida = 3;
-   C = 1;
-   srand((unsigned)time(NULL));
-   while(C == 1){
-
-        p = rand()%8;
-        if(inicios.ativa[p] != 1 ){
-            red.x = inicios.x[p]*50;
-            red.y = inicios.y[p]*50;
-            inicios.ativa[p] = 1;
-            C=0;
-        }
-   }
-
-}
 
 
 struct Reds{
@@ -232,23 +215,6 @@ void* enviaClientes(void* arg){
 
 }
 
-void sortearNas(int n){
-   int p, C;
-   red.vida = 3;
-   C = 1;
-   srand((unsigned)time(NULL));
-   while(C == 1){
-
-        p = rand()%8;
-        if(inicios.ativa[p] != 1 ){
-            red.x = inicios.x[p]*50;
-            red.y = inicios.y[p]*50;
-            inicios.ativa[p] = 1;
-            C=0;
-        }
-   }
-
-}
 
 void setmove(int lado){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
@@ -285,6 +251,25 @@ void setmove(int lado){
             break;
     }
 }
+
+void sortearNas(){
+   int p, C;
+   red.vida = 3;
+   C = 1;
+   srand((unsigned)time(NULL));
+   while(C == 1){
+
+        p = rand()%8;
+        if(inicios.ativa[p] != 1 ){
+            red.x = inicios.x[p]*50;
+            red.y = inicios.y[p]*50;
+            inicios.ativa[p] = 1;
+            C=0;
+        }
+   }
+
+}
+
 
 int colision(int xa, int ya, int posix, int posiy, int eixo){
        int px, py;
@@ -385,6 +370,36 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
 
                     }
+
+       }
+
+
+        //para o personagem
+        int px1;
+        int py1;
+       int contador;
+       for (contador = 0; contador < 4; contador++ ){
+            if(contador != posicaoServidor){
+                px1 =  personas[contador].x+32;
+                py1 =  personas[contador].y+40;
+
+                if(red.x == personas[contador].x)
+                    coli = 1;
+
+                if(red.x == px1)
+                    coli = 1;
+
+                if(red.y ==  personas[contador].y)
+                    coli = 1;
+
+                if(red.y == py1)
+                    coli = 1;
+
+
+
+            }
+
+
 
        }
 
@@ -848,7 +863,7 @@ int game(int servidor) {
                          {
                              red.vida -= 1;
                          }else{
-                             //sortearNas();
+                             sortearNas();
                          }
 
                 }
