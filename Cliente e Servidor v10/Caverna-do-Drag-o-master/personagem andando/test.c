@@ -163,6 +163,7 @@ struct Pdfora{
 
     int inicia;
 };
+
 struct Reds red;
 struct Pdfora personas[4];
 struct Pdfora eu;
@@ -214,7 +215,6 @@ void* enviaClientes(void* arg){
     }
 
 }
-
 
 void setmove(int lado){
     // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
@@ -270,7 +270,6 @@ void sortearNas(){
 
 }
 
-
 int colision(int xa, int ya, int posix, int posiy, int eixo){
        int px, py;
        int coli = 0;
@@ -287,6 +286,8 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
                         if( mapa[anaY][anaX] == 1 )
                             coli = 1;
+
+
 
                         //ponto de borda sprite 2
                         anaX = (px+32)/50;
@@ -320,6 +321,8 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
                         if(mapa[anaY][anaX] == 5)
                             coli = 5;
+
+
 
 
 
@@ -375,25 +378,50 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
 
 
         //para o personagem
-        int px1;
-        int py1;
        int contador;
+
        for (contador = 0; contador < 4; contador++ ){
             if(contador != posicaoServidor){
-                px1 =  personas[contador].x+32;
-                py1 =  personas[contador].y+40;
+                if(eixo == 1){
+                        px += posix * SPEED;
 
-                if(red.x == personas[contador].x)
-                    coli = 1;
+                        if(px > personas[contador].x && px<(personas[contador].x+32) )
+                            if(red.y > personas[contador].y && red.y<(personas[contador].y+40) )
+                                coli =1;
 
-                if(red.x == px1)
-                    coli = 1;
+                        if((px+32) > personas[contador].x && (px+32)<(personas[contador].x+32) )
+                            if(red.y > personas[contador].y && red.y<(personas[contador].y+40) )
+                                coli =1;
 
-                if(red.y ==  personas[contador].y)
-                    coli = 1;
+                        if((px) > personas[contador].x && (px)<(personas[contador].x+32) )
+                            if((red.y+40) > personas[contador].y && (red.y+40)<(personas[contador].y+40) )
+                                coli =1;
 
-                if(red.y == py1)
-                    coli = 1;
+                        if((px+32) > personas[contador].x && (px+32)<(personas[contador].x+32) )
+                            if((red.y+40) > personas[contador].y && (red.y+40)<(personas[contador].y+40) )
+                                coli =1;
+                }
+                if(eixo == 2){
+                     py += posiy * SPEED;
+                    if(py > personas[contador].y && py<(personas[contador].y+40) )
+                        if(red.x > personas[contador].x && red.x<(personas[contador].x+32) )
+                            coli =1;
+
+                    if((py+40) > personas[contador].y && (py+40)<(personas[contador].y+40) )
+                        if((red.x+32) > personas[contador].x && (red.x+32)<(personas[contador].x+32) )
+                            coli =1;
+
+                    if(py > personas[contador].y && py<(personas[contador].y+40) )
+                        if((red.x+32) > personas[contador].x && (red.x+32)<(personas[contador].x+32) )
+                            coli =1;
+
+                    if((py+40) > personas[contador].y && (py+40)<(personas[contador].y+40) )
+                        if(red.x > personas[contador].x && red.x<(personas[contador].x+32) )
+                            coli =1;
+                }
+
+
+
 
 
 
@@ -1083,7 +1111,6 @@ for(shift = 0; shift < NUM_SPRITES; shift++)
   return 0;
 }
 
-
 int menu() {
     ALLEGRO_DISPLAY *janela = NULL;
     ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
@@ -1341,7 +1368,7 @@ int criaCliente(){
 
     sock.sin_family=AF_INET;
     sock.sin_port=htons(1235); //Numero da porta de rede
-    sock.sin_addr.s_addr=inet_addr(/*"127.0.0.1"*/"10.135.160.22"/*ip*/);
+    sock.sin_addr.s_addr=inet_addr("127.0.0.1"/*"10.135.160.22"ip*/);
 
     if(connect(clienteWinsock, (SOCKADDR*)&sock, sizeof(sock))==SOCKET_ERROR)
     {

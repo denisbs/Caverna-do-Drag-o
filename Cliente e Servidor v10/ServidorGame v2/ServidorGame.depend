@@ -106,3 +106,30 @@
 	<allegro5/allegro_image.h>
 	<allegro5/allegro_primitives.h>
 
+1414627509 source:c:\users\caio.mvsilva\desktop\cliente e servidor v10\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1415055721 source:c:\users\caio.mvsilva\desktop\cliente e servidor v11 problema de vida\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1415232523 source:c:\users\caio.mvsilva\desktop\cliente e servidor v12 problema de tempo com 4 player\servidorgame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+

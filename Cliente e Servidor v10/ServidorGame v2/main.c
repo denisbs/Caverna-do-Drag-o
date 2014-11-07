@@ -7,6 +7,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 
+#define mapa_size 13
+
 WSADATA data; //Variíveis que recebem o valor da inicialização e criação do socket.
 //SOCKET winsock; //Variíveis que recebem o valor da inicialização e criação do socket.
 SOCKADDR_IN sock; //Variíveis que recebem o valor da inicialização e criação do socket
@@ -20,6 +22,8 @@ typedef struct{
     int trapX;
     int trapY;
     int spriteT;
+    int vida;
+    int inicia;
 }dados;
 
 
@@ -36,6 +40,7 @@ pontoNas inicios;
 HANDLE MeuMutex;
 
 int cont = 0;
+int iniciar = 0;
 int clientes[4];
 int posicaoPersonagem[4][4];
 int mapa[13][13] = {
@@ -55,7 +60,7 @@ int mapa[13][13] = {
 };   // mapa base
 
 void Servidor(void* arg){
-    int sockEntrada = (*(int *) arg) - 1;
+    int sockEntrada = (*(int *) arg);
     int EstadoAtual;
     dados armazena;
     /*if (sockEntrada < 0){
@@ -64,15 +69,25 @@ void Servidor(void* arg){
     printf("%d\n", sockEntrada);
     printf("%d\n", clientes[sockEntrada]);
     printf("---------------------------------------\n");
-    send(clientes[sockEntrada], &sockEntrada, sizeof(sockEntrada),0);
+    if (send(clientes[sockEntrada], &sockEntrada, sizeof(sockEntrada),0) < 0){
+        puts("Send failed\n");
+        return 1;
+    }
+    send(clientes[sockEntrada], &mapa, sizeof(mapa),0);
     sortearNas(sockEntrada);
+    send(clientes[sockEntrada], (void*)&personagens, sizeof(personagens),0);
     while(1){
         //printf("oi oio io ioi o io i");EstadoAtual = WaitForSingleObject(MeuMutex, INFINITE);
 
-        if (cont > 2){
+        if (cont > 0 ){
             recv(clientes[sockEntrada], (void*)&armazena, sizeof(armazena),0);
             WaitForSingleObject(MeuMutex, INFINITE);
-            personagens[sockEntrada] = armazena;
+            if (iniciar < 4){
+                iniciar++;
+                //printf("%d\n",iniciar);
+            }else{
+                personagens[sockEntrada] = armazena;
+            }
             ReleaseMutex(MeuMutex);
 
 
@@ -89,16 +104,28 @@ void Servidor(void* arg){
 void enviaClientes(){
     int k;
     while(1){
-        Sleep(10);
-        for(k = 0; k < 4; k++){
-            send(clientes[k], (void*)&personagens, sizeof(personagens),0);
+        Sleep(20);
+        if(iniciar != 4){
+            for(k = 0; k < 4; k++){
+                if (k < cont){
+                    send(clientes[k], (void*)&personagens, sizeof(personagens),0);
+                }
+            }
+        }else{
+            for(k = 0; k < 4; k++){
+                personagens[k].inicia = 1;
+                iniciar++;
+                //printf("adcionei\n");
+            }
         }
     }
 }
 
 void sortearNas(int n){
+
+
    int p, C;
-   //personagens[n].vida = 3;
+   personagens[n].vida = 3;
    C = 1;
    srand((unsigned)time(NULL));
    while(C == 1){
@@ -108,13 +135,36 @@ void sortearNas(int n){
             personagens[n].x = inicios.x[p]*50;
             personagens[n].y = inicios.y[p]*50;
             //printf("%d,\n%d\n", inicios.x[p],inicios.y[p]);
-            send(clientes[n], (void*)&personagens[n], sizeof(personagens[n]),0);
+            //send(clientes[n], (void*)&personagens[n], sizeof(personagens[n]),0);
 
             inicios.ativa[p] = 1;
             C=0;
         }
    }
 
+}
+
+void sorteaA(){
+    int a, C;
+    int nL, nC;
+    C = 0;
+    srand((unsigned)time(NULL));
+    for (a = 0; a < 7; a++ ){
+        nL = rand()%mapa_size;
+        nC = rand()%mapa_size;
+        while (C == 0){
+            if(mapa[nC][nL] == 0){
+                mapa[nC][nL] = 3;
+                C = 1;
+                printf(" trap em: %d - %d\n", nL, nC);
+            }else{
+                nL = rand()%mapa_size;
+                nC = rand()%mapa_size;
+            }
+        }
+        C = 0;
+
+    }
 }
 
 void setI(){
@@ -193,7 +243,7 @@ int criaServidor(){
 
 int main()
 {
-    HANDLE th[4];
+    HANDLE th[5];
     DWORD Ith;
 
     MeuMutex = CreateMutex(NULL, FALSE, NULL);
@@ -203,6 +253,7 @@ int main()
     }
 
     setI();
+    sorteaA();
     int i = 0;
     struct sockaddr_in clienteAddr;
     int winsock = criaServidor();
@@ -233,13 +284,14 @@ int main()
                 printf("Erro na Thread\n",GetLastError());
                 return 0;
             }
-
-            if (cont == 3){
+            Sleep(1000);
+            cont++;
+            if (cont == 1){
                 //Sleep(1000);
                 th[4] = CreateThread(NULL,0,enviaClientes,0,0,NULL) == 0;
             }
 
-            cont++;
+            //cont++;
             i++;
         }
     }
