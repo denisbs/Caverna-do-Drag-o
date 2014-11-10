@@ -260,15 +260,79 @@ void sortearNas(){
    while(C == 1){
 
         p = rand()%8;
-        if(inicios.ativa[p] != 1 ){
+        inicios.ativa[p] = identiP(inicios.x[p]*50, inicios.y[p]*50);
+
+        if(inicios.ativa[p] != 1){
             red.x = inicios.x[p]*50;
             red.y = inicios.y[p]*50;
-            inicios.ativa[p] = 1;
+            inicios.ativa[p] = 0;
             C=0;
         }
    }
 
 }
+
+
+int identiP(int x, int y){
+    int coli = 0;
+    int contador;
+    for (contador = 0; contador < 4; contador++ ){
+            if(contador != posicaoServidor){
+
+                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
+                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
+                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                            coli = 1;
+
+                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
+                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
+                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                            coli = 1;
+            }
+
+
+
+    }
+
+    return coli;
+}
+
+int ataque(int x, int y, int sentido){
+    int coli = 0;
+    int contador;
+    for (contador = 0; contador < 4; contador++ ){
+            if(contador != posicaoServidor){
+
+                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
+                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
+                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                            coli = 1;
+
+                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
+                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
+                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                            coli = 1;
+            }
+
+
+
+    }
+
+
+}
+
 
 int colision(int xa, int ya, int posix, int posiy, int eixo){
        int px, py;
@@ -385,39 +449,81 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                 if(eixo == 1){
                         px += posix * SPEED;
 
-                        if(px > personas[contador].x && px<(personas[contador].x+32) )
-                            if(red.y > personas[contador].y && red.y<(personas[contador].y+40) )
+                        if(px >= personas[contador].x && px<=(personas[contador].x+32) )
+                            if(red.y >= personas[contador].y && red.y<=(personas[contador].y+40) )
                                 coli =1;
 
-                        if((px+32) > personas[contador].x && (px+32)<(personas[contador].x+32) )
-                            if(red.y > personas[contador].y && red.y<(personas[contador].y+40) )
+                        if((px+32) >= personas[contador].x && (px+32)<=(personas[contador].x+32) )
+                            if(red.y >= personas[contador].y && red.y<=(personas[contador].y+40) )
                                 coli =1;
 
-                        if((px) > personas[contador].x && (px)<(personas[contador].x+32) )
-                            if((red.y+40) > personas[contador].y && (red.y+40)<(personas[contador].y+40) )
+                        if((px) >= personas[contador].x && (px)<=(personas[contador].x+32) )
+                            if((red.y+40) >= personas[contador].y && (red.y+40)<=(personas[contador].y+40) )
                                 coli =1;
 
-                        if((px+32) > personas[contador].x && (px+32)<(personas[contador].x+32) )
-                            if((red.y+40) > personas[contador].y && (red.y+40)<(personas[contador].y+40) )
+                        if((px+32) >= personas[contador].x && (px+32)<=(personas[contador].x+32) )
+                            if((red.y+40) >= personas[contador].y && (red.y+40)<=(personas[contador].y+40) )
                                 coli =1;
+
+
+
+
+                        if((px+16) >= personas[contador].x && (px+16)<=(personas[contador].x+32) )
+                            if(red.y >= personas[contador].y && red.y<=(personas[contador].y+40) )
+                                coli =1;
+
+                        if((px+16) >= personas[contador].x && (px+16)<=(personas[contador].x+32) )
+                            if(red.y >= personas[contador].y && red.y<=(personas[contador].y+40) )
+                                coli =1;
+
+                        if((px+16) >= personas[contador].x && (px+16)<=(personas[contador].x+32) )
+                            if((red.y+20) > personas[contador].y && (red.y+20)<(personas[contador].y+40) )
+                                coli =1;
+
+                        if((px+16) >= personas[contador].x && (px+16)<=(personas[contador].x+32) )
+                            if((red.y+20) >= personas[contador].y && (red.y+20)<=(personas[contador].y+40) )
+                                coli =1;
+
+
                 }
                 if(eixo == 2){
                      py += posiy * SPEED;
-                    if(py > personas[contador].y && py<(personas[contador].y+40) )
-                        if(red.x > personas[contador].x && red.x<(personas[contador].x+32) )
+                    if(py >= personas[contador].y && py<=(personas[contador].y+40) )
+                        if(red.x >= personas[contador].x && red.x<=(personas[contador].x+32) )
                             coli =1;
 
-                    if((py+40) > personas[contador].y && (py+40)<(personas[contador].y+40) )
-                        if((red.x+32) > personas[contador].x && (red.x+32)<(personas[contador].x+32) )
+                    if((py+40) >= personas[contador].y && (py+40)<=(personas[contador].y+40) )
+                        if((red.x+32) >= personas[contador].x && (red.x+32)<=(personas[contador].x+32) )
                             coli =1;
 
-                    if(py > personas[contador].y && py<(personas[contador].y+40) )
-                        if((red.x+32) > personas[contador].x && (red.x+32)<(personas[contador].x+32) )
+                    if(py >= personas[contador].y && py<=(personas[contador].y+40) )
+                        if((red.x+32) >= personas[contador].x && (red.x+32)<=(personas[contador].x+32) )
                             coli =1;
 
-                    if((py+40) > personas[contador].y && (py+40)<(personas[contador].y+40) )
-                        if(red.x > personas[contador].x && red.x<(personas[contador].x+32) )
+                    if((py+40) >= personas[contador].y && (py+40)<=(personas[contador].y+40) )
+                        if(red.x >= personas[contador].x && red.x<=(personas[contador].x+32) )
                             coli =1;
+
+
+                    if((py+20) >= personas[contador].y && (py+20)<=(personas[contador].y+40) )
+                        if(red.x >= personas[contador].x && red.x<=(personas[contador].x+32) )
+                            coli =1;
+
+                    if((py+20) >= personas[contador].y && (py+20)<=(personas[contador].y+40) )
+                        if((red.x+16) >= personas[contador].x && (red.x+16)<=(personas[contador].x+32) )
+                            coli =1;
+
+                    if((py+20) >= personas[contador].y && (py+20)<=(personas[contador].y+40) )
+                        if((red.x+16) >= personas[contador].x && (red.x+16)<=(personas[contador].x+32) )
+                            coli =1;
+
+                    if((py+20) >= personas[contador].y && (py+20)<=(personas[contador].y+40) )
+                        if(red.x >= personas[contador].x && red.x <= (personas[contador].x+32) )
+                            coli =1;
+
+
+
+
                 }
 
 
@@ -618,10 +724,9 @@ int game(int servidor) {
 
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
   ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
-  ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap_B = al_create_timer(0.5);
   ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
   /**********/
-  ALLEGRO_BITMAP *solo = al_load_bitmap("C:/Users/denis.loliveira/Desktop/solo.png");
+  ALLEGRO_BITMAP *solo = al_load_bitmap("C:/Inclusos/solo.png");
   if(!solo)
     error("failed to load solo");
 
@@ -630,28 +735,28 @@ int game(int servidor) {
     if (!area_central)
         error("Falha ao criar bitmap.");
 
-  ALLEGRO_BITMAP *parede = al_load_bitmap("C:/Users/denis.loliveira/Desktop/paredes.png");
+  ALLEGRO_BITMAP *parede = al_load_bitmap("C:/Inclusos/paredes.png");
   if(!parede)
     error("failed to load paredes");
 
-  ALLEGRO_BITMAP *life = al_load_bitmap("C:/Users/denis.loliveira/Desktop/heart.png");
+  ALLEGRO_BITMAP *life = al_load_bitmap("C:/Inclusos/heart.png");
   if(!life)
     error("faled to load life");
 
-  ALLEGRO_BITMAP *trap = al_load_bitmap("C:/Users/denis.loliveira/Desktop/trap.png");
+  ALLEGRO_BITMAP *trap = al_load_bitmap("C:/Inclusos/trap.png");
   if(!trap)
     error("failed to load trap");
 
-  ALLEGRO_BITMAP *sheet = al_load_bitmap("C:/Users/denis.loliveira/Desktop/Red.png");
+  ALLEGRO_BITMAP *sheet = al_load_bitmap("C:/Inclusos/Red.png");
   if(!sheet)
     error("failed to load sheet");
 
-  ALLEGRO_BITMAP *saida = al_load_bitmap("C:/Users/denis.loliveira/Desktop/exit.png");
+  ALLEGRO_BITMAP *saida = al_load_bitmap("C:/Inclusos/exit.png");
   if(!saida)
     error("failed to load saida");
 
 
-    ALLEGRO_FONT *fonte = al_load_font("C:/Users/denis.loliveira/Desktop/aspartam.ttf", 20, 0);
+    ALLEGRO_FONT *fonte = al_load_font("C:/Inclusos/aspartam.ttf", 20, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
@@ -711,7 +816,7 @@ int game(int servidor) {
   int ai;
 
   int flags = 0;
-  int pos_x_trap = 1;
+  int pos_x_trap = 0;
   int flag_trap = 0;
     int px;
     int py;
@@ -726,16 +831,17 @@ int game(int servidor) {
     reloginho.segundos = 0;
     reloginho.minutos = 0;
 
+
+
+
   /************/
   //Gerando personagens na tela
   int contador;
-  /*for (contador = 0; contador < 4; contador++){
+  for (contador = 0; contador < 4; contador++){
         //sortearNas(contador);
-       if(contador != servidor)
-            al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
+       //if(contador != servidor)
+            personas[contador].spriteT = 0;
   }
-  al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
-*/
   /**********/
 
   al_flip_display();
@@ -754,6 +860,7 @@ int game(int servidor) {
 
     al_start_timer(timer);
     al_start_timer(timer_contador);
+
   while(running) {
     ALLEGRO_EVENT event;
 
@@ -1014,7 +1121,7 @@ int game(int servidor) {
                             al_draw_bitmap(life,(660+l*70),250, 0);
 
 
-                    if(b == 3)
+                    if(red.b == 3)
                         al_draw_bitmap(traps[pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
 
 
@@ -1022,10 +1129,10 @@ int game(int servidor) {
                    for (contador = 0; contador < 4; contador++){
                     //sortearNas(contador);
 
-                   if(contador != servidor)
-                        al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
+                           if(contador != servidor)
+                                al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
 
-                        al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+                            al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
 
 
                    }
@@ -1142,7 +1249,7 @@ int menu() {
         return -1;
     }
 
-    fonte = al_load_font("C:/Users/denis.loliveira/Desktop/aspartam.ttf", 24, 0);
+    fonte = al_load_font("C:/Inclusos/aspartam.ttf", 24, 0);
     if (!fonte)
     {
         al_destroy_display(janela);
@@ -1150,7 +1257,7 @@ int menu() {
         return -1;
     }
 
-    fontT = al_load_font("C:/Users/denis.loliveira/Desktop/aspartam.ttf", 50, 0);
+    fontT = al_load_font("C:/Inclusos/aspartam.ttf", 50, 0);
     if (!fontT)
     {
         al_destroy_display(janela);
@@ -1399,11 +1506,11 @@ int waitplayer(){
     ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
     ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
 
-    ALLEGRO_FONT *fonte = al_load_font("C:/Users/denis.loliveira/Desktop/NIv.ttf", 20, 0);
+    ALLEGRO_FONT *fonte = al_load_font("C:/Inclusos/NIv.ttf", 20, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
-    ALLEGRO_FONT *fonte2 = al_load_font("C:/Users/denis.loliveira/Desktop/NIv.ttf", 30, 0);
+    ALLEGRO_FONT *fonte2 = al_load_font("C:/Inclusos/NIv.ttf", 30, 0);
     if (!fonte)
         error("Falha ao carregar fonte.");
 
