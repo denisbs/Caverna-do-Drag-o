@@ -1266,13 +1266,17 @@ int menu() {
     }
 
 
+    ALLEGRO_FONT *fonte3 = al_load_font("C:/Inclusos/aspartam.ttf", 17, 0);
+    if (!fonte)
+        error("Falha ao carregar fonte.");
+
 
     // Configura o título da janela
     al_set_window_title(janela, "Rotinas de Mouse - www.rafaeltoledo.net");
 
     //configurar textos
     char *texto1 = "Programa teste";
-    char *texto2 = "Mutiplayer";
+    char *texto2 = "Sabe de nada Inocente";
     char *texto3 = "Sair";
     char *titulo1 = "Riddle Story";
     char *titulo2 = " of ";
@@ -1431,7 +1435,7 @@ int menu() {
 
 
         al_draw_bitmap(btt_mult, 100, 320, 0);
-        al_draw_textf(fonte, al_map_rgb(0, 0, 0), 220, 330, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
+        al_draw_textf(fonte3, al_map_rgb(0, 0, 0), 220, 340, ALLEGRO_ALIGN_CENTRE, "%s", texto2);
 
         al_draw_bitmap(botao_sair, WIDTHM - al_get_bitmap_width(botao_sair) - 10, HEIGHTM - al_get_bitmap_height(botao_sair) - 10, 0);
         al_draw_textf(fonte, al_map_rgb(0, 0, 0), WIDTHM - al_get_bitmap_width(botao_sair)+25, HEIGHTM - al_get_bitmap_height(botao_sair) , ALLEGRO_ALIGN_CENTRE, "%s", texto3);
@@ -1532,14 +1536,14 @@ int waitplayer(){
         confp[i] = 0;
     confT = 0;
 
-    char *texto1 = "Voce  o player N";
+    char *texto1 = "Voce  o player: ";
 
     char *texto2 = "Aguardando mapa";
     char *texto21 = "Mapa carregado";
 
     char *texto3 = "Aguardando Player ";
     char *texto4 = "Player ";
-    char *okok ="ok";
+    char *okok =" OK";
 
     char *texto5 = "Posicoes inicias definidas";
 
