@@ -248,7 +248,6 @@ void setmove(int lado){
         case 0:
             red.moveH = 0;
             red.moveV = 0;
-            red.direcaoS = 0;
             red.sprite = 0;
             break;
         default:
@@ -711,6 +710,8 @@ int game(int servidor) {
   ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
   ALLEGRO_TIMER *timer_mudanca_de_posicao_na_imagem_da_trap = al_create_timer(0.5);
   ALLEGRO_TIMER *timer_contador = al_create_timer(1.0);
+  ALLEGRO_TIMER *timer_ataque = al_create_timer(0.15);
+  ALLEGRO_TIMER *timer_dano = al_create_timer(0.25);
   /**********/
   ALLEGRO_BITMAP *solo = al_load_bitmap("C:/Inclusos/solo.png");
   if(!solo)
@@ -756,11 +757,11 @@ int game(int servidor) {
     }
 
 
-  ALLEGRO_BITMAP *sprites[NUM_SPRITES][NUM_SPRITES];
+  ALLEGRO_BITMAP *sprites[NUM_SPRITES+4][NUM_SPRITES];
 
   int shift, shiftb;
 
-  for(shift = 0; shift < NUM_SPRITES; shift++){
+  for(shift = 0; shift < (NUM_SPRITES+4); shift++){
     for(shiftb = 0; shiftb < NUM_SPRITES; shiftb++){
         sprites[shift][shiftb] = al_create_sub_bitmap(sheet, shiftb * SPRITE_SIZEH, shift * SPRITE_SIZEV, SPRITE_SIZEH, SPRITE_SIZEV);
     }
@@ -805,6 +806,9 @@ int game(int servidor) {
     int flags = 0;
     int pos_x_trap = 0;
     int flag_trap = 0;
+
+    int pos_ataq = 0;
+
     int px;
     int py;
 
@@ -844,6 +848,8 @@ int game(int servidor) {
   al_register_event_source(queue, al_get_timer_event_source(timer));
   al_register_event_source(queue, al_get_timer_event_source(timer_mudanca_de_posicao_na_imagem_da_trap));
   al_register_event_source(queue, al_get_timer_event_source(timer_contador));
+  al_register_event_source(queue, al_get_timer_event_source(timer_ataque));
+  al_register_event_source(queue, al_get_timer_event_source(timer_dano));
   /**********/
 
   int running = 1;
@@ -872,7 +878,6 @@ int game(int servidor) {
         break;
 
       case ALLEGRO_KEY_DOWN:
-
                 if(red.b != 3 && alguemganhou == 0){
                     setmove(4);
                     flags = 0;
@@ -896,6 +901,16 @@ int game(int servidor) {
                 refresh = 1;
             }
         break;
+      case ALLEGRO_KEY_SPACE:
+            if(red.b != 3 && alguemganhou == 0){
+                    setmove(0);
+                    ataque(red.x, red.y, red.direcaoS);
+                    al_start_timer(timer_ataque);
+                    red.direcaoS += 4;
+                    flags = 0;
+                    refresh = 1;
+                }
+            break;
       case ALLEGRO_KEY_ESCAPE:
         running = 0;
         break;
@@ -935,6 +950,9 @@ int game(int servidor) {
           refresh = 1;
         }
         break;
+      case ALLEGRO_KEY_SPACE:
+        break;
+
       case ALLEGRO_KEY_ESCAPE:
         running = 0;
         break;
@@ -1016,9 +1034,7 @@ int game(int servidor) {
                     refresh = 1;
             }
 
-
-
-       if(event.timer.source == timer_contador)
+        if(event.timer.source == timer_contador)
             {
                     maisumseg();
                     if(reloginho.segundos == 15 && reloginho.minutos == 0 ){
@@ -1033,6 +1049,32 @@ int game(int servidor) {
                         al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
                     }
             }
+
+         if(event.timer.source == timer_ataque)
+         {
+            if(red.sprite < 2 && pos_ataq == 0)
+            {
+                red.sprite++;
+            }
+            else
+            {
+                pos_ataq = 1;
+                red.sprite--;
+
+                if(red.sprite == 0)
+                    {
+                        al_stop_timer(timer_ataque);
+                        red.b = 0;
+                        red.direcaoS -= 4;
+                        pos_ataq = 0;
+                    }
+            }
+
+
+         }
+
+
+
             break;
         default:
             printf("");
@@ -1546,7 +1588,7 @@ int criaCliente(){
 
     sock.sin_family=AF_INET;
     sock.sin_port=htons(1235); //Numero da porta de rede
-    sock.sin_addr.s_addr=inet_addr(/*"127.0.0.1"*/"10.135.160.22"/*ip*/);
+    sock.sin_addr.s_addr=inet_addr("127.0.0.1"/*"10.135.160.22"/*ip*/);
 
     if(connect(clienteWinsock, (SOCKADDR*)&sock, sizeof(sock))==SOCKET_ERROR)
     {
@@ -1623,7 +1665,7 @@ int waitplayer(){
     al_register_event_source(queue, al_get_timer_event_source(timer));
     al_register_event_source(queue, al_get_timer_event_source(timer_contador));
 
-    timerF = 20;
+    timerF = 5;
     al_start_timer(timer);
     while(saida){
 
@@ -1776,8 +1818,6 @@ int waitplayer(){
 
 
 }
-
-
 
 int main(){
     HANDLE th[2];
