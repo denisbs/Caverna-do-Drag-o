@@ -139,6 +139,7 @@ struct Reds{
       int b; //estados
       int vida;
 
+      int ataque;
       int frame;
       int arm;
 
@@ -221,7 +222,7 @@ void* enviaClientes(void* arg){
 }
 
 void setmove(int lado){
-    // 0 = down, 1 = esquerda, 2 = direita, 3 = cima - mapa de sprites moves
+    // 4 = down 1, 1 = esquerda -1, 2 = direita 1, 3 = cima-1 - mapa de sprites moves
     switch(lado){
         case 1:
              red.moveH = -1;
@@ -278,23 +279,24 @@ void sortearNas(){
 int identiP(int x, int y){
     int coli = 0;
     int contador;
+
     for (contador = 0; contador < 4; contador++ ){
             if(contador != posicaoServidor){
 
                     if(personas[contador].x >= x && personas[contador].x <= (x+50))
-                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                        if(personas[contador].y >= y && personas[contador].y <= (y+50))
                             coli = 1;
 
                     if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
-                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
+                        if(personas[contador].y >= y && personas[contador].y <= (y+50))
                             coli = 1;
 
                     if(personas[contador].x >= x && personas[contador].x <= (x+50))
-                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                        if((personas[contador].y+40) >= y && (personas[contador].y+40) <= (y+50))
                             coli = 1;
 
                     if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
-                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
+                        if((personas[contador].y+40) >= y && (personas[contador].y+40) <= (y+50))
                             coli = 1;
             }
 
@@ -308,31 +310,242 @@ int identiP(int x, int y){
 int ataque(int x, int y, int sentido){
     int coli = 0;
     int contador;
-    for (contador = 0; contador < 4; contador++ ){
-            if(contador != posicaoServidor){
+     // 4 = down 1, 1 = esquerda -1, 2 = direita 1, 3 = cima-1
+    switch(sentido){
+        case (0):
+            y = y+41;
+            for (contador = 0; contador < 4; contador++ ){
+                    if(contador != posicaoServidor){
 
-                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
-                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
-                            coli = 1;
+                            if(personas[contador].x >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
 
-                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
-                        if(personas[contador].y >= x && personas[contador].y <= (y+50))
-                            coli = 1;
+                            if((personas[contador].x+32) >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
 
-                    if(personas[contador].x >= x && personas[contador].x <= (x+50))
-                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
-                            coli = 1;
+                            if((personas[contador].x+32) >= x && personas[contador].y >= y){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= y ){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
 
-                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
-                        if((personas[contador].y+40) >= x && (personas[contador].y+40) <= (y+50))
-                            coli = 1;
+                            if((personas[contador].x+32) >= x && (personas[contador].y+40) >= y){
+                                if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= y){
+                                    if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && (personas[contador].y+40) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+16) >= x && (personas[contador].y+20) >= (y)){
+                                if(( personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y)){
+                                    if( (personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y+50)){
+                                        if( (personas[contador].x+16) >= x && (personas[contador].y+20) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                    }
             }
+        break;
+        case 1:
+            x = x - 50;
+            for (contador = 0; contador < 4; contador++ ){
+                    if(contador != posicaoServidor){
 
+                            if(personas[contador].x >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
 
+                            if((personas[contador].x+32) >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
 
+                            if((personas[contador].x+32) >= x && personas[contador].y >= y){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= y ){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && (personas[contador].y+40) >= (y)){
+                                if(( personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && (personas[contador].y+40) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+16) >= x && (personas[contador].y+20) >= (y)){
+                                if(( personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y)){
+                                    if( (personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y+50)){
+                                        if( (personas[contador].x+16) >= x && (personas[contador].y+20) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                    }
+            }
+            break;
+        case 2:
+            x = x + 83;
+            for (contador = 0; contador < 4; contador++ ){
+                    if(contador != posicaoServidor){
+
+                            if(personas[contador].x >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && personas[contador].y >= y){
+                                if ((personas[contador].x+32) >= x+50 && personas[contador].y >= y ){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && (personas[contador].y+40) >= (y)){
+                                if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && (personas[contador].y+40) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+16) >= x && (personas[contador].y+20) >= (y)){
+                                if ((personas[contador].x+16) >= (x+50) && (personas[contador].y+20)>= y){
+                                    if( (personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y+50)){
+                                        if( (personas[contador].x+16) >= x && (personas[contador].y+20) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                    }
+            }
+            break;
+        case 3:
+            y = y-51;
+            for (contador = 0; contador < 4; contador++ ){
+                    if(contador != posicaoServidor){
+
+                            if(personas[contador].x >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && personas[contador].y >= (y)){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && personas[contador].y >= y){
+                                if( (personas[contador].x+32) >= x+50 && personas[contador].y >= y ){
+                                    if( (personas[contador].x+32) >= x+50 && personas[contador].y >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && personas[contador].y >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+32) >= x && (personas[contador].y+40) >= (y)){
+                                if(( personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y)){
+                                    if( (personas[contador].x+32) >= x+50 && (personas[contador].y+40) >= (y+50)){
+                                        if( (personas[contador].x+32) >= x && (personas[contador].y+40) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if((personas[contador].x+16) >= x && (personas[contador].y+20) >= (y)){
+                                if(( personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y)){
+                                    if( (personas[contador].x+16) >= x+50 && (personas[contador].y+20) >= (y+50)){
+                                        if( (personas[contador].x+16) >= x && (personas[contador].y+20) >= (y+50)){
+                                                coli = contador;
+                                        }
+                                    }
+                                }
+                            }
+
+                    }
+            }
+            break;
     }
-
-
+    return coli;
 }
 
 int colision(int xa, int ya, int posix, int posiy, int eixo){
@@ -861,6 +1074,8 @@ int game(int servidor) {
     al_start_timer(timer_contador);
 
   while(running) {
+    // estado < 3 anda normal, 3 amardilha, 4 ffim por tempo, 6 atacando, 7 atacado
+
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
@@ -904,7 +1119,8 @@ int game(int servidor) {
       case ALLEGRO_KEY_SPACE:
             if(red.b != 3 && alguemganhou == 0){
                     setmove(0);
-                    ataque(red.x, red.y, red.direcaoS);
+                    red.b = 6;
+                    red.ataque = ataque(red.x, red.y, red.direcaoS);
                     al_start_timer(timer_ataque);
                     red.direcaoS += 4;
                     flags = 0;
@@ -1086,7 +1302,7 @@ int game(int servidor) {
 
             for(contador = 0; contador <4; contador++){
                 if(personas[contador].estado == 5){
-                        vencedor == contador;
+                        vencedor = contador;
                         alguemganhou = 1;
 
                 }
