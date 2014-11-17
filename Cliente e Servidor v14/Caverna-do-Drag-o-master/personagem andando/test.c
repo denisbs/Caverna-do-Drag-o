@@ -1079,13 +1079,15 @@ int game(int servidor) {
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
+    if(eu.estado == 7)
+        red.b == 7;
 
 
     switch(event.type) {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-        if(red.b != 3 && alguemganhou == 0){
+        if(red.b < 3 && alguemganhou == 0){
             setmove(1 );
             flags = 0;
             refresh = 1;
@@ -1093,7 +1095,7 @@ int game(int servidor) {
         break;
 
       case ALLEGRO_KEY_DOWN:
-                if(red.b != 3 && alguemganhou == 0){
+                if(red.b < 3 && alguemganhou == 0){
                     setmove(4);
                     flags = 0;
                     refresh = 1;
@@ -1101,23 +1103,22 @@ int game(int servidor) {
             break;
 
       case ALLEGRO_KEY_UP:
-            if(red.b != 3 && alguemganhou == 0){
+            if(red.b < 3 && alguemganhou == 0){
                 setmove(3);
                 flags = 0;
-
                 refresh = 1;
             }
             break;
 
       case ALLEGRO_KEY_RIGHT:
-            if(red.b != 3 && alguemganhou == 0){
+            if(red.b < 3 && alguemganhou == 0){
                 setmove(2);
                 flags = 0;
                 refresh = 1;
             }
         break;
       case ALLEGRO_KEY_SPACE:
-            if(red.b != 3 && alguemganhou == 0){
+            if(red.b < 3 && alguemganhou == 0){
                     setmove(0);
                     red.b = 6;
                     red.ataque = ataque(red.x, red.y, red.direcaoS);
@@ -1127,6 +1128,7 @@ int game(int servidor) {
                     refresh = 1;
                 }
             break;
+
       case ALLEGRO_KEY_ESCAPE:
         running = 0;
         break;
@@ -1167,6 +1169,10 @@ int game(int servidor) {
         }
         break;
       case ALLEGRO_KEY_SPACE:
+          if(red.b != 6 ) {
+          setmove(0);
+          refresh = 1;
+        }
         break;
 
       case ALLEGRO_KEY_ESCAPE:
@@ -1176,6 +1182,7 @@ int game(int servidor) {
         printf("b");
       }
       break;
+
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
       running = 0;
 
@@ -1288,8 +1295,6 @@ int game(int servidor) {
 
 
          }
-
-
 
             break;
         default:
@@ -1577,7 +1582,7 @@ int menu() {
     fonte = al_load_font("C:/Inclusos/aspartam.ttf", 24, 0);
     if (!fonte)
     {
-        al_destroy_display(janela);
+        al_destroy_display(janela);if(ALLEGRO_EVENT_DISPLAY_CLOSE){}
         fprintf(stderr, "Falha ao carregar fonte.\n");
         return -1;
     }
@@ -1661,7 +1666,7 @@ int menu() {
 
     // Dizemos que vamos tratar os eventos vindos do mouse
     al_register_event_source(fila_eventos, al_get_mouse_event_source());
-
+    al_register_event_source(fila_eventos, al_get_display_event_source(janela));
     // Flag indicando se o mouse está sobre o retângulo central
     int na_area_central = 0;
     int no_btt_multi = 0;
@@ -1672,6 +1677,17 @@ int menu() {
         {
             ALLEGRO_EVENT evento;
             al_wait_for_event(fila_eventos, &evento);
+
+            if(evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+                            al_destroy_bitmap(botao_sair);
+                           al_destroy_bitmap(area_central);
+                           al_destroy_bitmap(btt_mult);
+
+                           al_destroy_display(janela);
+                           al_destroy_event_queue(fila_eventos);
+
+                    sair = 1;
+            }
 
             // Se o evento foi de movimentação do mouse
             if (evento.type == ALLEGRO_EVENT_MOUSE_AXES)
@@ -1719,6 +1735,7 @@ int menu() {
                     }
                 }
             }
+
         }
 
         // Limpamos a tela
@@ -1950,7 +1967,7 @@ int waitplayer(){
                                         timerF = timerF - 1;
                                     }else{
                                         ret = 1;
-                                        saida = 0;
+                                        saida = 1;
                                         al_stop_timer(timer_contador);
                                     }
 
@@ -2030,7 +2047,7 @@ int waitplayer(){
 
     al_shutdown_primitives_addon();
 
-    return 0;
+    return saida;
 
 
 }
@@ -2058,14 +2075,22 @@ int main(){
     //printf("%d,\n%d\n", red[posicaoServidor].x,red[posicaoServidor].y);
     th[0] = CreateThread(NULL,0,recebeClientes,&posicaoServidor,0,&Ith);
 
-    int qual = menu();
-    send(descritorCliente, (void*)&eu, sizeof(eu),0);
+    int qual = 3;
     int q2;
-    if(qual == 1){
-        waitplayer();
-        th[1] = CreateThread(NULL,0,enviaClientes,&posicaoServidor,0,&Ith);
-        game(posicaoServidor);
-    }
+    while(qual != 0){
+        qual = menu();
+        send(descritorCliente, (void*)&eu, sizeof(eu),0);
 
+        if(qual == 1){
+            q2 = waitplayer();
+            th[1] = CreateThread(NULL,0,enviaClientes,&posicaoServidor,0,&Ith);
+            if(q2 == 1){
+                game(posicaoServidor);
+            }else{
+                qual = 3;
+            }
+
+        }
+    }
     return 0;
 }
