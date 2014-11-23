@@ -1,0 +1,280 @@
+    //imagens de solo
+    ALLEGRO_BITMAP *i1 = al_load_bitmap("C:/Inclusos/mapa/1.png");
+    if(!i1)
+      error("failed to load 1");
+    ALLEGRO_BITMAP *i2 = al_load_bitmap("C:/Inclusos/mapa/2.png");
+    if(!i2)
+      error("failed to load 2");
+    ALLEGRO_BITMAP *i3 = al_load_bitmap("C:/Inclusos/mapa/3.png");
+    if(!i3)
+      error("failed to load 3");
+    ALLEGRO_BITMAP *i4 = al_load_bitmap("C:/Inclusos/mapa/4.png");
+    if(!i4)
+      error("failed to load 4");
+    ALLEGRO_BITMAP *i5 = al_load_bitmap("C:/Inclusos/mapa/5.png");
+    if(!i5)
+      error("failed to load 5");
+    ALLEGRO_BITMAP *i6 = al_load_bitmap("C:/Inclusos/mapa/6.png");
+    if(!i6)
+      error("failed to load 6");
+    ALLEGRO_BITMAP *i7 = al_load_bitmap("C:/Inclusos/mapa/7.png");
+    if(!i7)
+      error("failed to load 7");
+    ALLEGRO_BITMAP *i8 = al_load_bitmap("C:/Inclusos/mapa/8.png");
+    if(!i8)
+      error("failed to load 8");
+    ALLEGRO_BITMAP *i9 = al_load_bitmap("C:/Inclusos/mapa/9.png");
+    if(!i9)
+      error("failed to load 9");
+    ALLEGRO_BITMAP *i10 = al_load_bitmap("C:/Inclusos/mapa/10.png");
+    if(!i10)
+      error("failed to load 10");
+    ALLEGRO_BITMAP *i11 = al_load_bitmap("C:/Inclusos/mapa/11.png");
+    if(!i11)
+      error("failed to load 11");
+    ALLEGRO_BITMAP *i12 = al_load_bitmap("C:/Inclusos/mapa/12.png");
+    if(!i12)
+      error("failed to load 12");
+    ALLEGRO_BITMAP *i13 = al_load_bitmap("C:/Inclusos/mapa/13.png");
+    if(!i13)
+      error("failed to load 13");
+    ALLEGRO_BITMAP *i14 = al_load_bitmap("C:/Inclusos/mapa/14.png");
+    if(!i14)
+      error("failed to load 14");
+    ALLEGRO_BITMAP *i15 = al_load_bitmap("C:/Inclusos/mapa/15.png");
+    if(!i15)
+      error("failed to load 15");
+    ALLEGRO_BITMAP *i16 = al_load_bitmap("C:/Inclusos/mapa/16.png");
+    if(!i16)
+      error("failed to load 16");
+    ALLEGRO_BITMAP *i17 = al_load_bitmap("C:/Inclusos/mapa/17.png");
+    if(!i17)
+      error("failed to load 17");
+    ALLEGRO_BITMAP *i18 = al_load_bitmap("C:/Inclusos/mapa/18.png");
+    if(!i18)
+      error("failed to load 18");
+    ALLEGRO_BITMAP *i19 = al_load_bitmap("C:/Inclusos/mapa/19.png");
+    if(!i19)
+      error("failed to load 19");
+    ALLEGRO_BITMAP *i20 = al_load_bitmap("C:/Inclusos/mapa/20.png");
+    if(!i20)
+      error("failed to load 20");
+    ALLEGRO_BITMAP *i21 = al_load_bitmap("C:/Inclusos/mapa/21.png");
+    if(!i21)
+      error("failed to load 21");
+    ALLEGRO_BITMAP *i22 = al_load_bitmap("C:/Inclusos/mapa/22.png");
+    if(!i22)
+      error("failed to load 22");
+    ALLEGRO_BITMAP *i23 = al_load_bitmap("C:/Inclusos/mapa/23.png");
+    if(!i23)
+      error("failed to load 23");
+    ALLEGRO_BITMAP *i24 = al_load_bitmap("C:/Inclusos/mapa/24.png");
+    if(!i24)
+      error("failed to load 24");
+    ALLEGRO_BITMAP *i25 = al_load_bitmap("C:/Inclusos/mapa/25.png");
+    if(!i25)
+      error("failed to load 25");
+    ALLEGRO_BITMAP *i26 = al_load_bitmap("C:/Inclusos/mapa/26.png");
+    if(!i26)
+      error("failed to load 26");
+    ALLEGRO_BITMAP *i27 = al_load_bitmap("C:/Inclusos/mapa/27.png");
+    if(!i27)
+      error("failed to load 27");
+    ALLEGRO_BITMAP *i28 = al_load_bitmap("C:/Inclusos/mapa/28.png");
+    if(!i28)
+      error("failed to load 28");
+    ALLEGRO_BITMAP *i29 = al_load_bitmap("C:/Inclusos/mapa/29.png");
+    if(!i29)
+      error("failed to load 29");
+    ALLEGRO_BITMAP *i30 = al_load_bitmap("C:/Inclusos/mapa/30.png");
+    if(!i30)
+      error("failed to load 30");
+    ALLEGRO_BITMAP *i31 = al_load_bitmap("C:/Inclusos/mapa/31.png");
+    if(!i31)
+      error("failed to load 31");
+    ALLEGRO_BITMAP *i32 = al_load_bitmap("C:/Inclusos/mapa/32.png");
+    if(!i32)
+      error("failed to load 32");
+    ALLEGRO_BITMAP *i33 = al_load_bitmap("C:/Inclusos/mapa/33.png");
+    if(!i33)
+      error("failed to load 33");
+    ALLEGRO_BITMAP *i34 = al_load_bitmap("C:/Inclusos/mapa/34.png");
+    if(!i34)
+      error("failed to load 34");
+
+    //paredes
+    ALLEGRO_BITMAP *i35 = al_load_bitmap("C:/Inclusos/mapa/35.png");
+    if(!i35)
+      error("failed to load 35");
+    ALLEGRO_BITMAP *i36 = al_load_bitmap("C:/Inclusos/mapa/36.png");
+    if(!i36)
+      error("failed to load 36");
+    ALLEGRO_BITMAP *i37 = al_load_bitmap("C:/Inclusos/mapa/37.png");
+    if(!i37)
+      error("failed to load 37");
+    ALLEGRO_BITMAP *i38 = al_load_bitmap("C:/Inclusos/mapa/38.png");
+    if(!i38)
+      error("failed to load 38");
+    ALLEGRO_BITMAP *i39 = al_load_bitmap("C:/Inclusos/mapa/39.png");
+    if(!i39)
+      error("failed to load 39");
+    ALLEGRO_BITMAP *i40 = al_load_bitmap("C:/Inclusos/mapa/40.png");
+    if(!i40)
+      error("failed to load 40");
+    ALLEGRO_BITMAP *i41 = al_load_bitmap("C:/Inclusos/mapa/41.png");
+    if(!i41)
+      error("failed to load 41");
+    ALLEGRO_BITMAP *i42 = al_load_bitmap("C:/Inclusos/mapa/42.png");
+    if(!i42)
+      error("failed to load 42");
+    ALLEGRO_BITMAP *i43 = al_load_bitmap("C:/Inclusos/mapa/43.png");
+    if(!i43)
+      error("failed to load 43");
+    ALLEGRO_BITMAP *i44 = al_load_bitmap("C:/Inclusos/mapa/44.png");
+    if(!i44)
+      error("failed to load 44");
+    ALLEGRO_BITMAP *i45 = al_load_bitmap("C:/Inclusos/mapa/45.png");
+    if(!i45)
+      error("failed to load 45");
+    ALLEGRO_BITMAP *i46 = al_load_bitmap("C:/Inclusos/mapa/46.png");
+    if(!i46)
+      error("failed to load 46");
+    ALLEGRO_BITMAP *i47 = al_load_bitmap("C:/Inclusos/mapa/47.png");
+    if(!i47)
+      error("failed to load 47");
+    ALLEGRO_BITMAP *i48 = al_load_bitmap("C:/Inclusos/mapa/48.png");
+    if(!i48)
+      error("failed to load 48");
+    ALLEGRO_BITMAP *i49 = al_load_bitmap("C:/Inclusos/mapa/49.png");
+    if(!i49)
+      error("failed to load 49");
+    ALLEGRO_BITMAP *i50 = al_load_bitmap("C:/Inclusos/mapa/50.png");
+    if(!i50)
+      error("failed to load 50");
+    ALLEGRO_BITMAP *i51 = al_load_bitmap("C:/Inclusos/mapa/51.png");
+    if(!i51)
+      error("failed to load 51");
+    ALLEGRO_BITMAP *i52 = al_load_bitmap("C:/Inclusos/mapa/52.png");
+    if(!i52)
+      error("failed to load 52");
+    ALLEGRO_BITMAP *i53 = al_load_bitmap("C:/Inclusos/mapa/53.png");
+    if(!i53)
+      error("failed to load 53");
+    ALLEGRO_BITMAP *i54 = al_load_bitmap("C:/Inclusos/mapa/54.png");
+    if(!i54)
+      error("failed to load 54");
+    ALLEGRO_BITMAP *i55 = al_load_bitmap("C:/Inclusos/mapa/55.png");
+    if(!i55)
+      error("failed to load 55");
+    ALLEGRO_BITMAP *i56 = al_load_bitmap("C:/Inclusos/mapa/56.png");
+    if(!i56)
+      error("failed to load 56");
+    ALLEGRO_BITMAP *i57 = al_load_bitmap("C:/Inclusos/mapa/57.png");
+    if(!i57)
+      error("failed to load 57");
+
+
+  //armadilhas
+    ALLEGRO_BITMAP *t1 = al_load_bitmap("C:/Inclusos/mapa/trap1.png");
+    if(!t1)
+      error("failed to load trap 1");
+    ALLEGRO_BITMAP *t2 = al_load_bitmap("C:/Inclusos/mapa/trap2.png");
+    if(!t2)
+      error("failed to load trap 2");
+    ALLEGRO_BITMAP *t3 = al_load_bitmap("C:/Inclusos/mapa/trap3.png");
+    if(!t3)
+      error("failed to load trap 3");
+    ALLEGRO_BITMAP *t4 = al_load_bitmap("C:/Inclusos/mapa/trap4.png");
+    if(!t4)
+      error("failed to load trap 4");
+    ALLEGRO_BITMAP *t5 = al_load_bitmap("C:/Inclusos/mapa/trap5.png");
+    if(!t5)
+      error("failed to load trap 5");
+    ALLEGRO_BITMAP *t6 = al_load_bitmap("C:/Inclusos/mapa/trap6.png");
+    if(!t6)
+      error("failed to load trap 6");
+    ALLEGRO_BITMAP *t7 = al_load_bitmap("C:/Inclusos/mapa/trap7.png");
+    if(!t7)
+      error("failed to load trap 7");
+    ALLEGRO_BITMAP *t8 = al_load_bitmap("C:/Inclusos/mapa/trap8.png");
+    if(!t8)
+      error("failed to load trap 8");
+    ALLEGRO_BITMAP *t9 = al_load_bitmap("C:/Inclusos/mapa/trap9.png");
+    if(!t9)
+      error("failed to load trap 9");
+    ALLEGRO_BITMAP *t10 = al_load_bitmap("C:/Inclusos/mapa/trap10.png");
+    if(!t10)
+      error("failed to load trap 10");
+    ALLEGRO_BITMAP *t11 = al_load_bitmap("C:/Inclusos/mapa/trap11.png");
+    if(!t11)
+      error("failed to load trap 11");
+    ALLEGRO_BITMAP *t12 = al_load_bitmap("C:/Inclusos/mapa/trap12.png");
+    if(!t12)
+      error("failed to load trap 12");
+    ALLEGRO_BITMAP *t13 = al_load_bitmap("C:/Inclusos/mapa/trap13.png");
+    if(!t13)
+      error("failed to load trap 13");
+    ALLEGRO_BITMAP *t14 = al_load_bitmap("C:/Inclusos/mapa/trap14.png");
+    if(!t14)
+      error("failed to load trap 14");
+    ALLEGRO_BITMAP *t15 = al_load_bitmap("C:/Inclusos/mapa/trap15.png");
+    if(!t15)
+      error("failed to load trap 15");
+    ALLEGRO_BITMAP *t16 = al_load_bitmap("C:/Inclusos/mapa/trap16.png");
+    if(!t16)
+      error("failed to load trap 16");
+    ALLEGRO_BITMAP *t17 = al_load_bitmap("C:/Inclusos/mapa/trap17.png");
+    if(!t17)
+      error("failed to load trap 17");
+    ALLEGRO_BITMAP *t18 = al_load_bitmap("C:/Inclusos/mapa/trap18.png");
+    if(!t18)
+      error("failed to load trap 18");
+    ALLEGRO_BITMAP *t19 = al_load_bitmap("C:/Inclusos/mapa/trap19.png");
+    if(!t19)
+      error("failed to load trap 19");
+    ALLEGRO_BITMAP *t20 = al_load_bitmap("C:/Inclusos/mapa/trap20.png");
+    if(!t20)
+      error("failed to load trap 20");
+    ALLEGRO_BITMAP *t21 = al_load_bitmap("C:/Inclusos/mapa/trap21.png");
+    if(!t21)
+      error("failed to load trap 21");
+    ALLEGRO_BITMAP *t22 = al_load_bitmap("C:/Inclusos/mapa/trap22.png");
+    if(!t22)
+      error("failed to load trap 22");
+    ALLEGRO_BITMAP *t23 = al_load_bitmap("C:/Inclusos/mapa/trap23.png");
+    if(!t23)
+      error("failed to load trap 23");
+    ALLEGRO_BITMAP *t24 = al_load_bitmap("C:/Inclusos/mapa/trap24.png");
+    if(!t24)
+      error("failed to load trap 24");
+    ALLEGRO_BITMAP *t25 = al_load_bitmap("C:/Inclusos/mapa/trap25.png");
+    if(!t25)
+      error("failed to load trap 25");
+    ALLEGRO_BITMAP *t26 = al_load_bitmap("C:/Inclusos/mapa/trap26.png");
+    if(!t26)
+      error("failed to load trap 26");
+    ALLEGRO_BITMAP *t27 = al_load_bitmap("C:/Inclusos/mapa/trap27.png");
+    if(!t27)
+      error("failed to load trap 27");
+    ALLEGRO_BITMAP *t28 = al_load_bitmap("C:/Inclusos/mapa/trap28.png");
+    if(!t28)
+      error("failed to load trap 28");
+    ALLEGRO_BITMAP *t29 = al_load_bitmap("C:/Inclusos/mapa/trap29.png");
+    if(!t29)
+      error("failed to load trap 29");
+    ALLEGRO_BITMAP *t30 = al_load_bitmap("C:/Inclusos/mapa/trap30.png");
+    if(!t30)
+      error("failed to load trap 30");
+    ALLEGRO_BITMAP *t31 = al_load_bitmap("C:/Inclusos/mapa/trap31.png");
+    if(!t31)
+      error("failed to load trap 31");
+    ALLEGRO_BITMAP *t32 = al_load_bitmap("C:/Inclusos/mapa/trap32.png");
+    if(!t32)
+      error("failed to load trap 32");
+    ALLEGRO_BITMAP *t33 = al_load_bitmap("C:/Inclusos/mapa/trap33.png");
+    if(!t33)
+      error("failed to load trap 33");
+    ALLEGRO_BITMAP *t34 = al_load_bitmap("C:/Inclusos/mapa/trap34.png");
+    if(!t34)
+      error("failed to load trap 34");
+

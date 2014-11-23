@@ -1,0 +1,104 @@
+
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[0][trapshift]= al_create_sub_bitmap(t1, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[1][trapshift]= al_create_sub_bitmap(t2, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[2][trapshift]= al_create_sub_bitmap(t3, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[3][trapshift]= al_create_sub_bitmap(t4, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[4][trapshift]= al_create_sub_bitmap(t5, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[5][trapshift]= al_create_sub_bitmap(t6, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[6][trapshift]= al_create_sub_bitmap(t7, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[7][trapshift]= al_create_sub_bitmap(t8, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[8][trapshift]= al_create_sub_bitmap(t9, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[9][trapshift]= al_create_sub_bitmap(t10, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[10][trapshift]= al_create_sub_bitmap(t11, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[11][trapshift]= al_create_sub_bitmap(t12, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[12][trapshift]= al_create_sub_bitmap(t13, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[13][trapshift]= al_create_sub_bitmap(t14, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[14][trapshift]= al_create_sub_bitmap(t15, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[15][trapshift]= al_create_sub_bitmap(t16, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[16][trapshift]= al_create_sub_bitmap(t17, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[17][trapshift]= al_create_sub_bitmap(t18, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[18][trapshift]= al_create_sub_bitmap(t19, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[19][trapshift]= al_create_sub_bitmap(t20, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[20][trapshift]= al_create_sub_bitmap(t21, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[21][trapshift]= al_create_sub_bitmap(t22, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[22][trapshift]= al_create_sub_bitmap(t23, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[23][trapshift]= al_create_sub_bitmap(t24, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[24][trapshift]= al_create_sub_bitmap(t25, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[25][trapshift]= al_create_sub_bitmap(t26, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[26][trapshift]= al_create_sub_bitmap(t27, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[27][trapshift]= al_create_sub_bitmap(t28, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[28][trapshift]= al_create_sub_bitmap(t29, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[29][trapshift]= al_create_sub_bitmap(t30, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[30][trapshift]= al_create_sub_bitmap(t31, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[31][trapshift]= al_create_sub_bitmap(t32, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[32][trapshift]= al_create_sub_bitmap(t33, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
+    for(trapshift = 0; trapshift < 5; trapshift++){
+        traps[33][trapshift]= al_create_sub_bitmap(t34, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
+    }
