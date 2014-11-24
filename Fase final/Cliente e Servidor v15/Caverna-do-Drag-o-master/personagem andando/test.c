@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define WIDTH 900
+#define WIDTH 1100
 #define HEIGHT 650
 
 #define WIDTHM 500
@@ -27,13 +27,12 @@
 #define SPRITE_SIZEV 40
 #define NUM_SPRITES 5
 #define FRAMES_PER_SHIFT 10
-#define SPEED 1
-#define mapa_size 13
+#define SPEED 2
 
-#define worldWidth 3250
-#define worldHeight 3550
+#define worldWidth 3550
+#define worldHeight 3350
 
-#define realWieHei 650
+#define realWieHei 600
 
 
 #define FPS 60
@@ -126,29 +125,6 @@ int mapa[67][71] = {
                     41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41
                     }; // mapa base
 
-void sorteaA(){
-    int a, C;
-    int nL, nC;
-    C = 0;
-    srand((unsigned)time(NULL));
-    for (a = 0; a < 7; a++ ){
-        nL = rand()%mapa_size;
-        nC = rand()%mapa_size;
-        while (C == 0){
-            if(mapa[nC][nL] == 0){
-                mapa[nC][nL] = 3;
-                C = 1;
-                printf("\n trap em: %d - %d", nL, nC);
-            }else{
-                nL = rand()%mapa_size;
-                nC = rand()%mapa_size;
-            }
-        }
-        C = 0;
-
-    }
-}
-
 struct pontoNas{
         int x[8];
         int y[8];
@@ -160,37 +136,37 @@ struct pontoNas inicios;
 
 void setI(){
 
-    inicios.x[0] = 1;
-    inicios.y[0] = 1;
-    mapa[1][1] = 4;
+    inicios.x[0] = 2;
+    inicios.y[0] = 2;
 
-    inicios.x[1] = 1;
-    inicios.y[1] = 11;
-    mapa[1][11] = 4;
 
-    inicios.x[2] = 11;
-    inicios.y[2] = 11;
-    mapa[11][11] = 4;
+    inicios.x[1] = 34;
+    inicios.y[1] = 2;
 
-    inicios.x[3] = 11;
-    inicios.y[3] = 1;
-    mapa[11][1] = 4;
 
-    inicios.x[4] = 1;
-    inicios.y[4] = 6;
-    mapa[1][6] = 4;
+    inicios.x[2] = 66;
+    inicios.y[2] = 2;
 
-    inicios.x[5] = 6;
-    inicios.y[5] = 11;
-    mapa[6][11] = 4;
+
+    inicios.x[3] = 66;
+    inicios.y[3] = 36;
+
+
+    inicios.x[4] = 66;
+    inicios.y[4] = 70;
+
+
+    inicios.x[5] = 2;
+    inicios.y[5] = 70;
+
 
     inicios.x[6] = 11;
     inicios.y[6] = 6;
-    mapa[11][6] = 4;
 
-    inicios.x[7] = 6;
-    inicios.y[7] = 1;
-    mapa[6][1] = 4;
+
+    inicios.x[7] = 2;
+    inicios.y[7] = 36;
+
 
 
 }
@@ -211,6 +187,8 @@ struct Reds{
       int arm;
 
 
+      int chave;
+
 };
 
 struct Pdfora{
@@ -226,10 +204,13 @@ struct Pdfora{
 
     int trapX;
     int trapY;
+    int Trapativa;
     int spriteT;
     int vida;
 
     int inicia;
+
+    int chave;
 };
 
 struct relogio{
@@ -240,6 +221,8 @@ struct relogio{
 struct trapAtiva{
     int x;
     int y;
+    int quale;
+
 };
 
 struct Reds red;
@@ -484,7 +467,7 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         anaX = (px/50);
                         anaY = (py/50);
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
 
@@ -493,34 +476,34 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         anaX = (px+32)/50;
                         anaY = (py/50);
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
                         //ponto de borda sprite 3
                         anaX = (px+32)/50;
                         anaY = (py+40)/50;
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
-                        if(mapa[anaY][anaX] == 3)
+                        if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                        if(mapa[anaY][anaX] == 5)
-                            coli = 5;
+                       // if(mapa[anaY][anaX] == 5)
+                         //   coli = 5;
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
                         anaY = (py+40)/50;
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
-                        if(mapa[anaY][anaX] == 3)
+                        if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                        if(mapa[anaY][anaX] == 5)
-                            coli = 5;
+                        //if(mapa[anaY][anaX] == 5)
+                          //  coli = 5;
 
 
 
@@ -534,41 +517,41 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         anaX = (px/50);
                         anaY = (py/50);
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
                         //ponto de borda sprite 2
                         anaX = (px+32)/50;
                         anaY = (py/50);
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
                         //ponto de borda sprite 3
                         anaX = (px+32)/50;
                         anaY = (py+40)/50;
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
-                       if(mapa[anaY][anaX] == 3)
+                       if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                         if(mapa[anaY][anaX] == 5)
-                            coli = 5;
+                        // if(mapa[anaY][anaX] == 5)
+                          //  coli = 5;
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
                         anaY = (py+40)/50;
 
-                        if( mapa[anaY][anaX] == 1 )
+                        if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
-                        if(mapa[anaY][anaX] == 3)
+                        if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                         if(mapa[anaY][anaX] == 5)
-                            coli = 5;
+                         //if(mapa[anaY][anaX] == 5)
+                        //    coli = 5;
 
 
 
@@ -710,7 +693,6 @@ int testex(){
                     red.xA = red.xA*50;
                     red.yA = red.y;
                     red.x += red.moveH * SPEED;
-
                     cameraX = red.x - realWieHei/2;
 
                     red.moveH = 0;
@@ -731,6 +713,20 @@ int testex(){
                     red.sprite = 0;
 
                 }
+                    if (cameraX < 0)
+                        cameraX = 0;
+
+                    if (cameraY < 0)
+                        cameraY = 0;
+
+                    if (cameraX > (worldWidth - realWieHei))
+                        cameraX = worldWidth - realWieHei;
+
+                    if (cameraY > (worldHeight - realWieHei))
+                        cameraY = worldHeight - realWieHei;
+
+
+
                 return esta;
 }
 
@@ -768,7 +764,6 @@ int testey(){
 
                     red.yA = (red.yA) * 50;
                     red.y += red.moveV * SPEED;
-
                     cameraY = red.y - realWieHei/2;
 
                     red.moveV = 0;
@@ -795,6 +790,19 @@ int testey(){
                 }
 
                 }
+
+                    if (cameraX < 0)
+                        cameraX = 0;
+
+                    if (cameraY < 0)
+                        cameraY = 0;
+
+                    if (cameraX > (worldWidth - realWieHei))
+                        cameraX = worldWidth - realWieHei;
+
+                    if (cameraY > (worldHeight - realWieHei))
+                        cameraY = worldHeight - realWieHei;
+
 
         return esta;
 }
@@ -826,6 +834,11 @@ void maisumseg(){
 }
 
 int game(int servidor) {
+
+
+
+    printf("%d/n %d", red.x,red.y);
+
   if(!al_init())
     error("failed to initialize");
 
@@ -1055,6 +1068,10 @@ int game(int servidor) {
     ALLEGRO_BITMAP *i57 = al_load_bitmap("C:/Inclusos/mapa/57.png");
     if(!i57)
       error("failed to load 57");
+    //saidas
+    ALLEGRO_BITMAP *s60 = al_load_bitmap("C:/Inclusos/exit.png");
+    if(!s60)
+      error("failed to load exit");
 
 
   //armadilhas
@@ -1273,11 +1290,26 @@ int game(int servidor) {
     setI();
     int l,m;
 
+    cameraX = (red.x)- realWieHei/2;
+    cameraY = (red.y)- realWieHei/2;
+
+    if (cameraX < 0)
+            cameraX = 0;
+
+    if (cameraY < 0)
+            cameraY = 0;
+
+    if (cameraX > (worldWidth - realWieHei))
+            cameraX = worldWidth - realWieHei;
+
+    if (cameraY > (worldHeight - realWieHei))
+        cameraY = worldHeight - realWieHei;
+
     //subindo mapa pela primeira vez + demorado
-           for(l = 0; l < mapa_sizeC; l++){
-            for(m = 0; m < mapa_sizeL; m++){
+        for(l = 0; l < mapa_sizeL; l++){
+            for(m = 0; m < mapa_sizeC; m++){
               switch(mapa[m][l]){
-                                        case 1 :
+                    case 1 :
                         al_draw_bitmap(i1,(l*50)-cameraX,(m*50)-cameraY, 0);
                         break;
                     case 2 :
@@ -1448,6 +1480,9 @@ int game(int servidor) {
                     case 57 :
                         al_draw_bitmap(i57,(l*50)-cameraX,(m*50)-cameraY, 0);
                         break;
+                    case 60:
+                        al_draw_bitmap(s60,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
                     case 101 :
                         al_draw_bitmap(traps[0][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                         break;
@@ -1591,11 +1626,13 @@ int game(int servidor) {
 
     vencedor = 0;
 
+
+
+
     reloginho.segundos = 0;
     reloginho.minutos = 0;
-/*
-    cameraX = red.x - 50;
-    cameraY = red.y - 50;
+/*cameraY = red.y - realWieHei/2;
+
 */
 
 
@@ -1767,25 +1804,15 @@ int game(int servidor) {
                 if(red.moveH != 0){
                     ai = red.moveH;
                     red.b = testex();
+
                     if(red.b == 3){
+                        eu.Trapativa = mapa[TAFu.x][TAFu.y];
+                        TAFu.quale = mapa[TAFu.x][TAFu.y];
                         red.x = (TAFu.x*50) + (9);
                         red.y = (TAFu.y*50) + (5);
                         al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
                         pos_x_trap = 1;
                     }
-
-
-                    if (cameraX < 0)
-                        cameraX = 0;
-
-                    if (cameraY < 0)
-                        cameraY = 0;
-
-                    if (cameraX > (worldWidth - realWieHei))
-                        cameraX = worldWidth - realWieHei;
-
-                    if (cameraY > (worldHeight - realWieHei))
-                        cameraY = worldHeight - realWieHei;
 
 
                     refresh = 1;
@@ -1794,6 +1821,7 @@ int game(int servidor) {
                   if(red.moveV != 0){
                     ai = red.moveV;
                     red.b = testey();
+
                      if(red.b == 3){
                         red.x = (TAFu.x*50) + (9);
                         red.y = (TAFu.y*50) - (5* ai);
@@ -1801,17 +1829,6 @@ int game(int servidor) {
                         al_start_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
                         pos_x_trap = 1;
                     }
-                    if (cameraX < 0)
-                        cameraX = 0;
-
-                    if (cameraY < 0)
-                        cameraY = 0;
-
-                    if (cameraX > (worldWidth - realWieHei))
-                        cameraX = worldWidth - realWieHei;
-
-                    if (cameraY > (worldHeight - realWieHei))
-                        cameraY = worldHeight - realWieHei;
 
                     refresh = 1;
                     }
@@ -1942,23 +1959,23 @@ int game(int servidor) {
                          al_set_target_bitmap(al_get_backbuffer(display));
 
 
-                          al_draw_bitmap(area_central, 650, 0, 0);
+                          al_draw_bitmap(area_central, 651, 0, 0);
 
                           if(reloginho.segundos < 10){
-                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : 0%d", reloginho.minutos, reloginho.segundos);
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 675, 50, ALLEGRO_ALIGN_CENTRE, "0%d : 0%d", reloginho.minutos, reloginho.segundos);
                           }else{
-                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 775, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
+                            al_draw_textf(fonte, al_map_rgb(140, 255, 0), 675, 50, ALLEGRO_ALIGN_CENTRE, "0%d : %d", reloginho.minutos, reloginho.segundos);
                           }
 
                           if(red.b == 4)
-                            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+                            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 690, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
 
 
                             px = cameraX/50;
                             py = cameraY/50;
 
-                           		for(l = px; l < px+15  ; l++){
-                                    for(m = py; m < py+15; m++){
+                           		for(l = px; l < px+13  ; l++){
+                                    for(m = py; m < py+13; m++){
                                       switch(mapa[m][l]){
                                             case 1 :
                                                 al_draw_bitmap(i1,(l*50)-cameraX,(m*50)-cameraY, 0);
@@ -2131,6 +2148,9 @@ int game(int servidor) {
                                             case 57 :
                                                 al_draw_bitmap(i57,(l*50)-cameraX,(m*50)-cameraY, 0);
                                                 break;
+                                            case 60:
+                                                al_draw_bitmap(s60,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
                                             case 101 :
                                                 al_draw_bitmap(traps[0][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                                                 break;
@@ -2239,7 +2259,7 @@ int game(int servidor) {
                                     }
                                 }
 
-
+/*
                         for (contador = 0; contador < 4; contador++){
                             if(contador != servidor){
                                 px = personas[contador].x/50;
@@ -2517,7 +2537,7 @@ int game(int servidor) {
                                                 break;
                                             case 133 :
                                                 al_draw_bitmap(traps[32][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
+                                                break;if (cameraX < 0)
                                             case 134 :
                                                 al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                                                 break;
@@ -2529,30 +2549,44 @@ int game(int servidor) {
                             }
                         }
 
-
+*/
                     for(l = 0; l < red.vida; l++)
-                            al_draw_bitmap(life,(660+l*70),250, 0);
+                            al_draw_bitmap(life,(670+l*70),250, 0);
 
 
                     if(red.b == 3)
-                        al_draw_bitmap(traps[0][pos_x_trap],TAFu.x*50,TAFu.y*50, 0);
+                        al_draw_bitmap(traps[(TAFu.quale-101)][pos_x_trap],TAFu.x*50-cameraX,TAFu.y*50-cameraY, 0);
 
 
                     for(contador = 0;contador<4; contador++){
                             if(contador != servidor){
-                                if(personas[contador].estado == 3){
-                                    al_draw_bitmap(traps[0][personas[contador].spriteT],personas[contador].trapX*50,personas[contador].trapY*50, 0);
+                                 if(cameraX < personas[contador].x-cameraX && cameraX+realWieHei > personas[contador].x-cameraX ){
+                                    if(cameraY < personas[contador].y-cameraY && cameraY+realWieHei > personas[contador].y-cameraY )
+                                  {
+                                      if(personas[contador].estado == 3){
+                                        al_draw_bitmap(traps[(personas[contador].Trapativa-101)][personas[contador].spriteT],personas[contador].trapX*50-cameraX,personas[contador].trapY*50-cameraY, 0);
+                                      }
+                                  }
                                 }
+
+
+
                             }
                     }
 
                    for (contador = 0; contador < 4; contador++){
                     //sortearNas(contador);
-                           if(contador != servidor)
-                                al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x, personas[contador].y, flags);
+                           if(contador != servidor){
+                                if(cameraX < personas[contador].x-cameraX && cameraX+realWieHei > personas[contador].x-cameraX ){
+                                    if(cameraY < personas[contador].y-cameraY && cameraY+realWieHei > personas[contador].y-cameraY )
+                                  {
+                                      al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x -cameraX, personas[contador].y -cameraY, flags);
+                                  }
+                                }
 
+                           }
 
-                            al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x, red.y, flags);
+                            al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x -cameraX, red.y -cameraY, flags);
 
 
                    }
@@ -2561,14 +2595,18 @@ int game(int servidor) {
         }
             else
         {
-            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
-            al_draw_textf(fonte, al_map_rgb(0, 0, 0), 770, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu %d", vencedor);
-
 
             if(red.b == 5){
-                red.x = (6*50) + (9);
-                red.y = (6*50) + (5);
+                red.x += (9);
+                red.y += (5);
+                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 770, 400, ALLEGRO_ALIGN_CENTRE, "Você venceu");
+            }else{
+                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
+                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 770, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu %d", vencedor);
+
             }
+
 
 
 
@@ -2747,6 +2785,9 @@ int game(int servidor) {
                                 break;
                             case 57 :
                                 al_draw_bitmap(i57,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                break;
+                            case 60 :
+                                al_draw_bitmap(s60,(l*50)-cameraX,(m*50)-cameraY, 0);
                                 break;
                             case 101 :
                                 al_draw_bitmap(traps[0][0],(l*50)-cameraX,(m*50)-cameraY, 0);
@@ -3280,7 +3321,7 @@ int criaCliente(){
 
     sock.sin_family=AF_INET;
     sock.sin_port=htons(1235); //Numero da porta de rede
-    sock.sin_addr.s_addr=inet_addr(/*"10.135.108.173"/*/"10.135.160.22"/*ip*/);
+    sock.sin_addr.s_addr=inet_addr("127.0.0.1"/*"10.135.160.22"/*ip*/);
 
     if(connect(clienteWinsock, (SOCKADDR*)&sock, sizeof(sock))==SOCKET_ERROR)
     {
@@ -3375,7 +3416,7 @@ int waitplayer(){
                 {
                              if(conf1 == 0){
                             //recebe mapa
-                                if(mapa[0][0] == 1)
+                                if(mapa[0][0] >= 1)
                                     conf1 = 1;
                             }
                             if(conf2 == 0){
@@ -3522,7 +3563,7 @@ int main(){
     recv(descritorCliente, &posicaoServidor, sizeof(posicaoServidor),0);
     printf("%d\n", posicaoServidor);
     recv(descritorCliente, &mapa, sizeof(mapa),0);
-    recv(descritorCliente, &saidaMapa, sizeof(saidaMapa),0);
+    //recv(descritorCliente, &saidaMapa, sizeof(saidaMapa),0);
     recv(descritorCliente, (void*)&personas, sizeof(personas),0);
     eu = personas[posicaoServidor];
     red.x = eu.x;
@@ -3548,3 +3589,4 @@ int main(){
     //}
     return 0;
 }
+
