@@ -131,10 +131,13 @@ void Servidor(void* arg){
     printf("%d\n", clientes[sockEntrada]);
     printf("---------------------------------------\n");
     send(clientes[sockEntrada], &sockEntrada, sizeof(sockEntrada),0);
-    send(clientes[sockEntrada], &mapa, sizeof(mapa),0);
+
     //send(clientes[sockEntrada], &saidaMapa, sizeof(saidaMapa),0);
     sortearNas(sockEntrada);
     send(clientes[sockEntrada], (void*)&personagens, sizeof(personagens),0);
+    send(clientes[sockEntrada], &mapa, sizeof(mapa),0);
+
+
     while(1){
         //printf("oi oio io ioi o io i");EstadoAtual = WaitForSingleObject(MeuMutex, INFINITE);
 
@@ -241,24 +244,24 @@ void setI(){
     inicios.y[1] = 1;
     mapa[33][1] = 60;
 
-    inicios.x[2] = 65;
+    inicios.x[2] = 69;
     inicios.y[2] = 1;
     mapa[65][1] = 60;
 
-    inicios.x[3] = 65;
+    inicios.x[3] = 69;
     inicios.y[3] = 35;
     mapa[65][35] = 60;
 
     inicios.x[4] = 65;
-    inicios.y[4] = 65;
-    mapa[65][69] = 60;
+    inicios.y[4] = 67;
+    mapa[65][67] = 60;
 
     inicios.x[5] = 1;
-    inicios.y[5] = 65;
-    mapa[1][68] = 60;
+    inicios.y[5] = 68;
+    mapa[1][65] = 60;
 
-    inicios.x[6] = 10;
-    inicios.y[6] = 5;
+    inicios.x[6] = 35;
+    inicios.y[6] = 65;
     mapa[10][5] = 60;
 
     inicios.x[7] = 1;

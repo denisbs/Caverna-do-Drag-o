@@ -126,6 +126,7 @@ int mapa[67][71] = {
                     }; // mapa base
 
 
+
 struct pontoNas{
         int x[8];
         int y[8];
@@ -136,40 +137,37 @@ struct pontoNas{
 struct pontoNas inicios;
 
 void setI(){
-
     inicios.x[0] = 1;
     inicios.y[0] = 1;
-
+    mapa[1][1] = 60;
 
     inicios.x[1] = 33;
     inicios.y[1] = 1;
+    mapa[33][1] = 60;
 
-
-    inicios.x[2] = 65;
+    inicios.x[2] = 69;
     inicios.y[2] = 1;
+    mapa[65][1] = 60;
 
-
-    inicios.x[3] = 65;
+    inicios.x[3] = 69;
     inicios.y[3] = 35;
-
+    mapa[65][35] = 60;
 
     inicios.x[4] = 65;
-    inicios.y[4] = 68;
-
+    inicios.y[4] = 67;
+    mapa[65][67] = 60;
 
     inicios.x[5] = 1;
     inicios.y[5] = 68;
+    mapa[1][65] = 60;
 
-
-    inicios.x[6] = 10;
-    inicios.y[6] = 5;
-
+    inicios.x[6] = 35;
+    inicios.y[6] = 65;
+    mapa[10][5] = 60;
 
     inicios.x[7] = 1;
     inicios.y[7] = 35;
-
-
-
+    mapa[1][35] = 60;
 }
 
 struct Reds{
@@ -1953,8 +1951,8 @@ int game(int servidor) {
                             px = cameraX/50;
                             py = cameraY/50;
 
-                           		for(l = px; l < px+13  ; l++){
-                                    for(m = py; m < py+13; m++){
+                           		for(l = px; l < px+15  ; l++){
+                                    for(m = py; m < py+15; m++){
                                       switch(mapa[m][l]){
                                             case 1 :
                                                 al_draw_bitmap(i1,(l*50)-cameraX,(m*50)-cameraY, 0);
@@ -3259,7 +3257,7 @@ int main(){
     HANDLE th[2];
     DWORD Ith;
 
-
+    setI();
 //    struct sockaddr_in serv_addr;
     /*Tamanho da estrutura*/
 //    unsigned int clntLen;
@@ -3270,21 +3268,20 @@ int main(){
     descritorCliente = criaCliente();
     recv(descritorCliente, &posicaoServidor, sizeof(posicaoServidor),0);
     printf("%d\n", posicaoServidor);
-    recv(descritorCliente, &mapa, sizeof(mapa),0);
+
     personas[posicaoServidor].x = 0;
     personas[posicaoServidor].y = 0;
     //recv(descritorCliente, &saidaMapa, sizeof(saidaMapa),0);
     recv(descritorCliente, (void*)&personas, sizeof(personas),0);
+
+
+    recv(descritorCliente, &mapa, sizeof(mapa),0);
+
     eu = personas[posicaoServidor];
     red.x = eu.x;
     red.y = eu.y;
-    if(red.x < 50 || red.y < 50){
 
-
-        red.x +=350 ;
-        red.y +=100 ;
-    }
-    printf("x: %d\ny: %d", personas[posicaoServidor].x,personas[posicaoServidor].y);
+    printf("x: %d\ny: %d", red.x,red.y);
 
     cameraX = (red.x)- realWieHei/2;
     cameraY = (red.y)- realWieHei/2;
