@@ -26,7 +26,7 @@
 					<Add library="bin\Debug\allegro_primitives-5.0.10-md.dll" />
 					<Add library="bin\Debug\allegro_ttf-5.0.10-md.dll" />
 					<Add library="bin\Debug\allegro-5.0.10-md.dll" />
-					<Add library="..\..\..\..\..\..\Program Files (x86)\CodeBlocks\MinGW\lib\libwsock32.a" />
+					<Add library="bin\Debug\libwsock32.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
