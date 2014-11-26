@@ -195,7 +195,7 @@ void sortearNas(int n){
    srand((unsigned)time(NULL));
    while(C == 1){
 
-        p = rand()%8;
+        p = rand()%7;
         if(inicios.ativa[p] != 1 ){
             personagens[n].x = inicios.x[p]*50;
             personagens[n].y = inicios.y[p]*50;
@@ -216,17 +216,17 @@ void sorteaA(){
     int nL, nC;
     C = 0;
     srand((unsigned)time(NULL));
-    for (a = 0; a < 100; a++ ){
-        nL = rand()%mapa_size;
-        nC = rand()%mapa_size;
+    for (a = 0; a < 50; a++ ){
+        nL = rand()%66;
+        nC = rand()%70;
         while (C == 0){
             if(mapa[nC][nL] <= 34){
                 mapa[nC][nL] = mapa[nC][nL] + 100;
                 C = 1;
                 printf(" trap em: %d - %d\n", nL, nC);
             }else{
-                nL = rand()%mapa_size;
-                nC = rand()%mapa_size;
+                nL = rand()%66;
+                nC = rand()%70;
             }
         }
         C = 0;
@@ -235,38 +235,34 @@ void sorteaA(){
 }
 
 void setI(){
-
     inicios.x[0] = 1;
     inicios.y[0] = 1;
     mapa[1][1] = 60;
 
-    inicios.x[1] = 33;
-    inicios.y[1] = 1;
-    mapa[33][1] = 60;
+    inicios.x[1] = 1;
+    inicios.y[1] = 35;
+    mapa[35][1] = 60;
 
-    inicios.x[2] = 69;
-    inicios.y[2] = 1;
-    mapa[65][1] = 60;
-
-    inicios.x[3] = 69;
-    inicios.y[3] = 35;
+    inicios.x[2] = 35;
+    inicios.y[2] = 65;
     mapa[65][35] = 60;
 
-    inicios.x[4] = 65;
-    inicios.y[4] = 67;
-    mapa[65][67] = 60;
+    inicios.x[3] = 1;
+    inicios.y[3] = 65;
+    mapa[65][1] = 60;
+
+
+    inicios.x[4] = 69;
+    inicios.y[4] = 65;
+    mapa[65][69] = 60;
 
     inicios.x[5] = 1;
-    inicios.y[5] = 68;
-    mapa[1][65] = 60;
+    inicios.y[5] = 65;
+    mapa[65][1] = 60;
 
-    inicios.x[6] = 35;
-    inicios.y[6] = 65;
-    mapa[10][5] = 60;
-
-    inicios.x[7] = 1;
-    inicios.y[7] = 35;
-    mapa[1][35] = 60;
+    inicios.x[6] = 33;
+    inicios.y[6] = 1;
+    mapa[1][33] = 60;
 
 }
 
