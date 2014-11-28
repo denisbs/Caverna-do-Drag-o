@@ -1,0 +1,82 @@
+# depslib dependency file v1.0
+1408583544 source:c:\users\caio.mvsilva\desktop\clientegame\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+
+1408656067 source:c:\users\caio.mvsilva\desktop\allegro 5\clientegame\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+
+1408727348 source:c:\users\nutel\desktop\allegro 5\pi vi\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+
+1408744424 source:c:\users\caio.mvsilva\desktop\cliente e servidor v2\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1408798596 source:c:\users\geoinformacao\desktop\cliente e servidor v3\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1408798596 source:f:\allegro 5\pi vi\cliente e servidor v3\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1409189300 source:c:\users\caio.mvsilva\desktop\cliente e servidor v3\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1410385289 source:c:\users\caio.mvsilva\desktop\cliente e servidor v3problema no envio de dados\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1410391719 source:c:\users\caio.mvsilva\desktop\cliente e servidor v4 comecando a usar struct\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
+1411000041 source:c:\users\caio.mvsilva\desktop\cliente e servidor v5 problemas com zeros\clientegame v2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<winsock.h>
+	<windows.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+
