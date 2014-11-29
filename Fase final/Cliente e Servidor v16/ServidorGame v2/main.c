@@ -48,7 +48,7 @@ int cont = 0;
 int iniciar = 0;
 int clientes[4];
 int posicaoPersonagem[4][4];
-int saidaMapa;
+int mapasaida[3];
 
 int mapa[67][71] = {
                     41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,40,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,38,40,
@@ -120,6 +120,14 @@ int mapa[67][71] = {
                     41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41,41
                     }; // mapa base
 
+void sortKey(){
+    srand((unsigned)time(NULL));
+    int k;
+    k = rand()%4;
+    printf("\n\n%d\n\n",k);
+    personagens[k].chave=1;
+}
+
 void Servidor(void* arg){
     int sockEntrada = (*(int *) arg);
     int EstadoAtual;
@@ -127,15 +135,24 @@ void Servidor(void* arg){
     /*if (sockEntrada < 0){
         sockEntrada = sockEntrada + 1;
     }*/
+
+
     printf("%d\n", sockEntrada);
     printf("%d\n", clientes[sockEntrada]);
     printf("---------------------------------------\n");
     send(clientes[sockEntrada], &sockEntrada, sizeof(sockEntrada),0);
 
-    //send(clientes[sockEntrada], &saidaMapa, sizeof(saidaMapa),0);
+
     sortearNas(sockEntrada);
     send(clientes[sockEntrada], (void*)&personagens, sizeof(personagens),0);
-    send(clientes[sockEntrada], &mapa, sizeof(mapa),0);
+    send(clientes[sockEntrada], &mapasaida, sizeof(mapasaida),0);
+    if (send(clientes[sockEntrada], &mapa, sizeof(mapa),0) < sizeof(mapa)){
+        printf("Erro");
+        return 0;
+    }
+
+
+
 
 
     while(1){
@@ -148,10 +165,10 @@ void Servidor(void* arg){
                 iniciar++;
                 //printf("%d\n",iniciar);
             }else{
-                /*if (armazena.atacando < 5){
+                if (armazena.estado ==  6){
                     //printf("oi\n");
                     personagens[armazena.atacando].estado = 7;
-                }*/
+                }
                 personagens[sockEntrada] = armazena;
             }
             ReleaseMutex(MeuMutex);
@@ -169,6 +186,7 @@ void Servidor(void* arg){
 
 void enviaClientes(){
     int k;
+
     while(1){
         Sleep(20);
         if(iniciar != 4){
@@ -180,9 +198,11 @@ void enviaClientes(){
         }else{
             for(k = 0; k < 4; k++){
                 personagens[k].inicia = 1;
+
                 //printf("adcionei\n");
             }
             iniciar++;
+
         }
     }
 }
@@ -222,7 +242,7 @@ void sorteaA(){
         nC = rand()%70;
         while (C == 0){
             if(mapa[nC][nL] <= 34){
-                mapa[nC][nL] = mapa[nC][nL] + 100;
+                mapa[nC][nL] = mapa[nC][nL] +100 ;
                 C = 1;
                 printf(" trap em: %d - %d\n", nL, nC);
             }else{
@@ -274,6 +294,27 @@ void setI(){
 
 }
 
+void SortExit(){
+    int i;
+    int s = 0;
+    int sorteados = 0;
+    srand((unsigned)time(NULL));
+    while(s < 3){
+        s = rand()%6;
+        mapasaida[sorteados] = s;
+        s++;
+        for (i = 0; i < sorteados; i++)
+        {
+            if (mapasaida[s] == mapasaida[i]){
+                s--;
+            }
+        }
+
+
+    }
+
+}
+
 int criaServidor(){
     int winsock;
     struct sockaddr_in serverAddr; /*Declaracao da estrutura*/
@@ -290,7 +331,7 @@ int criaServidor(){
 
     memset(&serverAddr, 0, sizeof (serverAddr));/*Zera a estrutura*/
     sock.sin_family=AF_INET; //tipo de familia
-    sock.sin_port=htons(1235); //Numero da porta de rede
+    sock.sin_port=htons(1236); //Numero da porta de rede
 
     if(bind(winsock,(SOCKADDR*)&sock,sizeof(sock))==SOCKET_ERROR)
     {
@@ -315,6 +356,7 @@ int main(){
     HANDLE th[5];
     DWORD Ith;
 
+
     MeuMutex = CreateMutex(NULL, FALSE, NULL);
     if(MeuMutex == NULL){
         printf("Erro na funcao CreateMutex:%d\n",GetLastError());
@@ -323,6 +365,8 @@ int main(){
 
     setI();
     sorteaA();
+    SortExit();
+    sortKey();
     int i = 0;
     struct sockaddr_in clienteAddr;
     int winsock = criaServidor();
@@ -353,7 +397,7 @@ int main(){
                 printf("Erro na Thread\n",GetLastError());
                 return 0;
             }
-            Sleep(5000);
+            Sleep(1000);
             cont++;
             if (cont == 1){
                 //Sleep(1000);

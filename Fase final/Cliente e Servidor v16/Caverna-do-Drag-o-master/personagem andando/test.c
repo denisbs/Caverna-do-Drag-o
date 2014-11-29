@@ -47,7 +47,7 @@ int descritorCliente;
 int posicaoServidor;
 char ip [1024];
 int posicaoPersonagem[4][4];
-int saidaMapa;
+int saidaMapa[3];
 
 
 // the camera's position
@@ -197,6 +197,13 @@ void SetS(){
 
 }
 
+void marcarsaidas(){
+    int i;
+    for (i = 0; i< 3; i++)
+        mapa[posicaoS[saidaMapa[i]][1]][posicaoS[saidaMapa[i]][0]] = posicaoS[saidaMapa[i]][2];
+
+
+}
 
 void* recebeClientes(void* arg){
     int sockEntrada = (*(int *) arg);
@@ -210,8 +217,9 @@ void* recebeClientes(void* arg){
 
         recv(descritorCliente, (void*)&personas, sizeof(personas),0);
 
-
-
+        if(personas[posicaoServidor].estado == 7){
+            red.b = 7;
+        }
 
         //printf("Posicao x %d\n",red[sockEntrada].x);
         //printf("Posicao y %d\n",red[sockEntrada].y);
@@ -236,6 +244,7 @@ void* enviaClientes(void* arg){
         eu.spritec = red.sprite;
         eu.trapX = TAFu.x;
         eu.trapY = TAFu.y;
+        eu.Trapativa = TAFu.quale;
         eu.vida = red.vida;
         eu.estado = red.b;
 
@@ -276,9 +285,37 @@ void setmove(int lado){
             red.moveV = 0;
             red.sprite = 0;
             break;
+        case 6:
+            red.moveH = 0;
+            red.moveV = 0;
+            red.sprite = 0;
+            red.direcaoS += 4;
+            red.b = 6;
+            break;
+
         default:
             break;
     }
+}
+
+void atualizaCAM(int x, int y){
+
+    cameraX = (x)- realWieHei/2;
+    cameraY = (y)- realWieHei/2;
+
+    if (cameraX < 0)
+        cameraX = 0;
+
+    if (cameraY < 0)
+        cameraY = 0;
+
+    if (cameraX > (worldWidth - realWieHei))
+        cameraX = worldWidth - realWieHei;
+
+    if (cameraY > (worldHeight - realWieHei))
+        cameraY = worldHeight - realWieHei;
+
+
 }
 
 void sortearNas(){
@@ -305,33 +342,13 @@ void sortearNas(){
 
 }
 
-void atualizaCAM(int x, int y){
-
-    cameraX = (x)- realWieHei/2;
-    cameraY = (y)- realWieHei/2;
-
-    if (cameraX < 0)
-        cameraX = 0;
-
-    if (cameraY < 0)
-        cameraY = 0;
-
-    if (cameraX > (worldWidth - realWieHei))
-        cameraX = worldWidth - realWieHei;
-
-    if (cameraY > (worldHeight - realWieHei))
-        cameraY = worldHeight - realWieHei;
-
-
-}
-
 int identiP(int x, int y){
     int coli = 0;
     int contador;
 
     for (contador = 0; contador < 4; contador++ ){
             if(contador != posicaoServidor){
-
+                    //pontas
                     if(personas[contador].x >= x && personas[contador].x <= (x+50))
                         if(personas[contador].y >= y && personas[contador].y <= (y+50))
                             coli = 1;
@@ -348,9 +365,32 @@ int identiP(int x, int y){
                         if((personas[contador].y+40) >= y && (personas[contador].y+40) <= (y+50))
                             coli = 1;
 
+                    //centro
                     if((personas[contador].x+16) >= x && (personas[contador].x+16) <= (x+50))
                         if((personas[contador].y+20) >= y && (personas[contador].y+20) <= (y+50))
                             coli = 1;
+
+
+                    // pontos dos meios
+                    if((personas[contador].x) >= x && (personas[contador].x) <= (x+50))
+                        if((personas[contador].y+20) >= y && (personas[contador].y+20) <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+16) >= x && (personas[contador].x+16) <= (x+50))
+                        if((personas[contador].y) >= y && (personas[contador].y) <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+32) >= x && (personas[contador].x+32) <= (x+50))
+                        if((personas[contador].y+20) >= y && (personas[contador].y+20) <= (y+50))
+                            coli = 1;
+
+                    if((personas[contador].x+16) >= x && (personas[contador].x+16) <= (x+50))
+                        if((personas[contador].y+40) >= y && (personas[contador].y+40) <= (y+50))
+                            coli = 1;
+
+
+
+
             }
 
 
@@ -368,16 +408,10 @@ int ataque(int x, int y, int sentido){
 
     switch(sentido){
 		case 4:
-			y = y+41; //baixo
+			y = y+40; //baixo
 			for (contador = 0; contador < 4; contador++ ){
 					if(contador != posicaoServidor){
-                        /*
-                        if((personas[contador].x+16) >= x && (personas[contador].x+16) <= (x+50))
-                            if((personas[contador].y+20) >= y && (personas[contador].y+20) <= (y+50))
-                                    coli =contador;
-                        */
-
-                        if((personas[contador].x+16)>= x){
+                       if((personas[contador].x+16)>= x){
                             if((personas[contador].x+16)<= x+50){
                                 if((personas[contador].y+20)>= y){
                                     if((personas[contador].y+20)<= y+50)
@@ -392,11 +426,10 @@ int ataque(int x, int y, int sentido){
 			}
 		break;
 		case 1://esquerda
-			x = x - 50;
+			x = x-50;
 			for (contador = 0; contador < 4; contador++ ){
 					if(contador != posicaoServidor){
-
-						if((personas[contador].x+16)>= x){
+                       if((personas[contador].x+16)>= x){
                             if((personas[contador].x+16)<= x+50){
                                 if((personas[contador].y+20)>= y){
                                     if((personas[contador].y+20)<= y+50)
@@ -411,30 +444,31 @@ int ataque(int x, int y, int sentido){
 			}
 			break;
 		case 2://direita
-			x = x + 33;
+			x = x+32;
 			for (contador = 0; contador < 4; contador++ ){
-					if((personas[contador].y+20)>= y){
-                            if((personas[contador].y+20)<= y+50)
-                                 if((personas[contador].x+16)>= x){
-                                    if((personas[contador].x+16)<= x+50){
+					if(contador != posicaoServidor){
+                       if((personas[contador].x+16)>= x){
+                            if((personas[contador].x+16)<= x+50){
+                                if((personas[contador].y+20)>= y){
+                                    if((personas[contador].y+20)<= y+50)
                                     {
                                             coli =contador;
                                     }
                                 }
                             }
                         }
+
+					}
 			}
 			break;
 		case 3://cima
-			y = y-51;
+			y = y-50;
 			for (contador = 0; contador < 4; contador++ ){
 					if(contador != posicaoServidor){
-
-
-                        if((personas[contador].y+20)>= y){
-                            if((personas[contador].y+20)<= y+50)
-                                 if((personas[contador].x+16)>= x){
-                                    if((personas[contador].x+16)<= x+50){
+                       if((personas[contador].x+16)>= x){
+                            if((personas[contador].x+16)<= x+50){
+                                if((personas[contador].y+20)>= y){
+                                    if((personas[contador].y+20)<= y+50)
                                     {
                                             coli =contador;
                                     }
@@ -446,10 +480,8 @@ int ataque(int x, int y, int sentido){
 			}
 			break;
 			default:
-			    coli = 5;
                 break;
 	}
-    printf("%d\n",coli);
     return coli;
 }
 
@@ -470,7 +502,14 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
-
+                         if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 0;
+                            }else{
+                                coli = 1;
+                            }
+                        }
 
                         //ponto de borda sprite 2
                         anaX = (px+32)/50;
@@ -479,6 +518,15 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
+
+                         if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 0;
+                            }else{
+                                coli = 1;
+                            }
+                        }
                         //ponto de borda sprite 3
                         anaX = (px+32)/50;
                         anaY = (py+40)/50;
@@ -489,8 +537,14 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                       // if(mapa[anaY][anaX] == 5)
-                         //   coli = 5;
+                        if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 5;
+                            }else{
+                                coli = 1;
+                            }
+                        }
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
@@ -502,8 +556,16 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                        //if(mapa[anaY][anaX] == 5)
-                          //  coli = 5;
+                        if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 5;
+                            }else{
+                                coli = 1;
+                            }
+
+                        }
+
 
 
 
@@ -520,6 +582,15 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
+
+                         if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 0;
+                            }else{
+                                coli = 1;
+                            }
+                        }
                         //ponto de borda sprite 2
                         anaX = (px+32)/50;
                         anaY = (py/50);
@@ -527,6 +598,15 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if( mapa[anaY][anaX] >= 35 && mapa[anaY][anaX] <= 57 && mapa[anaY][anaX] != 60 )
                             coli = 1;
 
+
+                         if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 0;
+                            }else{
+                                coli = 1;
+                            }
+                        }
                         //ponto de borda sprite 3
                         anaX = (px+32)/50;
                         anaY = (py+40)/50;
@@ -537,8 +617,14 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                        if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                        // if(mapa[anaY][anaX] == 5)
-                          //  coli = 5;
+                        if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 5;
+                            }else{
+                                coli = 1;
+                            }
+                        }
 
                         //ponto de borda sprite 4
                         anaX = (px)/50;
@@ -550,8 +636,14 @@ int colision(int xa, int ya, int posix, int posiy, int eixo){
                         if(mapa[anaY][anaX] > 100)
                             coli = 3;
 
-                         //if(mapa[anaY][anaX] == 5)
-                        //    coli = 5;
+                        if(mapa[anaY][anaX] > 70 && mapa[anaY][anaX] < 100){
+                            if(red.chave == 1)
+                            {
+                                coli = 5;
+                            }else{
+                                coli = 1;
+                            }
+                        }
 
 
 
@@ -715,17 +807,6 @@ int testex(){
                     red.sprite = 0;
 
                 }
-                    if (cameraX < 0)
-                        cameraX = 0;
-
-                    if (cameraY < 0)
-                        cameraY = 0;
-
-                    if (cameraX > (worldWidth - realWieHei))
-                        cameraX = worldWidth - realWieHei;
-
-                    if (cameraY > (worldHeight - realWieHei))
-                        cameraY = worldHeight - realWieHei;
 
 
 
@@ -793,19 +874,6 @@ int testey(){
 
                 }
 
-                    if (cameraX < 0)
-                        cameraX = 0;
-
-                    if (cameraY < 0)
-                        cameraY = 0;
-
-                    if (cameraX > (worldWidth - realWieHei))
-                        cameraX = worldWidth - realWieHei;
-
-                    if (cameraY > (worldHeight - realWieHei))
-                        cameraY = worldHeight - realWieHei;
-
-
         return esta;
 }
 
@@ -817,12 +885,23 @@ void error(char *message) {
 
 void zeraPersonagens(){
 
+       //direção do personagem
+
+      red.b = 0; //estados
+      red.vida = 3;
+
+      red.ataque = 5;
+
         red.sprite = 0;
         red.direcaoS = 0;
         red.moveH = 0;
         red.moveV = 0;
         red.frame = 0;
         red.arm = -1;
+
+    TAFu.x = 0;
+    TAFu.y = 0;
+    TAFu.quale = 0;
 }
 
 void maisumseg(){
@@ -872,12 +951,21 @@ int game(int servidor) {
     if(!life)
         error("faled to load life");
 
+    ALLEGRO_BITMAP *chave = al_load_bitmap("C:/Inclusos/chave.png");
+    if(!chave)
+        error("faled to load chave");
+
+
     ALLEGRO_BITMAP *sheet = al_load_bitmap("C:/Inclusos/Red.png");
     if(!sheet)
         error("failed to load sheet");
 
     ALLEGRO_FONT *fonte = al_load_font("C:/Inclusos/aspartam.ttf", 20, 0);
     if (!fonte)
+        error("Falha ao carregar fonte.");
+
+    ALLEGRO_FONT *fonte2 = al_load_font("C:/Inclusos/aspartam.ttf", 40, 0);
+    if (!fonte2)
         error("Falha ao carregar fonte.");
 
 
@@ -1174,6 +1262,25 @@ int game(int servidor) {
     ALLEGRO_BITMAP *t34 = al_load_bitmap("C:/Inclusos/mapa/trap34.png");
     if(!t34)
       error("failed to load trap 34");
+    //SAIDAS
+    ALLEGRO_BITMAP *s1 = al_load_bitmap("C:/Inclusos/mapa/saidas/s1.png");
+    if(!s1)
+      error("failed to load saida 1");
+    ALLEGRO_BITMAP *s2 = al_load_bitmap("C:/Inclusos/mapa/saidas/s2.png");
+    if(!s2)
+      error("failed to load saida 2");
+    ALLEGRO_BITMAP *s3 = al_load_bitmap("C:/Inclusos/mapa/saidas/s3.png");
+    if(!s3)
+      error("failed to load saida 3");
+    ALLEGRO_BITMAP *s4 = al_load_bitmap("C:/Inclusos/mapa/saidas/s4.png");
+    if(!s4)
+      error("failed to load saida 4");
+    ALLEGRO_BITMAP *s5 = al_load_bitmap("C:/Inclusos/mapa/saidas/s5.png");
+    if(!s5)
+      error("failed to load saida 5");
+	ALLEGRO_BITMAP *s6 = al_load_bitmap("C:/Inclusos/mapa/saidas/s6.png");
+    if(!s6)
+      error("failed to load saida 6");
 
 
     // carregar armadilha sprites
@@ -1210,7 +1317,6 @@ int game(int servidor) {
     for(trapshift = 0; trapshift < 5; trapshift++){
         traps[9][trapshift]= al_create_sub_bitmap(t10, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
     }
-
     for(trapshift = 0; trapshift < 5; trapshift++){
         traps[10][trapshift]= al_create_sub_bitmap(t11, trapshift * 49, 0, TILE_SIZEH, TILE_SIZEV);
     }
@@ -1300,295 +1406,315 @@ int game(int servidor) {
                   case 60 :
                      al_draw_bitmap(s60,(l*50)-cameraX,(m*50)-cameraY, 0);
                      break;
+                     //falta adicionar o resto
+
                   case 1 :
                      al_draw_bitmap(i1,(l*50)-cameraX,(m*50)-cameraY, 0);
                      break;
-                                            case 2 :
-                                                al_draw_bitmap(i2,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 3 :
-                                                al_draw_bitmap(i3,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 4 :
-                                                al_draw_bitmap(i4,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 5 :
-                                                al_draw_bitmap(i5,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 6 :
-                                                al_draw_bitmap(i6,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 7 :
-                                                al_draw_bitmap(i7,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 8 :
-                                                al_draw_bitmap(i8,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 9 :
-                                                al_draw_bitmap(i9,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 10 :
-                                                al_draw_bitmap(i10,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 11 :
-                                                al_draw_bitmap(i11,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 12 :
-                                                al_draw_bitmap(i12,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 13 :
-                                                al_draw_bitmap(i13,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 14 :
-                                                al_draw_bitmap(i14,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 15 :
-                                                al_draw_bitmap(i15,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 16 :
-                                                al_draw_bitmap(i16,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 17 :
-                                                al_draw_bitmap(i17,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 18 :
-                                                al_draw_bitmap(i18,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 19 :
-                                                al_draw_bitmap(i19,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 20 :
-                                                al_draw_bitmap(i20,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 21 :
-                                                al_draw_bitmap(i21,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 22 :
-                                                al_draw_bitmap(i22,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 23 :
-                                                al_draw_bitmap(i23,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 24 :
-                                                al_draw_bitmap(i24,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 25 :
-                                                al_draw_bitmap(i25,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 26 :
-                                                al_draw_bitmap(i26,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 27 :
-                                                al_draw_bitmap(i27,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 28 :
-                                                al_draw_bitmap(i28,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 29 :
-                                                al_draw_bitmap(i29,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 30 :
-                                                al_draw_bitmap(i30,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 31 :
-                                                al_draw_bitmap(i31,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 32 :
-                                                al_draw_bitmap(i32,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 33 :
-                                                al_draw_bitmap(i33,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 34 :
-                                                al_draw_bitmap(i34,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 35 :
-                                                al_draw_bitmap(i35,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 36 :
-                                                al_draw_bitmap(i36,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 37 :
-                                                al_draw_bitmap(i37,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 38 :
-                                                al_draw_bitmap(i38,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 39 :
-                                                al_draw_bitmap(i39,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 40 :
-                                                al_draw_bitmap(i40,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 41 :
-                                                al_draw_bitmap(i41,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 42 :
-                                                al_draw_bitmap(i42,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 43 :
-                                                al_draw_bitmap(i43,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 44 :
-                                                al_draw_bitmap(i44,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 45 :
-                                                al_draw_bitmap(i45,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 46 :
-                                                al_draw_bitmap(i46,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 47 :
-                                                al_draw_bitmap(i47,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 48 :
-                                                al_draw_bitmap(i48,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 49 :
-                                                al_draw_bitmap(i49,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 50 :
-                                                al_draw_bitmap(i50,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 51 :
-                                                al_draw_bitmap(i51,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 52 :
-                                                al_draw_bitmap(i52,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 53 :
-                                                al_draw_bitmap(i53,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 54 :
-                                                al_draw_bitmap(i54,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 55 :
-                                                al_draw_bitmap(i55,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 56 :
-                                                al_draw_bitmap(i56,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 57 :
-                                                al_draw_bitmap(i57,(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 101 :
-                                                al_draw_bitmap(traps[0][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 102 :
-                                                al_draw_bitmap(traps[1][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 103 :
-                                                al_draw_bitmap(traps[2][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 104 :
-                                                al_draw_bitmap(traps[3][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 105 :
-                                                al_draw_bitmap(traps[4][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 106 :
-                                                al_draw_bitmap(traps[5][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 107 :
-                                                al_draw_bitmap(traps[6][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 108 :
-                                                al_draw_bitmap(traps[7][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 109 :
-                                                al_draw_bitmap(traps[8][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 110 :
-                                                al_draw_bitmap(traps[9][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 111 :
-                                                al_draw_bitmap(traps[10][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 112 :
-                                                al_draw_bitmap(traps[11][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 113 :
-                                                al_draw_bitmap(traps[12][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 114 :
-                                                al_draw_bitmap(traps[13][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 115 :
-                                                al_draw_bitmap(traps[14][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 116 :
-                                                al_draw_bitmap(traps[15][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 117 :
-                                                al_draw_bitmap(traps[16][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 118 :
-                                                al_draw_bitmap(traps[17][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 119 :
-                                                al_draw_bitmap(traps[18][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 120 :
-                                                al_draw_bitmap(traps[19][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 121 :
-                                                al_draw_bitmap(traps[20][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 122 :
-                                                al_draw_bitmap(traps[21][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 123 :
-                                                al_draw_bitmap(traps[22][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 124 :
-                                                al_draw_bitmap(traps[23][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 125 :
-                                                al_draw_bitmap(traps[24][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 126 :
-                                                al_draw_bitmap(traps[25][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 127 :
-                                                al_draw_bitmap(traps[26][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 128 :
-                                                al_draw_bitmap(traps[27][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 129 :
-                                                al_draw_bitmap(traps[28][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 130 :
-                                                al_draw_bitmap(traps[29][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 131 :
-                                                al_draw_bitmap(traps[30][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 132 :
-                                                al_draw_bitmap(traps[31][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 133 :
-                                                al_draw_bitmap(traps[32][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            case 134 :
-                                                al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
-                                                break;
-                                            default :
-                                                break;
-              }
+					case 2 :
+						al_draw_bitmap(i2,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 3 :
+						al_draw_bitmap(i3,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 4 :
+						al_draw_bitmap(i4,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 5 :
+						al_draw_bitmap(i5,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 6 :
+						al_draw_bitmap(i6,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 7 :
+						al_draw_bitmap(i7,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 8 :
+						al_draw_bitmap(i8,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 9 :
+						al_draw_bitmap(i9,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 10 :
+						al_draw_bitmap(i10,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 11 :
+						al_draw_bitmap(i11,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 12 :
+						al_draw_bitmap(i12,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 13 :
+						al_draw_bitmap(i13,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 14 :
+						al_draw_bitmap(i14,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 15 :
+						al_draw_bitmap(i15,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 16 :
+						al_draw_bitmap(i16,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 17 :
+						al_draw_bitmap(i17,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 18 :
+						al_draw_bitmap(i18,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 19 :
+						al_draw_bitmap(i19,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 20 :
+						al_draw_bitmap(i20,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 21 :
+						al_draw_bitmap(i21,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 22 :
+						al_draw_bitmap(i22,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 23 :
+						al_draw_bitmap(i23,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 24 :
+						al_draw_bitmap(i24,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 25 :
+						al_draw_bitmap(i25,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 26 :
+						al_draw_bitmap(i26,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 27 :
+						al_draw_bitmap(i27,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 28 :
+						al_draw_bitmap(i28,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 29 :
+						al_draw_bitmap(i29,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 30 :
+						al_draw_bitmap(i30,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 31 :
+						al_draw_bitmap(i31,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 32 :
+						al_draw_bitmap(i32,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 33 :
+						al_draw_bitmap(i33,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 34 :
+						al_draw_bitmap(i34,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 35 :
+						al_draw_bitmap(i35,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 36 :
+						al_draw_bitmap(i36,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 37 :
+						al_draw_bitmap(i37,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 38 :
+						al_draw_bitmap(i38,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 39 :
+						al_draw_bitmap(i39,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 40 :
+						al_draw_bitmap(i40,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 41 :
+						al_draw_bitmap(i41,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 42 :
+						al_draw_bitmap(i42,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 43 :
+						al_draw_bitmap(i43,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 44 :
+						al_draw_bitmap(i44,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 45 :
+						al_draw_bitmap(i45,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 46 :
+						al_draw_bitmap(i46,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 47 :
+						al_draw_bitmap(i47,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 48 :
+						al_draw_bitmap(i48,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 49 :
+						al_draw_bitmap(i49,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 50 :
+						al_draw_bitmap(i50,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 51 :
+						al_draw_bitmap(i51,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 52 :
+						al_draw_bitmap(i52,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 53 :
+						al_draw_bitmap(i53,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 54 :
+						al_draw_bitmap(i54,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 55 :
+						al_draw_bitmap(i55,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 56 :
+						al_draw_bitmap(i56,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 57 :
+						al_draw_bitmap(i57,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 101 :
+						al_draw_bitmap(traps[0][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 102 :
+						al_draw_bitmap(traps[1][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 103 :
+						al_draw_bitmap(traps[2][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 104 :
+						al_draw_bitmap(traps[3][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 105 :
+						al_draw_bitmap(traps[4][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 106 :
+						al_draw_bitmap(traps[5][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 107 :
+						al_draw_bitmap(traps[6][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 108 :
+						al_draw_bitmap(traps[7][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 109 :
+						al_draw_bitmap(traps[8][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 110 :
+						al_draw_bitmap(traps[9][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 111 :
+						al_draw_bitmap(traps[10][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 112 :
+						al_draw_bitmap(traps[11][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 113 :
+						al_draw_bitmap(traps[12][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 114 :
+						al_draw_bitmap(traps[13][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 115 :
+						al_draw_bitmap(traps[14][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 116 :
+						al_draw_bitmap(traps[15][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 117 :
+						al_draw_bitmap(traps[16][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 118 :
+						al_draw_bitmap(traps[17][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 119 :
+						al_draw_bitmap(traps[18][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 120 :
+						al_draw_bitmap(traps[19][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 121 :
+						al_draw_bitmap(traps[20][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 122 :
+						al_draw_bitmap(traps[21][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 123 :
+						al_draw_bitmap(traps[22][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 124 :
+						al_draw_bitmap(traps[23][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 125 :
+						al_draw_bitmap(traps[24][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 126 :
+						al_draw_bitmap(traps[25][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 127 :
+						al_draw_bitmap(traps[26][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 128 :
+						al_draw_bitmap(traps[27][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 129 :
+						al_draw_bitmap(traps[28][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 130 :
+						al_draw_bitmap(traps[29][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 131 :
+						al_draw_bitmap(traps[30][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 132 :
+						al_draw_bitmap(traps[31][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 133 :
+						al_draw_bitmap(traps[32][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 134 :
+						al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 71 :
+						al_draw_bitmap(s1,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 72 :
+						al_draw_bitmap(s2,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 73 :
+						al_draw_bitmap(s3,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 74 :
+						al_draw_bitmap(s4,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 75 :
+						al_draw_bitmap(s5,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+					case 76 :
+						al_draw_bitmap(s6,(l*50)-cameraX,(m*50)-cameraY, 0);
+						break;
+
+					default :
+						break;
+				}
             }
-            }
+	   }
 
 
     //al_set_target_bitmap(area_central);
     //al_clear_to_color(al_map_rgb(255, 255, 255));
     //al_draw_bitmap(area_central, 650,0,0);
   /**********/
-  // 0 = down, 1 = esquerda, 2 = direita, 3 = cima
-    int b; //condição de colisão com trsap
+  // 4 = down, 1 = esquerda, 2 = direita, 3 = cima
     int ai;
 
-    eu.atacando = 5;
+
     int alguemganhou = 0;   //se algum player achar e alcancar a saida
     int flags = 0;
     int pos_x_trap = 0;
@@ -1602,25 +1728,16 @@ int game(int servidor) {
 
     int atuaS = 0;
 
-    red.frame = 0;
     eu.spriteT = 0;
-    red.arm = -1;
-
-    red.b = 0;
-    eu.estado = 0;
 
     red.vida = 3;
 
     vencedor = 0;
 
 
-
-
     reloginho.segundos = 0;
     reloginho.minutos = 0;
-/*cameraY = red.y - realWieHei/2;
 
-*/
 
 
   /************/
@@ -1647,9 +1764,8 @@ int game(int servidor) {
   int running = 1;
 
     int paraporra = 0;
-
+    pos_dano = 0;
     int refresh = 0;
-    red.sprite = 0;
 
     al_start_timer(timer);
     al_start_timer(timer_contador);
@@ -1665,15 +1781,15 @@ int game(int servidor) {
     case ALLEGRO_EVENT_KEY_DOWN:
       switch(event.keyboard.keycode) {
       case ALLEGRO_KEY_LEFT:
-        if(red.b < 3 && personas[servidor].estado != 7 && alguemganhou == 0){
-            setmove(1 );
+        if(red.b < 3 && alguemganhou == 0){
+            setmove(1);
             flags = 0;
             refresh = 1;
         }
         break;
 
       case ALLEGRO_KEY_DOWN:
-                if(red.b < 3 && personas[servidor].estado != 7 && alguemganhou == 0){
+                if(red.b < 3 && alguemganhou == 0){
                     setmove(4);
                     flags = 0;
                     refresh = 1;
@@ -1681,7 +1797,7 @@ int game(int servidor) {
             break;
 
       case ALLEGRO_KEY_UP:
-            if(red.b < 3 && personas[servidor].estado != 7 && alguemganhou == 0){
+            if(red.b < 3 && alguemganhou == 0){
                 setmove(3);
                 flags = 0;
                 refresh = 1;
@@ -1695,17 +1811,15 @@ int game(int servidor) {
                 refresh = 1;
             }
         break;
-      /*case ALLEGRO_KEY_SPACE:
-            if(red.b < 3 && personas[servidor].estado != 7 && alguemganhou == 0){
-                    setmove(0);
-                    red.b = 6;
-                    eu.atacando = ataque(red.x, red.y, red.direcaoS);
+      case ALLEGRO_KEY_SPACE:
+            if(red.b < 3 && alguemganhou == 0){
+                    setmove(6);
+                    red.ataque = ataque(red.x, red.y, red.direcaoS);
                     al_start_timer(timer_ataque);
-                    red.direcaoS += 4;
                     flags = 0;
                     refresh = 1;
                 }
-            break;*/
+            break;
 
       case ALLEGRO_KEY_ESCAPE:
         running = 0;
@@ -1746,13 +1860,11 @@ int game(int servidor) {
           refresh = 1;
         }
         break;
-      /*case ALLEGRO_KEY_SPACE:
-          if(red.b != 6 && red.b != 7) {
-          setmove(0);
-          refresh = 1;
-        }
-        break;*/
-
+      case ALLEGRO_KEY_SPACE:
+          if(red.b == 6 && red.b != 7) {
+            refresh = 1;
+            }
+            break;
       case ALLEGRO_KEY_ESCAPE:
         running = 0;
         break;
@@ -1770,7 +1882,11 @@ int game(int servidor) {
         if(event.timer.source == timer)
         {
                 if(red.b == 7){
-                    red.sprite = 0;
+
+                    if(red.chave == 1){
+                        red.chave = 0;
+                        eu.chave = 0;
+                    }
                     if(paraporra == 0){
                         setmove(0);
                          if(red.vida > 1)
@@ -1779,6 +1895,7 @@ int game(int servidor) {
                             al_start_timer(timer_dano);
                          }else{
                              sortearNas();
+                             atualizaCAM(red.x, red.y);
                              red.b = 0;
                              al_stop_timer(timer_dano);
                          }
@@ -1819,6 +1936,8 @@ int game(int servidor) {
 
                     refresh = 1;
                     }
+
+
                     eu.estado = red.b;
                     refresh = 1;
 
@@ -1842,7 +1961,7 @@ int game(int servidor) {
                              red.vida -= 1;
                          }else{
                              sortearNas();
-
+                             atualizaCAM(red.x, red.y);
                          }
 
                 }
@@ -1869,11 +1988,9 @@ int game(int servidor) {
         if(event.timer.source == timer_contador)
             {
                     maisumseg();
-                    if(reloginho.segundos == 15 && reloginho.minutos == 0 ){
-                        mapa[6][6] = 5;
-                        atuaS = 1;
+                    if(reloginho.segundos == 0 && reloginho.minutos == 1 ){
+                        marcarsaidas();
                     }
-
                     if( reloginho.minutos == 6 && reloginho.segundos == 30){
                         al_stop_timer(timer_contador);
                         al_stop_timer(timer_dano);
@@ -1881,22 +1998,27 @@ int game(int servidor) {
                         al_stop_timer(timer_mudanca_de_posicao_na_imagem_da_trap);
 
                         red.b = 4;
-                        eu.estado = 4;
-                        personas[servidor].estado = 4;
                     }
             }
 
          if(event.timer.source == timer_ataque)
          {
-             eu.atacando = 5;
+
             if(red.sprite < 2 && pos_ataq == 0)
             {
+                if(red.sprite == 0){
+                    printf("\n%d",red.ataque);
+                    if(personas[red.ataque].chave == 1){
+                        red.chave = 1;
+                        eu.chave = 1;
+                    }
+                    red.ataque = 5;
+               }
                 red.sprite++;
             }
             else
             {
                 pos_ataq = 1;
-                red.sprite--;
 
                 if(red.sprite == 0)
                     {
@@ -1905,6 +2027,8 @@ int game(int servidor) {
                         red.direcaoS -= 4;
                         pos_ataq = 0;
                         eu.atacando = 5;
+                    }else{
+                        red.sprite--;
                     }
             }
 
@@ -1913,8 +2037,7 @@ int game(int servidor) {
 
          if(event.timer.source == timer_dano)
          {
-
-                if(pos_dano < 4){
+                if(pos_dano <= 3 && paraporra == 1){
                     red.direcaoS++;
                     pos_dano++;
                     if(red.direcaoS >= 3){
@@ -1924,9 +2047,8 @@ int game(int servidor) {
                 }else{
                     al_stop_timer(timer_dano);
                     red.b = 0;
-                    eu.estado = 0;
                     paraporra = 0;
-                    personas[contador].estado = 0;
+                    pos_dano = 0;
                 }
                 eu.estado = red.b;
          }
@@ -2238,6 +2360,24 @@ int game(int servidor) {
                                             case 134 :
                                                 al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                                                 break;
+                                            case 71 :
+                                                al_draw_bitmap(s1,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 72 :
+                                                al_draw_bitmap(s2,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 73 :
+                                                al_draw_bitmap(s3,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 74 :
+                                                al_draw_bitmap(s4,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 75 :
+                                                al_draw_bitmap(s5,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 76 :
+                                                al_draw_bitmap(s6,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
                                             default :
                                                 break;
                                       }
@@ -2247,7 +2387,8 @@ int game(int servidor) {
                     for(l = 0; l < red.vida; l++)
                             al_draw_bitmap(life,(0+l*70),0, 0);
 
-
+                    if(red.chave == 1)
+                            al_draw_bitmap(chave, 550, 0,0);
 
 
                     if(red.b == 3){
@@ -2269,30 +2410,16 @@ int game(int servidor) {
 
                     for(contador = 0;contador<4; contador++){
                             if(contador != servidor){
-                                 if(px < ((personas[contador].x-cameraX)/50) && px+15 > ((personas[contador].x-cameraX)/50) ){
-                                    if(py < ((personas[contador].y-cameraY)/50) && py+15 > ((personas[contador].y-cameraY)/50) )
-                                  {
-                                      if(personas[contador].estado == 3){
+                                 if(personas[contador].estado == 3){
                                         al_draw_bitmap(traps[(personas[contador].Trapativa)][personas[contador].spriteT],personas[contador].trapX*50-cameraX,personas[contador].trapY*50-cameraY, 0);
                                       }
                                   }
                                 }
 
-
-
-                            }
-                    }
-
                    for (contador = 0; contador < 4; contador++){
                     //sortearNas(contador);
                            if(contador != servidor){
-                                //if(cameraX < personas[contador].x-cameraX && cameraX+realWieHei > personas[contador].x-cameraX ){
-                                  //  if(cameraY < personas[contador].y-cameraY && cameraY+realWieHei > personas[contador].y-cameraY )
-                                  //{
                                       al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x-cameraX, personas[contador].y -cameraY, flags);
-                                  //}
-                                //}
-
                            }
 
                             al_draw_bitmap(sprites[red.direcaoS][red.sprite], red.x -cameraX, red.y -cameraY, flags);
@@ -2305,21 +2432,7 @@ int game(int servidor) {
             else
         {
 
-            if(red.b == 5){
-                red.x += (9);
-                red.y += (5);
-                //al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
-                //al_draw_textf(fonte, al_map_rgb(0, 0, 0), 770, 400, ALLEGRO_ALIGN_CENTRE, "Você venceu");
-            }/*else{
-                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 800, 135, ALLEGRO_ALIGN_CENTRE, "Fim de jogo");
-                al_draw_textf(fonte, al_map_rgb(0, 0, 0), 770, 400, ALLEGRO_ALIGN_CENTRE, "O jogador venceu %d", vencedor);
-
-            }*/
-
-
-
-            cameraX = (red.x)- realWieHei/2;
-            cameraY = (red.y)- realWieHei/2;
+           atualizaCAM(red.x, red.y);
 
                    px = cameraX/50;
                    py = cameraY/50;
@@ -2603,6 +2716,25 @@ int game(int servidor) {
                                             case 134 :
                                                 al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                                                 break;
+                                            case 71 :
+                                                al_draw_bitmap(s1,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 72 :
+                                                al_draw_bitmap(s2,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 73 :
+                                                al_draw_bitmap(s3,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 74 :
+                                                al_draw_bitmap(s4,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 75 :
+                                                al_draw_bitmap(s5,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+                                            case 76 :
+                                                al_draw_bitmap(s6,(l*50)-cameraX,(m*50)-cameraY, 0);
+                                                break;
+
                                             default :
                                                 break;
                                       }
@@ -2614,16 +2746,14 @@ int game(int servidor) {
 
                 for (contador = 0; contador < 4; contador++){
                     if(contador != servidor){
-                        if(cameraX < personas[contador].x-cameraX && cameraX+realWieHei > personas[contador].x-cameraX ){
-                            if(cameraY < personas[contador].y-cameraY && cameraY+realWieHei > personas[contador].y-cameraY )
-                            {
-                                al_draw_bitmap(sprites[personas[contador].spritel][personas[contador].spritec], personas[contador].x -cameraX, personas[contador].y -cameraY, flags);
-                            }
-                        }
+                        al_draw_bitmap(sprites[0][0], personas[contador].x -cameraX, personas[contador].y -cameraY, flags);
                     }else{
-                         al_draw_bitmap(sprites[0][0], red.x, red.y, flags);
+                        al_draw_bitmap(sprites[0][0], red.x-cameraX, red.y-cameraY, flags);
                     }
                 }
+
+                al_draw_textf(fonte2, al_map_rgb(0, 0, 0), 325, 250, ALLEGRO_ALIGN_CENTRE, "Para o infito e alem!");
+
             }
 
         }
@@ -2737,6 +2867,13 @@ int game(int servidor) {
   al_destroy_bitmap(t32);
   al_destroy_bitmap(t33);
   al_destroy_bitmap(t34);
+
+  al_destroy_bitmap(s1);
+  al_destroy_bitmap(s2);
+  al_destroy_bitmap(s3);
+  al_destroy_bitmap(s4);
+  al_destroy_bitmap(s5);
+  al_destroy_bitmap(s6);
 
 
 
@@ -3038,8 +3175,8 @@ int criaCliente(){
     gets(ip);*/
 
     sock.sin_family=AF_INET;
-    sock.sin_port=htons(1235); //Numero da porta de rede
-    sock.sin_addr.s_addr=inet_addr("127.0.0.1"/*"10.135.160.22"/*ip*/);
+    sock.sin_port=htons(1236); //Numero da porta de rede
+    sock.sin_addr.s_addr=inet_addr("127.0.0.1"/*"10.135.226.14"/*ip*/);
 
     if(connect(clienteWinsock, (SOCKADDR*)&sock, sizeof(sock))==SOCKET_ERROR)
     {
@@ -3275,6 +3412,8 @@ int main(){
     DWORD Ith;
 
     setI();
+    SetS();
+
 //    struct sockaddr_in serv_addr;
     /*Tamanho da estrutura*/
 //    unsigned int clntLen;
@@ -3288,9 +3427,10 @@ int main(){
 
     personas[posicaoServidor].x = 0;
     personas[posicaoServidor].y = 0;
-    //recv(descritorCliente, &saidaMapa, sizeof(saidaMapa),0);
+
     recv(descritorCliente, (void*)&personas, sizeof(personas),0);
 
+    recv(descritorCliente, &saidaMapa, sizeof(saidaMapa),0);
 
     if (recv(descritorCliente, &mapa, sizeof(mapa),0) < 0){
         printf("Error");
@@ -3300,8 +3440,9 @@ int main(){
     eu = personas[posicaoServidor];
     red.x = eu.x;
     red.y = eu.y;
-
-    printf("x: %d\ny: %d", red.x,red.y);
+    red.chave = eu.chave;
+    zeraPersonagens();
+    printf("x: %d\ny: %d\nchave: %d", red.x,red.y,red.chave);
 
     atualizaCAM(red.x, red.y);
 
@@ -3326,4 +3467,3 @@ int main(){
     //}
     return 0;
 }
-

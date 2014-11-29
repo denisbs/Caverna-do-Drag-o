@@ -90,3 +90,11 @@
   al_destroy_bitmap(t32);
   al_destroy_bitmap(t33);
   al_destroy_bitmap(t34);
+
+  al_destroy_bitmap(s1);
+  al_destroy_bitmap(s2);
+  al_destroy_bitmap(s3);
+  al_destroy_bitmap(s4);
+  al_destroy_bitmap(s5);
+  al_destroy_bitmap(s6);
+ 

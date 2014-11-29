@@ -278,3 +278,23 @@
     if(!t34)
       error("failed to load trap 34");
 
+
+    ALLEGRO_BITMAP *s1 = al_load_bitmap("C:/Inclusos/mapa/saidas/s1.png");
+    if(!s1)
+      error("failed to load saida 1");
+    ALLEGRO_BITMAP *s2 = al_load_bitmap("C:/Inclusos/mapa/saidas/s2.png");
+    if(!s2)
+      error("failed to load saida 2");
+    ALLEGRO_BITMAP *s3 = al_load_bitmap("C:/Inclusos/mapa/saidas/s3.png");
+    if(!s3)
+      error("failed to load saida 3");
+    ALLEGRO_BITMAP *s4 = al_load_bitmap("C:/Inclusos/mapa/saidas/s4.png");
+    if(!s4)
+      error("failed to load saida 4");
+    ALLEGRO_BITMAP *s5 = al_load_bitmap("C:/Inclusos/mapa/saidas/s5.png");
+    if(!s5)
+      error("failed to load saida 5");
+	ALLEGRO_BITMAP *s6 = al_load_bitmap("C:/Inclusos/mapa/saidas/s6.png");
+    if(!s6)
+      error("failed to load saida 6");
+

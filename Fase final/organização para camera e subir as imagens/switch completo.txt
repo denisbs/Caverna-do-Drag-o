@@ -274,6 +274,27 @@
                     case 134 :
                         al_draw_bitmap(traps[33][0],(l*50)-cameraX,(m*50)-cameraY, 0);
                         break;
+					
+					
+					case 71 :
+                        al_draw_bitmap(s1,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+                    case 72 :
+                        al_draw_bitmap(s2,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+                    case 73 :
+                        al_draw_bitmap(s3,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+                    case 74 :
+                        al_draw_bitmap(s4,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+                    case 75 :
+                        al_draw_bitmap(s5,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+                    case 76 :
+                        al_draw_bitmap(s6,(l*50)-cameraX,(m*50)-cameraY, 0);
+                        break;
+	
                     default:
                         break;
               }
