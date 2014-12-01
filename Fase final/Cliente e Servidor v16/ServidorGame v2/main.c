@@ -168,6 +168,9 @@ void Servidor(void* arg){
                 if (armazena.estado ==  6){
                     //printf("oi\n");
                     personagens[armazena.atacando].estado = 7;
+                    if(personagens[armazena.atacando].chave == 1)
+                        personagens[armazena.atacando].chave = 0;
+
                 }
                 personagens[sockEntrada] = armazena;
             }

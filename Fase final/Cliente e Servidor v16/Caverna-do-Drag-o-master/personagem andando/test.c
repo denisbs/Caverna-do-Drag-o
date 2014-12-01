@@ -1815,6 +1815,7 @@ int game(int servidor) {
             if(red.b < 3 && alguemganhou == 0){
                     setmove(6);
                     red.ataque = ataque(red.x, red.y, red.direcaoS);
+                    eu.atacando = red.ataque;
                     al_start_timer(timer_ataque);
                     flags = 0;
                     refresh = 1;
@@ -1882,7 +1883,7 @@ int game(int servidor) {
         if(event.timer.source == timer)
         {
                 if(red.b == 7){
-
+                    red.b = 8;
                     if(red.chave == 1){
                         red.chave = 0;
                         eu.chave = 0;
@@ -1893,6 +1894,7 @@ int game(int servidor) {
                          {
                             red.vida -= 1;
                             al_start_timer(timer_dano);
+                            paraporra = 1;
                          }else{
                              sortearNas();
                              atualizaCAM(red.x, red.y);
@@ -1900,7 +1902,7 @@ int game(int servidor) {
                              al_stop_timer(timer_dano);
                          }
 
-                        paraporra = 1;
+
                     }
                 }
 
@@ -2008,11 +2010,13 @@ int game(int servidor) {
             {
                 if(red.sprite == 0){
                     printf("\n%d",red.ataque);
+
                     if(personas[red.ataque].chave == 1){
                         red.chave = 1;
                         eu.chave = 1;
                     }
                     red.ataque = 5;
+                    eu.atacando = 5;
                }
                 red.sprite++;
             }
