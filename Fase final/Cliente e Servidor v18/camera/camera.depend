@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1416438849 source:c:\users\caio.mvsilva\desktop\camera\main.c
+	<stdio.h>
+	<stdlib.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<winsock.h>
+
+1416441602 source:c:\users\caio.mvsilva\desktop\nova pasta\camera\main.c
+	<stdio.h>
+	<stdlib.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<winsock.h>
+
